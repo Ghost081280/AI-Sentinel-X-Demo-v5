@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sentinel-X | Autonomous Cyber Defense Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --accent: #7c3aed;
+            --danger: #ff0044;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060912;
+            --bg-card: rgba(10, 20, 40, 0.8);
+            --border: rgba(0, 255, 136, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
+            --gradient-hologram: linear-gradient(45deg, #00ff88, #00ccff, #7c3aed, #ff00ff);
+            --gradient-quantum: linear-gradient(135deg, #7c3aed 0%, #ff00ff 50%, #00ccff 100%);
+            --gradient-hybrid: linear-gradient(135deg, #00ff88 0%, #7c3aed 50%, #00ccff 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Consolas', 'Monaco', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Neural Network Background */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .neural-bg canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Enhanced Matrix Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, rgba(0, 255, 136, 0.03) 0%, transparent 70%);
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            font-size: 14px;
+            color: var(--primary);
+            animation: matrixFall 20s linear infinite;
+            opacity: 0.1;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .hologram-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: hologramShift 30s linear infinite;
+            transform: perspective(1000px) rotateX(60deg) translateZ(0);
+            transform-origin: center;
+        }
+
+        @keyframes hologramShift {
+            0% { transform: perspective(1000px) rotateX(60deg) translateZ(0) translateY(0); }
+            100% { transform: perspective(1000px) rotateX(60deg) translateZ(0) translateY(-50px); }
+        }
+
+        @keyframes matrixFall {
+            to {
+                top: 100%;
+            }
+        }
+
+        /* Login Container - OPTIMIZED HEIGHT */
+        .login-container {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 25px;
+            width: 100%;
+            max-width: 450px;
+            max-height: 95vh;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                inset 0 0 100px rgba(0, 255, 136, 0.02);
+            animation: loginSlideIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--gradient-hologram);
+            border-radius: 16px;
+            opacity: 0;
+            z-index: -1;
+            animation: hologramBorder 4s linear infinite;
+            background-size: 400% 400%;
+        }
+
+        @keyframes hologramBorder {
+            0% { opacity: 0; background-position: 0% 50%; }
+            50% { opacity: 0.5; background-position: 100% 50%; }
+            100% { opacity: 0; background-position: 0% 50%; }
+        }
+
+        @keyframes loginSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Enhanced Logo - COMPACT */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .sentinel-logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-shield {
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            animation: shieldPulse 3s ease-in-out infinite;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 136, 0.5),
+                inset 0 0 20px rgba(0, 255, 136, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-particles {
+            position: absolute;
+            width: 130%;
+            height: 130%;
+            top: -15%;
+            left: -15%;
+            pointer-events: none;
+        }
+
+        .particle-orbit {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: particleOrbit 10s linear infinite;
+        }
+
+        @keyframes particleOrbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo-eye {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                inset 0 0 20px rgba(0, 255, 136, 0.3),
+                0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-iris {
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            animation: irisGlow 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 136, 0.8),
+                inset 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-iris::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            box-shadow: inset 0 0 8px rgba(0, 255, 136, 0.5);
+        }
+
+        @keyframes shieldPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.8);
+            }
+        }
+
+        @keyframes irisGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(0, 204, 255, 0.8); }
+        }
+
+        .login-title {
+            font-size: 22px;
+            font-weight: bold;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Agent Status Badge - COMPACT */
+        .agent-status-badge {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(0, 255, 136, 0.1) 100%);
+            border: 1px solid rgba(124, 58, 237, 0.5);
+            border-radius: 10px;
+            padding: 8px 12px;
+            margin: 12px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-status-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), transparent);
+            animation: securityScan 3s linear infinite;
+        }
+
+        @keyframes securityScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .agent-status-content {
+            position: relative;
+            z-index: 1;
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.3;
+        }
+
+        .agent-status-title {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 2px;
+            font-size: 11px;
+        }
+
+        /* Enhanced Form - COMPACT */
+        .login-form {
+            margin-top: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        .input-icon {
+            width: 18px;
+            height: 18px;
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 136, 0.3),
+                inset 0 0 15px rgba(0, 255, 136, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .input-description {
+            font-size: 9px;
+            color: var(--text-secondary);
+            margin-top: 3px;
+            margin-left: 24px;
+            opacity: 0.8;
+            line-height: 1.3;
+        }
+
+        /* Enhanced Login Button - COMPACT */
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-darker);
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 18px;
+            box-shadow: 
+                0 4px 15px rgba(0, 255, 136, 0.3),
+                inset 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 255, 136, 0.5),
+                inset 0 0 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Enhanced Status Message - COMPACT */
+        .status-message {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 11px;
+            min-height: 16px;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .status-message.error {
+            color: var(--danger);
+            text-shadow: 0 0 8px currentColor;
+        }
+
+        .status-message.success {
+            color: var(--success);
+            text-shadow: 0 0 8px currentColor;
+        }
+
+        /* Enhanced Demo Info - COMPACT */
+        .demo-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .demo-info p {
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .demo-credentials {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 6px;
+            font-family: 'Courier New', monospace;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 4px 15px rgba(0, 255, 136, 0.1),
+                inset 0 0 15px rgba(0, 255, 136, 0.02);
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .demo-instructions {
+            background: rgba(0, 204, 255, 0.05);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 9px;
+            line-height: 1.4;
+        }
+
+        .demo-instructions strong {
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 10px;
+        }
+
+        .demo-credentials-highlight {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 4px 0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 10px;
+        }
+
+        /* Enhanced Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--bg-darker);
+            border-radius: 50%;
+            border-top-color: var(--bg-darker);
+            border-right-color: rgba(255, 255, 255, 0.3);
+            animation: quantumSpin 1s ease-in-out infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        @keyframes quantumSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 2FA Container - COMPACT */
+        .twofa-container {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 95vh;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                inset 0 0 100px rgba(0, 255, 136, 0.02);
+            animation: loginSlideIn 0.5s ease;
+            display: none;
+            text-align: center;
+        }
+
+        .twofa-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+            animation: shieldPulse 3s ease-in-out infinite;
+        }
+
+        .twofa-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .twofa-subtitle {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .twofa-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .twofa-input {
+            width: 45px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .twofa-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.1);
+            transform: scale(1.05);
+        }
+
+        .twofa-demo-note {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+
+        .twofa-demo-code {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-top: 4px;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .twofa-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-darker);
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 4px 15px rgba(0, 255, 136, 0.3),
+                inset 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .twofa-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 255, 136, 0.5),
+                inset 0 0 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .twofa-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Mobile Responsive - OPTIMIZED */
+        @media (max-width: 600px) {
+            body {
+                padding: 8px;
+            }
+            
+            .login-container {
+                padding: 18px 16px;
+                border-radius: 12px;
+                max-height: 98vh;
+            }
+            
+            .login-title {
+                font-size: 20px;
+            }
+            
+            .sentinel-logo {
+                width: 55px;
+                height: 55px;
+            }
+            
+            .logo-eye {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .logo-iris {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .logo-iris::before {
+                width: 7px;
+                height: 7px;
+            }
+            
+            .input-field {
+                padding: 11px 12px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+            
+            .login-btn {
+                padding: 13px;
+                font-size: 13px;
+            }
+
+            .twofa-container {
+                padding: 20px 16px;
+                max-height: 98vh;
+            }
+
+            .twofa-input {
+                width: 40px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .demo-info {
+                margin-top: 12px;
+                padding-top: 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            body {
+                padding: 5px;
+            }
+            
+            .login-container {
+                padding: 15px 12px;
+            }
+            
+            .login-title {
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+            
+            .login-subtitle {
+                font-size: 10px;
+            }
+            
+            .input-label {
+                font-size: 10px;
+            }
+            
+            .demo-info {
+                font-size: 9px;
+            }
+            
+            .sentinel-logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .logo-eye {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .logo-iris {
+                width: 16px;
+                height: 16px;
+            }
+
+            .agent-status-badge {
+                padding: 6px 8px;
+                margin: 8px 0;
+            }
+
+            .demo-instructions {
+                padding: 6px;
+                font-size: 8px;
+            }
+        }
+
+        /* Landscape Mobile - ULTRA COMPACT */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+            
+            .login-container {
+                padding: 12px 20px;
+                max-height: 98vh;
+            }
+            
+            .sentinel-logo {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 6px;
+            }
+            
+            .logo-eye {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .logo-iris {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .login-title {
+                font-size: 16px;
+                margin-bottom: 2px;
+            }
+
+            .login-subtitle {
+                font-size: 9px;
+                margin-bottom: 0;
+            }
+
+            .agent-status-badge {
+                padding: 5px 8px;
+                margin: 6px 0;
+                font-size: 9px;
+            }
+            
+            .input-group {
+                margin-bottom: 8px;
+            }
+
+            .input-field {
+                padding: 8px 10px;
+            }
+
+            .input-description {
+                display: none;
+            }
+            
+            .login-btn {
+                padding: 10px;
+                margin-top: 10px;
+            }
+            
+            .demo-info {
+                margin-top: 8px;
+                padding-top: 8px;
+            }
+
+            .demo-instructions {
+                display: none;
+            }
+
+            .demo-credentials {
+                padding: 6px;
+                font-size: 9px;
+            }
+        }
+
+        /* Short screens optimization */
+        @media (max-height: 700px) {
+            .login-container {
+                max-height: 95vh;
+                overflow-y: auto;
+            }
+            
+            .input-description {
+                font-size: 8px;
+                margin-top: 2px;
+            }
+            
+            .demo-instructions {
+                font-size: 8px;
+                padding: 6px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Network Background -->
+    <div class="neural-bg">
+        <canvas id="neuralCanvas"></canvas>
+    </div>
+
+    <!-- Enhanced Matrix Background -->
+    <div class="matrix-bg">
+        <div class="hologram-grid"></div>
+        <div id="matrixBg"></div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        
+        <div class="logo-section">
+            <div class="sentinel-logo">
+                <div class="logo-particles">
+                    <div class="particle-orbit">
+                        <div class="particle"></div>
+                    </div>
+                    <div class="particle-orbit" style="animation-delay: -2.5s;">
+                        <div class="particle"></div>
+                    </div>
+                    <div class="particle-orbit" style="animation-delay: -5s;">
+                        <div class="particle"></div>
+                    </div>
+                </div>
+                <div class="logo-shield">
+                    <div class="logo-eye">
+                        <div class="logo-iris"></div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="login-title">AI SENTINEL-X</h1>
+            <p class="login-subtitle">Autonomous Cyber Defense Agent</p>
+        </div>
+
+        <!-- Agent Status Badge -->
+        <div class="agent-status-badge">
+            <div class="agent-status-content">
+                <div class="agent-status-title">🤖 AI AGENT READY</div>
+                <div>Main Agent + Sub-Agents • Hybrid-Resistant Encryption • Manual Override Available</div>
+            </div>
+        </div>
+
+        <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label class="input-label">
+                    <div class="input-icon">📧</div>
+                    <span>Email Address</span>
+                </label>
+                <input 
+                    type="email" 
+                    class="input-field" 
+                    id="email"
+                    placeholder="Enter your email address"
+                    required
+                    autocomplete="email"
+                >
+                <div class="input-description">Your registered email address for AI Sentinel-X account access</div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">
+                    <div class="input-icon">🔑</div>
+                    <span>Password</span>
+                </label>
+                <input 
+                    type="password" 
+                    class="input-field" 
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                    autocomplete="current-password"
+                >
+                <div class="input-description">Secure access to your autonomous cyber defense system</div>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                ACCESS SYSTEM
+            </button>
+
+            <div class="status-message" id="statusMessage"></div>
+        </form>
+
+        <div class="demo-info">
+            <p>🚀 Experience AI Sentinel-X: autonomous defense with specialized sub-agents and hybrid-resistant encryption</p>
+            
+            <div class="demo-credentials">
+                <strong>Demo Login Credentials:</strong><br>
+                Email: <span style="color: var(--primary);">demo@demo.com</span><br>
+                Password: <span style="color: var(--primary);">demo</span>
+            </div>
+            
+            <div class="demo-instructions">
+                <strong>🔐 Demo Access Instructions:</strong>
+                Use the credentials above to access the AI Sentinel-X system and explore all sub-agents including VPNMonitor with hybrid encryption capabilities. After login, you'll have full access to the autonomous cyber defense system.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2FA Container -->
+    <div class="twofa-container" id="twofaContainer">
+        <div class="twofa-icon">🔐</div>
+        <h2 class="twofa-title">Two-Factor Authentication</h2>
+        <p class="twofa-subtitle">Enter the 6-digit verification code from your authenticator app to complete the login process.</p>
+        
+        <div class="twofa-demo-note">
+            <strong>🔍 Demo Mode:</strong> Use the following code
+            <div class="twofa-demo-code">123456</div>
+        </div>
+
+        <div class="twofa-input-container">
+            <input type="text" class="twofa-input" maxlength="1" id="code1" onkeyup="moveToNext(this, 'code2')" autofocus>
+            <input type="text" class="twofa-input" maxlength="1" id="code2" onkeyup="moveToNext(this, 'code3')">
+            <input type="text" class="twofa-input" maxlength="1" id="code3" onkeyup="moveToNext(this, 'code4')">
+            <input type="text" class="twofa-input" maxlength="1" id="code4" onkeyup="moveToNext(this, 'code5')">
+            <input type="text" class="twofa-input" maxlength="1" id="code5" onkeyup="moveToNext(this, 'code6')">
+            <input type="text" class="twofa-input" maxlength="1" id="code6" onkeyup="checkCode()">
+        </div>
+
+        <button class="twofa-btn" id="verifyBtn" onclick="verify2FA()" disabled>
+            VERIFY CODE
+        </button>
+
+        <div class="status-message" id="twofaStatusMessage"></div>
+    </div>
+
+    <script>
+        // Neural Network Background Animation
+        function initNeuralBackground() {
+            const canvas = document.getElementById('neuralCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const nodes = [];
+            const nodeCount = 100;
+            
+            for (let i = 0; i < nodeCount; i++) {
+                nodes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Update nodes
+                nodes.forEach(node => {
+                    node.x += node.vx;
+                    node.y += node.vy;
+                    
+                    if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                    if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+                });
+                
+                // Draw connections
+                ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
+                ctx.lineWidth = 0.5;
+                
+                nodes.forEach((node1, i) => {
+                    nodes.slice(i + 1).forEach(node2 => {
+                        const dist = Math.hypot(node1.x - node2.x, node1.y - node2.y);
+                        if (dist < 100) {
+                            ctx.globalAlpha = 1 - dist / 100;
+                            ctx.beginPath();
+                            ctx.moveTo(node1.x, node1.y);
+                            ctx.lineTo(node2.x, node2.y);
+                            ctx.stroke();
+                        }
+                    });
+                });
+                
+                // Draw nodes
+                ctx.globalAlpha = 1;
+                nodes.forEach(node => {
+                    const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.radius * 2);
+                    gradient.addColorStop(0, 'rgba(0, 255, 136, 0.8)');
+                    gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, node.radius * 2, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        // Enhanced Matrix Background
+        function initMatrix() {
+            const matrixBg = document.getElementById('matrixBg');
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = i * 20 + 'px';
+                column.style.animationDelay = Math.random() * 20 + 's';
+                column.style.animationDuration = (15 + Math.random() * 10) + 's';
+                
+                // Generate security-themed characters
+                let content = '';
+                const chars = '01⟨⟩{}[]()<>/*-+=@#$%&!?;:,.';
+                for (let j = 0; j < 100; j++) {
+                    content += chars[Math.floor(Math.random() * chars.length)];
+                    if (j % 2 === 1) content += ' ';
+                }
+                column.textContent = content;
+                
+                matrixBg.appendChild(column);
+            }
+        }
+
+        // Enhanced Login Handler with realistic SaaS flow
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // Clear previous status
+            statusMessage.className = 'status-message';
+            statusMessage.textContent = '';
+            
+            // Validate inputs
+            if (!email || !password) {
+                statusMessage.className = 'status-message error';
+                statusMessage.textContent = '⚠️ Please enter both email and password';
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                statusMessage.className = 'status-message error';
+                statusMessage.textContent = '⚠️ Please enter a valid email address';
+                return;
+            }
+            
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading"></span>AUTHENTICATING...';
+            statusMessage.textContent = '🔐 Authenticating credentials...';
+            
+            // Realistic authentication flow simulation
+            setTimeout(() => {
+                statusMessage.textContent = '🌐 Checking account status...';
+                
+                setTimeout(() => {
+                    // Check demo credentials
+                    if (email.toLowerCase() === 'demo@demo.com' && password === 'demo') {
+                        statusMessage.className = 'status-message success';
+                        statusMessage.textContent = '✅ Authentication successful - Requiring 2FA...';
+                        
+                        // Store first-step auth
+                        sessionStorage.setItem('pending_auth', JSON.stringify({
+                            email: email,
+                            timestamp: Date.now()
+                        }));
+                        
+                        // Show 2FA screen
+                        setTimeout(() => {
+                            document.getElementById('loginContainer').style.display = 'none';
+                            document.getElementById('twofaContainer').style.display = 'block';
+                            document.getElementById('code1').focus();
+                        }, 800);
+                    } else {
+                        statusMessage.className = 'status-message error';
+                        statusMessage.textContent = '❌ Invalid credentials. Please use demo@demo.com and password: demo';
+                        loginBtn.disabled = false;
+                        loginBtn.innerHTML = 'ACCESS SYSTEM';
+                    }
+                }, 1500);
+            }, 1000);
+        }
+
+        // 2FA Functions
+        function moveToNext(current, nextFieldID) {
+            if (current.value.length >= current.maxLength) {
+                if (nextFieldID) {
+                    document.getElementById(nextFieldID).focus();
+                }
+            }
+            checkCode();
+        }
+
+        function checkCode() {
+            const code = 
+                document.getElementById('code1').value +
+                document.getElementById('code2').value +
+                document.getElementById('code3').value +
+                document.getElementById('code4').value +
+                document.getElementById('code5').value +
+                document.getElementById('code6').value;
+            
+            const verifyBtn = document.getElementById('verifyBtn');
+            if (code.length === 6) {
+                verifyBtn.disabled = false;
+                // Auto-verify if correct code
+                if (code === '123456') {
+                    verify2FA();
+                }
+            } else {
+                verifyBtn.disabled = true;
+            }
+        }
+
+        function verify2FA() {
+            const code = 
+                document.getElementById('code1').value +
+                document.getElementById('code2').value +
+                document.getElementById('code3').value +
+                document.getElementById('code4').value +
+                document.getElementById('code5').value +
+                document.getElementById('code6').value;
+            
+            const verifyBtn = document.getElementById('verifyBtn');
+            const statusMessage = document.getElementById('twofaStatusMessage');
+            
+            if (code !== '123456') {
+                statusMessage.className = 'status-message error';
+                statusMessage.textContent = '❌ Invalid code. Please enter: 123456';
+                // Clear inputs
+                for (let i = 1; i <= 6; i++) {
+                    document.getElementById(`code${i}`).value = '';
+                }
+                document.getElementById('code1').focus();
+                verifyBtn.disabled = true;
+                return;
+            }
+            
+            // Show loading
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<span class="loading"></span>VERIFYING...';
+            statusMessage.className = 'status-message';
+            statusMessage.textContent = '🔐 Verifying authentication code...';
+            
+            setTimeout(() => {
+                statusMessage.textContent = '🤖 Initializing AI agents...';
+                
+                setTimeout(() => {
+                    statusMessage.textContent = '🔍 Preparing network scanner...';
+                    
+                    setTimeout(() => {
+                        statusMessage.textContent = '🔑 Loading security modules...';
+                        
+                        setTimeout(() => {
+                            // Get pending auth
+                            const pendingAuth = JSON.parse(sessionStorage.getItem('pending_auth'));
+                            
+                            // Store full auth
+                            localStorage.setItem('sentinel_auth', JSON.stringify({
+                                email: pendingAuth.email,
+                                authenticated: true,
+                                timestamp: Date.now(),
+                                accountType: 'demo',
+                                needsSetup: true,
+                                twoFAVerified: true
+                            }));
+                            
+                            // Clear pending auth
+                            sessionStorage.removeItem('pending_auth');
+                            
+                            statusMessage.className = 'status-message success';
+                            statusMessage.textContent = '🚀 ACCESS GRANTED - REDIRECTING TO NETWORK DISCOVERY';
+                            
+                            // Redirect to network page
+                            setTimeout(() => {
+                                window.location.href = 'network.html';
+                            }, 1200);
+                        }, 800);
+                    }, 600);
+                }, 800);
+            }, 1000);
+        }
+
+        // Handle Enter key on 2FA inputs
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('twofaContainer').style.display === 'block') {
+                const verifyBtn = document.getElementById('verifyBtn');
+                if (!verifyBtn.disabled) {
+                    verify2FA();
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initMatrix();
+            initNeuralBackground();
+            
+            // Check if auth is valid and recent, don't auto-redirect
+            const auth = localStorage.getItem('sentinel_auth');
+            if (auth) {
+                try {
+                    const authData = JSON.parse(auth);
+                    // Check if auth is more than 24 hours old
+                    if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
+                        localStorage.removeItem('sentinel_auth');
+                        localStorage.removeItem('sentinel_scale');
+                    }
+                } catch (e) {
+                    // Invalid auth data, remove it
+                    localStorage.removeItem('sentinel_auth');
+                    localStorage.removeItem('sentinel_scale');
+                }
+            }
+            
+            // Add input focus effects
+            const inputs = document.querySelectorAll('.input-field');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.querySelector('.input-icon').style.transform = 'scale(1.2)';
+                });
+                input.addEventListener('blur', () => {
+                    input.parentElement.querySelector('.input-icon').style.transform = 'scale(1)';
+                });
+            });
+        });
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                document.getElementById('matrixBg').innerHTML = '';
+                initMatrix();
+                initNeuralBackground();
+            }, 250);
+        });
+    </script>
+</body>
+</html>
