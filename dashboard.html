@@ -326,24 +326,24 @@
             font-weight: bold;
         }
 
-        /* System Status Banner - IMPROVED CENTERING */
+        /* System Status Banner - FIXED SIZING FROM SHARED.JS */
         .system-status-banner {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 25px 20px !important;
+            padding: 20px 25px !important;
             margin-bottom: 25px !important;
             backdrop-filter: blur(15px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
-            gap: 15px;
+            flex-wrap: wrap;
+            gap: 20px;
             min-height: 90px !important;
             max-height: 90px !important;
-            flex-wrap: wrap;
         }
 
         .system-status-banner::before {
@@ -366,49 +366,45 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            padding: 8px 18px !important;
-            border-radius: 10px;
+            padding: 5px 12px !important;
+            border-radius: 8px;
             position: relative;
             z-index: 1;
             border: 1px solid rgba(0, 255, 136, 0.2);
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
-            height: 70px !important;
+            height: 60px !important;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-width: 140px;
-            flex: 1;
-            max-width: 180px;
         }
 
         .banner-stat:hover {
             background: rgba(0, 255, 136, 0.1);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
-            border-color: rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
         }
 
         .banner-stat-icon {
-            font-size: 20px !important;
-            margin-bottom: 4px !important;
-            filter: drop-shadow(0 0 6px currentColor);
+            font-size: 18px !important;
+            margin-bottom: 2px !important;
+            filter: drop-shadow(0 0 4px currentColor);
             color: var(--primary);
             line-height: 1;
         }
 
         .banner-stat-value {
-            font-size: 14px !important;
+            font-size: 12px !important;
             font-weight: bold;
             color: var(--primary);
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             line-height: 1.2;
             text-shadow: 0 0 8px currentColor;
         }
 
         .banner-stat-label {
-            font-size: 10px !important;
+            font-size: 9px !important;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -1671,10 +1667,6 @@
                 grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             }
 
-            .defense-metrics {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-
             .right-column-module {
                 height: auto !important;
                 min-height: 287px;
@@ -1719,10 +1711,6 @@
                 min-width: 120px;
                 max-width: 140px;
                 margin: 5px;
-            }
-
-            .defense-metrics {
-                grid-template-columns: repeat(2, 1fr);
             }
 
             .soc-intelligence-grid {
@@ -2022,73 +2010,6 @@
             </div>
         </div>
 
-        <!-- Cyber Defense Operations Module - REPLACING Combined Performance -->
-        <div class="cyber-defense-module">
-            <div class="defense-header">
-                <h2 class="defense-title">
-                    <span class="defense-icon">⚔️</span>
-                    <span>Cyber Defense Operations</span>
-                </h2>
-                <div class="defense-threat-level" id="defenseLevel">THREAT LEVEL: ELEVATED</div>
-            </div>
-            <div class="defense-metrics">
-                <div class="defense-metric-card" onclick="showDefenseDetails('threats')">
-                    <div class="defense-metric-icon">🎯</div>
-                    <div class="defense-metric-value" id="activeThreats">7</div>
-                    <div class="defense-metric-label">Active Threats</div>
-                    <div class="defense-metric-trend trend-down">
-                        <span>↘</span>
-                        <span>-12% from peak</span>
-                    </div>
-                </div>
-                <div class="defense-metric-card" onclick="showDefenseDetails('attacks')">
-                    <div class="defense-metric-icon">🛡️</div>
-                    <div class="defense-metric-value" id="blockedAttacks">12.4K</div>
-                    <div class="defense-metric-label">Attacks Blocked</div>
-                    <div class="defense-metric-trend trend-up">
-                        <span>↗</span>
-                        <span>+15% today</span>
-                    </div>
-                </div>
-                <div class="defense-metric-card" onclick="showDefenseDetails('honeypots')">
-                    <div class="defense-metric-icon">🍯</div>
-                    <div class="defense-metric-value" id="activeHoneypots">8</div>
-                    <div class="defense-metric-label">Active Honeypots</div>
-                    <div class="defense-metric-trend trend-stable">
-                        <span>→</span>
-                        <span>124 interactions</span>
-                    </div>
-                </div>
-                <div class="defense-metric-card" onclick="showDefenseDetails('quarantine')">
-                    <div class="defense-metric-icon">🔒</div>
-                    <div class="defense-metric-value" id="quarantinedIPs">23</div>
-                    <div class="defense-metric-label">IPs Quarantined</div>
-                    <div class="defense-metric-trend trend-up">
-                        <span>↗</span>
-                        <span>+5 this hour</span>
-                    </div>
-                </div>
-                <div class="defense-metric-card" onclick="showDefenseDetails('playbooks')">
-                    <div class="defense-metric-icon">📋</div>
-                    <div class="defense-metric-value" id="playbooksExecuted">47</div>
-                    <div class="defense-metric-label">Playbooks Executed</div>
-                    <div class="defense-metric-trend trend-up">
-                        <span>↗</span>
-                        <span>Auto-response</span>
-                    </div>
-                </div>
-                <div class="defense-metric-card" onclick="showDefenseDetails('response')">
-                    <div class="defense-metric-icon">⚡</div>
-                    <div class="defense-metric-value" id="defenseResponseTime">0.3s</div>
-                    <div class="defense-metric-label">Response Time</div>
-                    <div class="defense-metric-trend trend-stable">
-                        <span>→</span>
-                        <span>Optimal</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
@@ -2220,9 +2141,6 @@
                     <span>•</span>
                     <span>Autonomous Cyber Defense Platform</span>
                 </div>
-                <div class="footer-version">
-                    v3.4 Banner-Balance
-                </div>
             </div>
         </footer>
     </div>
@@ -2290,10 +2208,7 @@
             responseTime: '0.3s',
             activeThreats: 7,
             blockedAttacks: '12.4K',
-            subAgentCount: 10,
-            activeHoneypots: 8,
-            quarantinedIPs: 23,
-            playbooksExecuted: 47
+            subAgentCount: 10
         };
 
         // Dashboard page initialization with STAGGERED LOADING
@@ -2391,11 +2306,7 @@
                 bannerResponseTime: DashboardData.responseTime,
                 subAgentCountCard: DashboardData.subAgentCount,
                 activeThreats: DashboardData.activeThreats,
-                blockedAttacks: DashboardData.blockedAttacks,
-                activeHoneypots: DashboardData.activeHoneypots,
-                quarantinedIPs: DashboardData.quarantinedIPs,
-                playbooksExecuted: DashboardData.playbooksExecuted,
-                defenseResponseTime: DashboardData.responseTime
+                blockedAttacks: DashboardData.blockedAttacks
             };
 
             Object.entries(elements).forEach(([id, value]) => {
