@@ -37,6 +37,9 @@
             color: var(--text-primary);
             min-height: 100vh;
             height: 100vh;
+            /* Account for iOS Safari bottom bar */
+            min-height: calc(100vh - env(safe-area-inset-bottom));
+            height: calc(100vh - env(safe-area-inset-bottom));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -349,8 +352,11 @@
             padding: 20px 15px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             overflow-y: auto;
+            /* Improve iOS scrolling */
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
 
         /* Agent Status Badge - Desktop */
@@ -734,22 +740,34 @@
         /* TABLET AND MOBILE - VERTICAL LAYOUT */
         @media (max-width: 768px) {
             body {
-                padding: 8px;
+                padding: 5px;
+                /* Extra space for iOS Safari bottom bar */
+                height: calc(100vh - 80px);
+                min-height: calc(100vh - 80px);
             }
 
             .login-container {
                 grid-template-columns: 1fr;
                 max-width: 400px;
-                max-height: 95vh;
+                max-height: calc(100vh - 90px);
+                height: auto;
+                min-height: auto;
             }
 
             .brand-panel {
                 border-radius: 16px 16px 0 0;
-                padding: 15px 12px;
+                padding: 12px 10px;
+                flex-shrink: 0;
             }
 
             .form-panel {
-                padding: 15px 12px;
+                padding: 12px 10px;
+                justify-content: flex-start;
+                flex: 1;
+                min-height: 0;
+                /* Better iOS scrolling */
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
             }
 
             .sentinel-logo {
@@ -858,9 +876,12 @@
             }
 
             .twofa-container {
-                padding: 20px 15px;
+                padding: 15px 12px;
                 max-width: 380px;
-                max-height: 95vh;
+                max-height: calc(100vh - 90px);
+                /* Better mobile scrolling for 2FA */
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .twofa-icon {
@@ -903,20 +924,24 @@
         /* SMALL MOBILE */
         @media (max-width: 400px) {
             body {
-                padding: 5px;
+                padding: 3px;
+                /* Account for iOS Safari bottom bar on small screens */
+                height: calc(100vh - 90px);
+                min-height: calc(100vh - 90px);
             }
 
             .login-container {
                 max-width: 100%;
-                max-height: 98vh;
+                max-height: calc(100vh - 100px);
             }
 
             .brand-panel {
-                padding: 12px 10px;
+                padding: 10px 8px;
             }
 
             .form-panel {
-                padding: 12px 10px;
+                padding: 10px 8px;
+                gap: 6px;
             }
 
             .sentinel-logo {
@@ -1016,22 +1041,25 @@
         /* LANDSCAPE MOBILE */
         @media (max-height: 600px) and (orientation: landscape) {
             body {
-                padding: 5px;
+                padding: 3px;
+                /* Less height restriction in landscape */
+                height: calc(100vh - 40px);
+                min-height: calc(100vh - 40px);
             }
 
             .login-container {
                 grid-template-columns: 1fr 1fr;
                 max-width: 700px;
-                max-height: 95vh;
+                max-height: calc(100vh - 50px);
             }
 
             .brand-panel {
                 border-radius: 16px 0 0 16px;
-                padding: 15px 10px;
+                padding: 10px 8px;
             }
 
             .form-panel {
-                padding: 15px 10px;
+                padding: 10px 8px;
             }
 
             .sentinel-logo {
@@ -1112,21 +1140,39 @@
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
 
         ::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
         ::-webkit-scrollbar-thumb {
             background: var(--primary);
-            border-radius: 3px;
+            border-radius: 2px;
+            opacity: 0.7;
         }
 
         ::-webkit-scrollbar-thumb:hover {
             background: var(--secondary);
+            opacity: 1;
+        }
+
+        /* iOS Safari specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                /* Additional height adjustment for iOS Safari */
+                height: calc(100vh - env(safe-area-inset-bottom) - 60px);
+                min-height: calc(100vh - env(safe-area-inset-bottom) - 60px);
+            }
+            
+            @media (max-width: 768px) {
+                body {
+                    height: calc(100vh - env(safe-area-inset-bottom) - 100px);
+                    min-height: calc(100vh - env(safe-area-inset-bottom) - 100px);
+                }
+            }
         }
     </style>
 </head>
