@@ -1,0 +1,3021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | AI Sentinel-X</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --accent: #7c3aed;
+            --danger: #ff0044;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060912;
+            --bg-card: rgba(10, 20, 40, 0.8);
+            --border: rgba(0, 255, 136, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #00ccff 100%);
+            --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Consolas', 'Monaco', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            /* Account for iOS Safari bottom bar */
+            min-height: calc(100vh - env(safe-area-inset-bottom));
+            height: calc(100vh - env(safe-area-inset-bottom));
+        }
+
+        /* Neural Network Background Canvas */
+        #neuralCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px 15px 20px 20px;
+            padding: 25px 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* Logo */
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-shield {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            animation: shieldPulse 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .logo-eye {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-iris {
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+
+        .rotating-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate 12s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 4px var(--primary);
+        }
+
+        .dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+        .dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
+        .dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Encryption Status Badge - Matching encryption.html style */
+        .encryption-badges {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .encryption-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .encryption-badge:hover {
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .status-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: statusPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .agent-status:hover {
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .agent-icon {
+            font-size: 20px;
+        }
+
+        .agent-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .agent-status-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 0, 68, 0.3);
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: var(--danger);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 68, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--border);
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            font-weight: bold;
+        }
+
+        /* System Status Banner - IMPROVED CENTERING */
+        .system-status-banner {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px 20px !important;
+            margin-bottom: 25px !important;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            min-height: 90px !important;
+            max-height: 90px !important;
+            flex-wrap: wrap;
+        }
+
+        .system-status-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            animation: bannerScan 8s linear infinite;
+        }
+
+        @keyframes bannerScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .banner-stat {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px 18px !important;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            height: 70px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 140px;
+            flex: 1;
+            max-width: 180px;
+        }
+
+        .banner-stat:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.4);
+        }
+
+        .banner-stat-icon {
+            font-size: 20px !important;
+            margin-bottom: 4px !important;
+            filter: drop-shadow(0 0 6px currentColor);
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .banner-stat-value {
+            font-size: 14px !important;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 2px;
+            line-height: 1.2;
+            text-shadow: 0 0 8px currentColor;
+        }
+
+        .banner-stat-label {
+            font-size: 10px !important;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* AI Agent Command Center */
+        .agent-command-center {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .command-center-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .command-center-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Agent Card */
+        .main-agent-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.03) 0%, rgba(0, 204, 255, 0.02) 100%);
+            border: 1px solid var(--primary);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-agent-card:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(0, 204, 255, 0.03) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 136, 0.15);
+        }
+
+        .main-agent-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .main-agent-icon {
+            font-size: 48px;
+            filter: drop-shadow(0 0 6px var(--primary));
+        }
+
+        .main-agent-info {
+            flex: 1;
+        }
+
+        .main-agent-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .main-agent-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .main-agent-stats {
+            display: flex;
+            gap: 25px;
+        }
+
+        .agent-stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Sub-Agents Section */
+        .sub-agents-header {
+            margin: 25px 0 15px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sub-agents-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sub-agents-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .sub-agents-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .sub-agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .sub-agent-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 255, 136, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sub-agent-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .sub-agent-card-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sub-agent-card-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 0 5px currentColor);
+            min-width: 40px;
+        }
+
+        .sub-agent-card-info {
+            flex: 1;
+        }
+
+        .sub-agent-card-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .sub-agent-card-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .sub-agent-card-activity {
+            font-size: 11px;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .activity-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        .sub-agent-manage-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 10px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sub-agent-manage-btn:hover {
+            background: var(--primary);
+            color: var(--bg-darker);
+        }
+
+        /* Right Column Modules - FIXED HEIGHT */
+        .right-column-module {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            height: 552px !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-column-module::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.02) 0%, rgba(124, 58, 237, 0.01) 50%, rgba(0, 255, 136, 0.02) 100%);
+            animation: hqScan 10s linear infinite;
+        }
+
+        @keyframes hqScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 1;
+        }
+
+        .module-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .module-status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .module-status-indicator.online {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .module-status-indicator.warning {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .module-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        .module-content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            min-height: 0;
+        }
+
+        /* Global Network Updates */
+        .network-updates {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .network-update-item {
+            background: rgba(0, 204, 255, 0.05);
+            border: 1px solid rgba(0, 204, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid;
+            animation: updateSlideIn 0.5s ease;
+        }
+
+        @keyframes updateSlideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .network-update-item:hover {
+            background: rgba(0, 204, 255, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 204, 255, 0.15);
+        }
+
+        .network-update-item.system {
+            border-left-color: var(--secondary);
+        }
+
+        .network-update-item.security {
+            border-left-color: var(--success);
+        }
+
+        .network-update-item.warning {
+            border-left-color: var(--warning);
+        }
+
+        .network-update-item.info {
+            border-left-color: var(--accent);
+        }
+
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .update-title {
+            font-weight: bold;
+            color: var(--secondary);
+            font-size: 13px;
+        }
+
+        .update-timestamp {
+            font-size: 10px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .update-message {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .update-source {
+            font-size: 9px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .update-priority {
+            font-size: 8px;
+            padding: 2px 5px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .update-priority.high {
+            background: rgba(255, 0, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .update-priority.medium {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .update-priority.low {
+            background: rgba(0, 204, 255, 0.2);
+            color: var(--secondary);
+        }
+
+        /* SOC Intelligence Overview */
+        .soc-intelligence-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .soc-metric {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: fit-content;
+        }
+
+        .soc-metric:hover {
+            background: rgba(0, 255, 136, 0.05);
+            border-color: rgba(0, 255, 136, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .soc-metric-icon {
+            font-size: 20px;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+
+        .soc-metric-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 3px;
+        }
+
+        .soc-metric-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        /* Enhanced SOC Sub-sections */
+        .soc-subsections {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .soc-section {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 204, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .soc-section-header {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .soc-badge {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary);
+        }
+
+        /* Threat Trends Mini Chart */
+        .threat-trends {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 40px;
+            gap: 3px;
+            margin-bottom: 8px;
+        }
+
+        .trend-bar {
+            flex: 1;
+            background: var(--gradient-1);
+            border-radius: 2px 2px 0 0;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .trend-bar:hover {
+            opacity: 1;
+            transform: scaleY(1.1);
+        }
+
+        /* Alert List */
+        .alert-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            font-size: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .alert-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            color: var(--text-primary);
+        }
+
+        .alert-icon {
+            font-size: 12px;
+            filter: drop-shadow(0 0 3px currentColor);
+        }
+
+        .alert-time {
+            margin-left: auto;
+            font-size: 9px;
+            color: var(--text-secondary);
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feed-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .feed-item {
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s ease;
+            animation: feedSlide 0.3s ease;
+        }
+
+        @keyframes feedSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feed-item.warning {
+            background: rgba(255, 170, 0, 0.05);
+            border-left-color: var(--warning);
+        }
+
+        .feed-item.danger {
+            background: rgba(255, 0, 68, 0.05);
+            border-left-color: var(--danger);
+        }
+
+        .feed-item.encryption {
+            background: rgba(124, 58, 237, 0.05);
+            border-left-color: var(--accent);
+        }
+
+        .feed-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feed-message {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .feed-agent {
+            font-size: 11px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* Cyber Defense Operations Module - REPLACING Combined Performance */
+        .cyber-defense-module {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .cyber-defense-module::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 0, 68, 0.01) 0%, rgba(0, 255, 136, 0.01) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cyber-defense-module:hover::before {
+            opacity: 1;
+        }
+
+        .cyber-defense-module:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 0, 68, 0.2);
+        }
+
+        .defense-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 1;
+        }
+
+        .defense-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--danger);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .defense-icon {
+            font-size: 24px;
+            filter: drop-shadow(0 0 6px currentColor);
+        }
+
+        .defense-threat-level {
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .defense-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .defense-metric-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .defense-metric-card:hover {
+            background: rgba(255, 0, 68, 0.05);
+            border-color: rgba(255, 0, 68, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 0, 68, 0.2);
+        }
+
+        .defense-metric-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 6px currentColor);
+        }
+
+        .defense-metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--danger);
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .defense-metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .defense-metric-trend {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
+        }
+
+        .trend-stable {
+            color: var(--text-secondary);
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            border-radius: 20px 20px 0 0;
+            padding: 40px 30px 30px;
+            margin-top: 50px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.02), transparent);
+            animation: footerScan 15s linear infinite;
+        }
+
+        @keyframes footerScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+            padding-left: 10px;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: var(--bg-darker);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .footer-bottom {
+            position: relative;
+            z-index: 1;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-version {
+            color: var(--accent);
+            font-size: 11px;
+            padding: 4px 8px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+        }
+
+        /* AI Chat Widget */
+        .ai-chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .ai-chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+            font-size: 28px;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .ai-chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .ai-chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 400px;
+            height: 500px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .ai-chat-window.active {
+            display: flex;
+            animation: chatSlideIn 0.3s ease;
+        }
+
+        @keyframes chatSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-chat-header {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ai-chat-close {
+            cursor: pointer;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-message {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-message-bubble {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .ai-message-bubble.user {
+            background: rgba(0, 204, 255, 0.1);
+            border-color: var(--secondary);
+            align-self: flex-end;
+        }
+
+        .ai-message-bubble.system {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--accent);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .ai-message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .ai-chat-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .ai-chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .ai-chat-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .ai-chat-send {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* CLI Mode Indicator */
+        .cli-mode-indicator {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--warning);
+            display: none;
+        }
+
+        .cli-mode-indicator.active {
+            display: block;
+        }
+
+        /* Agent Shutdown Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn-primary {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sub-agents-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .defense-metrics {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .right-column-module {
+                height: auto !important;
+                min-height: 287px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .encryption-badges {
+                order: -1;
+                justify-content: center;
+            }
+            
+            .nav-tabs {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .ai-chat-window {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 140px);
+                right: -20px;
+                bottom: 80px;
+            }
+
+            .sub-agents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .system-status-banner {
+                flex-wrap: wrap;
+                justify-content: center;
+                min-height: auto !important;
+                max-height: none !important;
+                padding: 20px 15px !important;
+            }
+
+            .banner-stat {
+                min-width: 120px;
+                max-width: 140px;
+                margin: 5px;
+            }
+
+            .defense-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .soc-intelligence-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* iOS Safari specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                /* Additional height adjustment for iOS Safari */
+                height: calc(100vh - env(safe-area-inset-bottom) - 60px);
+                min-height: calc(100vh - env(safe-area-inset-bottom) - 60px);
+            }
+            
+            @media (max-width: 768px) {
+                body {
+                    height: calc(100vh - env(safe-area-inset-bottom) - 100px);
+                    min-height: calc(100vh - env(safe-area-inset-bottom) - 100px);
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Check authentication
+        const auth = localStorage.getItem('sentinel_auth');
+        if (!auth) {
+            window.location.href = 'index.html';
+        } else {
+            const authData = JSON.parse(auth);
+            if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
+                localStorage.removeItem('sentinel_auth');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+    <!-- Neural Network Background -->
+    <canvas id="neuralCanvas"></canvas>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="rotating-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="logo-shield">
+                            <div class="logo-eye">
+                                <div class="logo-iris"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="brand-name">AI SENTINEL-X</h1>
+                        <p class="brand-tagline">Autonomous Cyber Defense</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="encryption-badges">
+                        <div class="encryption-badge" onclick="showEncryptionStatus('hybrid')">
+                            <div class="status-light"></div>
+                            <span>HYBRID MODE ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="agent-status" onclick="showAgentShutdownModal()">
+                        <span class="agent-icon">🤖</span>
+                        <div class="agent-info">
+                            <span class="agent-title">AI Agent Active</span>
+                            <span class="agent-status-text" id="agentModeText">Autonomous with Manual Override</span>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <a href="#" class="nav-tab active">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="threats.html" class="nav-tab">
+                <span>🛡️</span>
+                <span>Threats</span>
+            </a>
+            <a href="network.html" class="nav-tab">
+                <span>🌐</span>
+                <span>Network</span>
+            </a>
+            <a href="defense.html" class="nav-tab">
+                <span>⚔️</span>
+                <span>Defense</span>
+            </a>
+            <a href="ai-engine.html" class="nav-tab">
+                <span>🧠</span>
+                <span>AI Engine</span>
+            </a>
+            <a href="encryption.html" class="nav-tab">
+                <span>🔐</span>
+                <span>Encryption</span>
+            </a>
+            <a href="analytics.html" class="nav-tab">
+                <span>📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="vpn.html" class="nav-tab">
+                <span>🔒</span>
+                <span>VPNMonitor</span>
+            </a>
+            <a href="settings.html" class="nav-tab">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- System Status Banner - IMPROVED CENTERING -->
+        <div class="system-status-banner">
+            <div class="banner-stat" onclick="showStatusDetails('devices')">
+                <div class="banner-stat-icon">🛡️</div>
+                <div class="banner-stat-value" id="bannerDeviceCount">247</div>
+                <div class="banner-stat-label">Devices Protected</div>
+            </div>
+            <div class="banner-stat" onclick="showStatusDetails('encryption')">
+                <div class="banner-stat-icon">🔐</div>
+                <div class="banner-stat-value">Hybrid Mode</div>
+                <div class="banner-stat-label">Encryption Active</div>
+            </div>
+            <div class="banner-stat" onclick="showStatusDetails('response')">
+                <div class="banner-stat-icon">⚡</div>
+                <div class="banner-stat-value" id="bannerResponseTime">0.3s</div>
+                <div class="banner-stat-label">Response Time</div>
+            </div>
+            <div class="banner-stat" onclick="showStatusDetails('vpn')">
+                <div class="banner-stat-icon">🔒</div>
+                <div class="banner-stat-value" id="bannerVpnCount">12</div>
+                <div class="banner-stat-label">VPN Connections</div>
+            </div>
+            <div class="banner-stat" onclick="showStatusDetails('updates')">
+                <div class="banner-stat-icon">📡</div>
+                <div class="banner-stat-value">Global Net</div>
+                <div class="banner-stat-label">Updates Sync</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- AI Agent Command Center -->
+                <div class="agent-command-center">
+                    <div class="command-center-header">
+                        <h2 class="command-center-title">AI Agent Command Center</h2>
+                        <span style="color: var(--text-secondary); font-size: 14px;">Orchestrating all operations</span>
+                    </div>
+                    
+                    <!-- Main Agent -->
+                    <div class="main-agent-card" onclick="showMainAgentDetails()">
+                        <div class="main-agent-content">
+                            <div class="main-agent-icon">🤖</div>
+                            <div class="main-agent-info">
+                                <div class="main-agent-name">Main Agent</div>
+                                <div class="main-agent-description">Central AI orchestrating all sub-agents and security operations with advanced encryption</div>
+                                <div class="main-agent-stats">
+                                    <div class="agent-stat">
+                                        <div class="stat-value" id="subAgentCountCard">10</div>
+                                        <div class="stat-label">Sub-Agents</div>
+                                    </div>
+                                    <div class="agent-stat">
+                                        <div class="stat-value" id="decisionsPerMin">2.4K</div>
+                                        <div class="stat-label">Decisions/Min</div>
+                                    </div>
+                                    <div class="agent-stat">
+                                        <div class="stat-value">99.8%</div>
+                                        <div class="stat-label">Accuracy</div>
+                                    </div>
+                                    <div class="agent-stat">
+                                        <div class="stat-value" id="systemUptimeCard">99.98%</div>
+                                        <div class="stat-label">Uptime</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sub-Agents Section Header -->
+                    <div class="sub-agents-header">
+                        <div class="sub-agents-title">
+                            <span>🔗</span>
+                            <span>Sub-Agent Network</span>
+                        </div>
+                        <div class="sub-agents-subtitle">Specialized AI modules coordinated by Main Agent • VPNMonitor and encryption specialists active</div>
+                    </div>
+                    
+                    <!-- Sub-Agents Grid with Scrollable Container -->
+                    <div class="sub-agents-container">
+                        <div class="sub-agents-grid" id="subAgentsGrid">
+                            <!-- Sub-agents will be populated by JavaScript from shared.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Activity Feed -->
+                <div class="activity-feed">
+                    <div class="feed-header">
+                        <h2 class="feed-title">
+                            <span>📈</span>
+                            <span>System Activity Feed</span>
+                        </h2>
+                        <div class="live-indicator">
+                            <div class="live-dot"></div>
+                            <span>LIVE</span>
+                        </div>
+                    </div>
+                    <div class="feed-content" id="dashboardActivityFeed">
+                        <!-- Feed items will be populated by ActivityFeedManager -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Global Network Updates Module - BALANCED HEIGHT -->
+                <div class="right-column-module">
+                    <div class="module-header">
+                        <h2 class="module-title">
+                            <span>📡</span>
+                            <span>Global Network Updates</span>
+                        </h2>
+                        <div class="module-status-indicator online" id="networkStatus">
+                            <div class="module-status-dot"></div>
+                            <span>LIVE FEED</span>
+                        </div>
+                    </div>
+                    <div class="module-content" id="networkContent">
+                        <div class="network-updates" id="networkUpdates">
+                            <!-- Updates will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOC Intelligence Overview Module - BALANCED HEIGHT -->
+                <div class="right-column-module">
+                    <div class="module-header">
+                        <h2 class="module-title">
+                            <span>🎯</span>
+                            <span>SOC Intelligence Overview</span>
+                        </h2>
+                        <div class="module-status-indicator online">
+                            <div class="module-status-dot"></div>
+                            <span>ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="module-content">
+                        <div class="soc-intelligence-grid" id="socIntelligenceGrid">
+                            <!-- SOC metrics will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cyber Defense Operations Module - REPLACING Combined Performance -->
+        <div class="cyber-defense-module">
+            <div class="defense-header">
+                <h2 class="defense-title">
+                    <span class="defense-icon">⚔️</span>
+                    <span>Cyber Defense Operations</span>
+                </h2>
+                <div class="defense-threat-level" id="defenseLevel">THREAT LEVEL: ELEVATED</div>
+            </div>
+            <div class="defense-metrics">
+                <div class="defense-metric-card" onclick="showDefenseDetails('threats')">
+                    <div class="defense-metric-icon">🎯</div>
+                    <div class="defense-metric-value" id="activeThreats">7</div>
+                    <div class="defense-metric-label">Active Threats</div>
+                    <div class="defense-metric-trend trend-down">
+                        <span>↘</span>
+                        <span>-12% from peak</span>
+                    </div>
+                </div>
+                <div class="defense-metric-card" onclick="showDefenseDetails('attacks')">
+                    <div class="defense-metric-icon">🛡️</div>
+                    <div class="defense-metric-value" id="blockedAttacks">12.4K</div>
+                    <div class="defense-metric-label">Attacks Blocked</div>
+                    <div class="defense-metric-trend trend-up">
+                        <span>↗</span>
+                        <span>+15% today</span>
+                    </div>
+                </div>
+                <div class="defense-metric-card" onclick="showDefenseDetails('honeypots')">
+                    <div class="defense-metric-icon">🍯</div>
+                    <div class="defense-metric-value" id="activeHoneypots">8</div>
+                    <div class="defense-metric-label">Active Honeypots</div>
+                    <div class="defense-metric-trend trend-stable">
+                        <span>→</span>
+                        <span>124 interactions</span>
+                    </div>
+                </div>
+                <div class="defense-metric-card" onclick="showDefenseDetails('quarantine')">
+                    <div class="defense-metric-icon">🔒</div>
+                    <div class="defense-metric-value" id="quarantinedIPs">23</div>
+                    <div class="defense-metric-label">IPs Quarantined</div>
+                    <div class="defense-metric-trend trend-up">
+                        <span>↗</span>
+                        <span>+5 this hour</span>
+                    </div>
+                </div>
+                <div class="defense-metric-card" onclick="showDefenseDetails('playbooks')">
+                    <div class="defense-metric-icon">📋</div>
+                    <div class="defense-metric-value" id="playbooksExecuted">47</div>
+                    <div class="defense-metric-label">Playbooks Executed</div>
+                    <div class="defense-metric-trend trend-up">
+                        <span>↗</span>
+                        <span>Auto-response</span>
+                    </div>
+                </div>
+                <div class="defense-metric-card" onclick="showDefenseDetails('response')">
+                    <div class="defense-metric-icon">⚡</div>
+                    <div class="defense-metric-value" id="defenseResponseTime">0.3s</div>
+                    <div class="defense-metric-label">Response Time</div>
+                    <div class="defense-metric-trend trend-stable">
+                        <span>→</span>
+                        <span>Optimal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <h3 class="footer-section-title">
+                        <span>🛡️</span>
+                        <span>AI Sentinel-X</span>
+                    </h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 15px;">
+                        Advanced AI-powered cybersecurity platform with autonomous threat detection, specialized sub-agents, and hybrid-resistant encryption protocols for enterprise-grade protection.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://twitter.com/aisentinelx" class="social-link" title="Twitter">
+                            <span>🐦</span>
+                        </a>
+                        <a href="https://linkedin.com/company/ai-sentinel-x" class="social-link" title="LinkedIn">
+                            <span>💼</span>
+                        </a>
+                        <a href="https://github.com/ai-sentinel-x" class="social-link" title="GitHub">
+                            <span>📱</span>
+                        </a>
+                        <a href="https://discord.gg/aisentinelx" class="social-link" title="Discord">
+                            <span>💬</span>
+                        </a>
+                        <a href="https://youtube.com/@aisentinelx" class="social-link" title="YouTube">
+                            <span>📺</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Support & Resources -->
+                <div class="footer-section">
+                    <h3 class="footer-section-title">
+                        <span>🎯</span>
+                        <span>Support & Resources</span>
+                    </h3>
+                    <a href="mailto:support@ai-sentinel-x.com" class="footer-link">
+                        <span>📧</span>
+                        <span>Contact Support</span>
+                    </a>
+                    <a href="#" class="footer-link" onclick="openTicketSystem()">
+                        <span>🎫</span>
+                        <span>Submit Support Ticket</span>
+                    </a>
+                    <a href="https://docs.ai-sentinel-x.com" class="footer-link">
+                        <span>📚</span>
+                        <span>Documentation</span>
+                    </a>
+                    <a href="https://academy.ai-sentinel-x.com" class="footer-link">
+                        <span>🎓</span>
+                        <span>Training Academy</span>
+                    </a>
+                    <a href="https://community.ai-sentinel-x.com" class="footer-link">
+                        <span>👥</span>
+                        <span>Community Forum</span>
+                    </a>
+                    <a href="https://status.ai-sentinel-x.com" class="footer-link">
+                        <span>📊</span>
+                        <span>System Status</span>
+                    </a>
+                </div>
+
+                <!-- Legal & Compliance -->
+                <div class="footer-section">
+                    <h3 class="footer-section-title">
+                        <span>⚖️</span>
+                        <span>Legal & Compliance</span>
+                    </h3>
+                    <a href="https://ai-sentinel-x.com/privacy" class="footer-link">
+                        <span>🔒</span>
+                        <span>Privacy Policy</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/terms" class="footer-link">
+                        <span>📄</span>
+                        <span>Terms of Service</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/security" class="footer-link">
+                        <span>🛡️</span>
+                        <span>Security Policy</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/compliance" class="footer-link">
+                        <span>✅</span>
+                        <span>Compliance Center</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/dpa" class="footer-link">
+                        <span>📋</span>
+                        <span>Data Processing Agreement</span>
+                    </a>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3 class="footer-section-title">
+                        <span>🔗</span>
+                        <span>Quick Links</span>
+                    </h3>
+                    <a href="https://ai-sentinel-x.com/pricing" class="footer-link">
+                        <span>💰</span>
+                        <span>Pricing Plans</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/demo" class="footer-link">
+                        <span>🎮</span>
+                        <span>Request Demo</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/partners" class="footer-link">
+                        <span>🤝</span>
+                        <span>Partner Program</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/careers" class="footer-link">
+                        <span>💼</span>
+                        <span>Careers</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/blog" class="footer-link">
+                        <span>📝</span>
+                        <span>Security Blog</span>
+                    </a>
+                    <a href="https://ai-sentinel-x.com/faq" class="footer-link">
+                        <span>❓</span>
+                        <span>FAQ</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <span>©</span>
+                    <span>2025 AI Sentinel-X. All rights reserved.</span>
+                    <span>•</span>
+                    <span>Autonomous Cyber Defense Platform</span>
+                </div>
+                <div class="footer-version">
+                    v3.4 Banner-Balance
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Agent Shutdown Modal -->
+    <div class="modal-overlay" id="agentShutdownModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">⚠️ Agent Control Toggle</h2>
+            </div>
+            <div class="modal-content">
+                Toggle autonomous mode? When paused, manual control remains available through the AI chat bot CLI. System will fallback to local control mode if external APIs are offline.
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" onclick="confirmAgentShutdown()">Toggle Agent Mode</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Widget -->
+    <div class="ai-chat-widget">
+        <div class="ai-chat-window" id="aiChatWindow">
+            <div class="ai-chat-header">
+                <div class="ai-chat-status">
+                    <span class="chat-status-dot"></span>
+                    <span>MAIN AGENT ONLINE</span>
+                </div>
+                <button class="ai-chat-close" onclick="toggleChat()">×</button>
+            </div>
+            <div class="cli-mode-indicator" id="cliModeIndicator">
+                ⚠️ CLI MODE - Main Agent Offline
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-message">
+                    <div class="ai-message-bubble">
+                        Welcome to AI Sentinel-X. I'm the Main Agent coordinating 10 sub-agents including VPNMonitor and encryption specialists. Global Network Updates sync active with real-time notifications from command center.
+                    </div>
+                    <div class="ai-message-time">Just now</div>
+                </div>
+            </div>
+            <div class="ai-chat-input-container">
+                <input 
+                    type="text" 
+                    class="ai-chat-input" 
+                    id="aiChatInput" 
+                    placeholder="Command the Main Agent"
+                    onkeypress="handleChatKeyPress(event)"
+                >
+                <button class="ai-chat-send" id="aiChatSend" onclick="sendChatMessage()">SEND</button>
+            </div>
+        </div>
+        <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Dashboard-specific state and configurations
+        let dashboardFeedId = 'dashboard-feed';
+
+        // Consistent data across dashboard
+        const DashboardData = {
+            deviceCount: 247,
+            vpnConnections: 12,
+            responseTime: '0.3s',
+            activeThreats: 7,
+            blockedAttacks: '12.4K',
+            subAgentCount: 10,
+            activeHoneypots: 8,
+            quarantinedIPs: 23,
+            playbooksExecuted: 47
+        };
+
+        // Dashboard page initialization with STAGGERED LOADING
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                initializeDashboard();
+            }, 100);
+        });
+
+        function initializeDashboard() {
+            // Initialize neural background first
+            if (typeof initNeuralBackground === 'function') {
+                initNeuralBackground();
+            }
+
+            // Initialize page context
+            if (typeof initializePageContext === 'function') {
+                initializePageContext();
+            }
+
+            // Sync numbers across all elements
+            syncDashboardNumbers();
+
+            // Initialize activity feed for dashboard with STAGGERED LOADING
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                // Initialize dashboard feed
+                activityFeedManager.initializeFeed(dashboardFeedId, 'dashboard');
+                activityFeedManager.setFeedContainer(dashboardFeedId, 'dashboardActivityFeed');
+                
+                // Add initial messages ONE AT A TIME with proper delays
+                setTimeout(() => {
+                    activityFeedManager.addMessage(dashboardFeedId, '🤖 Main Agent initialized with 10 sub-agents including VPNMonitor', '', 'Main Agent');
+                }, 800);
+                
+                setTimeout(() => {
+                    activityFeedManager.addMessage(dashboardFeedId, '🌐 NetworkMapper: 247 devices discovered and protected', '', 'NetworkMapper');
+                }, 1800);
+                
+                setTimeout(() => {
+                    activityFeedManager.addMessage(dashboardFeedId, '🔒 VPNMonitor: 12 active connections with hybrid encryption', '', 'VPNMonitor');
+                }, 2800);
+                
+                setTimeout(() => {
+                    activityFeedManager.addMessage(dashboardFeedId, '⚔️ DefenseOrchestrator: 8 honeypots active, 23 IPs quarantined', '', 'DefenseOrchestrator');
+                }, 3800);
+                
+                // Start auto-generation AFTER initial messages are loaded
+                setTimeout(() => {
+                    activityFeedManager.startAutoGeneration(dashboardFeedId, 7000);
+                }, 5000);
+            } else {
+                console.log('ActivityFeedManager not available yet, retrying...');
+                setTimeout(initializeDashboard, 200);
+                return;
+            }
+
+            // Initialize chat system
+            if (typeof SentinelChat !== 'undefined') {
+                window.sentinelChat = new SentinelChat();
+            }
+
+            // Populate sub-agents from shared.js
+            populateSubAgents();
+            
+            // Initialize Global Network Updates and SOC Intelligence with STAGGERED loading
+            initializeGlobalUpdates();
+            initializeSOCIntelligence();
+            
+            // Start periodic updates
+            setInterval(() => {
+                updateDashboardMetrics();
+            }, 3000);
+
+            // Update Network status indicators
+            setInterval(() => {
+                updateNetworkStatusIndicators();
+            }, 8000);
+
+            // Add new global updates periodically (staggered)
+            setInterval(() => {
+                addRandomGlobalUpdate();
+            }, 25000);
+
+            // Update SOC intelligence periodically
+            setInterval(() => {
+                updateSOCIntelligence();
+            }, 7000);
+        }
+
+        function syncDashboardNumbers() {
+            // Sync all numbers across the dashboard
+            const elements = {
+                bannerDeviceCount: DashboardData.deviceCount,
+                bannerVpnCount: DashboardData.vpnConnections,
+                bannerResponseTime: DashboardData.responseTime,
+                subAgentCountCard: DashboardData.subAgentCount,
+                activeThreats: DashboardData.activeThreats,
+                blockedAttacks: DashboardData.blockedAttacks,
+                activeHoneypots: DashboardData.activeHoneypots,
+                quarantinedIPs: DashboardData.quarantinedIPs,
+                playbooksExecuted: DashboardData.playbooksExecuted,
+                defenseResponseTime: DashboardData.responseTime
+            };
+
+            Object.entries(elements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = value;
+                }
+            });
+        }
+
+        function populateSubAgents() {
+            const grid = document.getElementById('subAgentsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+
+            // Get all sub-agents from shared.js SubAgentConfigs
+            if (typeof SubAgentConfigs !== 'undefined') {
+                Object.keys(SubAgentConfigs).forEach(agentKey => {
+                    const agent = SubAgentConfigs[agentKey];
+                    
+                    const card = document.createElement('div');
+                    card.className = 'sub-agent-card';
+                    card.onclick = () => window.location.href = agent.link;
+                    
+                    card.innerHTML = `
+                        <div class="sub-agent-manage-btn" onclick="event.stopPropagation(); manageAgent('${agentKey}')">Manage</div>
+                        <div class="sub-agent-card-content">
+                            <div class="sub-agent-card-icon">${agent.icon}</div>
+                            <div class="sub-agent-card-info">
+                                <div class="sub-agent-card-name">${agent.name}</div>
+                                <div class="sub-agent-card-description">${agent.description}</div>
+                                <div class="sub-agent-card-activity">
+                                    <span class="activity-dot"></span>
+                                    <span>${agent.activity}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+
+                // Update the sub-agent count in main agent card and banner
+                DashboardData.subAgentCount = Object.keys(SubAgentConfigs).length;
+                syncDashboardNumbers();
+            }
+        }
+
+        function initializeGlobalUpdates() {
+            const container = document.getElementById('networkUpdates');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            // Load more updates to fill the space better
+            const updates = [
+                {
+                    type: 'system',
+                    title: 'Global Fleet Update v2.3.1',
+                    message: 'Enhanced VPN monitoring deployed across all regions.',
+                    timestamp: '2 min ago',
+                    source: 'AI Sentinel HQ',
+                    priority: 'high'
+                },
+                {
+                    type: 'security',
+                    title: 'New Threat Signatures',
+                    message: 'Command center pushed 47 new signatures to global network.',
+                    timestamp: '15 min ago',
+                    source: 'Threat Intelligence',
+                    priority: 'medium'
+                },
+                {
+                    type: 'warning',
+                    title: 'Regional Alert - EMEA',
+                    message: 'Elevated threat activity detected. Enhanced monitoring active.',
+                    timestamp: '1h ago',
+                    source: 'Regional Control',
+                    priority: 'high'
+                },
+                {
+                    type: 'info',
+                    title: 'Performance Optimization',
+                    message: 'Hybrid encryption performance improved by 12%.',
+                    timestamp: '2h ago',
+                    source: 'Performance Team',
+                    priority: 'low'
+                },
+                {
+                    type: 'system',
+                    title: 'Certificate Renewal',
+                    message: 'Global certificate renewal completed for 2,847 agents.',
+                    timestamp: '3h ago',
+                    source: 'Certificate Authority',
+                    priority: 'medium'
+                }
+            ];
+
+            // Load updates with staggered timing
+            updates.forEach((update, index) => {
+                setTimeout(() => {
+                    const updateItem = document.createElement('div');
+                    updateItem.className = `network-update-item ${update.type}`;
+                    updateItem.onclick = () => openUpdateDetails(update);
+                    
+                    updateItem.innerHTML = `
+                        <div class="update-header">
+                            <div class="update-title">${update.title}</div>
+                            <div class="update-timestamp">${update.timestamp}</div>
+                        </div>
+                        <div class="update-message">${update.message}</div>
+                        <div class="update-source">
+                            <span>📡</span>
+                            <span>${update.source}</span>
+                            <div class="update-priority ${update.priority}">${update.priority}</div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(updateItem);
+                }, 300 + (index * 200));
+            });
+        }
+
+        function initializeSOCIntelligence() {
+            const container = document.getElementById('socIntelligenceGrid').parentElement;
+            if (!container) return;
+
+            // Clear and rebuild with enhanced content
+            container.innerHTML = `
+                <div class="soc-intelligence-grid" id="socIntelligenceGrid">
+                    <!-- Main metrics will be populated here -->
+                </div>
+                <div class="soc-subsections">
+                    <!-- Threat Trends Section -->
+                    <div class="soc-section">
+                        <div class="soc-section-header">
+                            <span>Threat Activity Trends</span>
+                            <span class="soc-badge">LAST 7 DAYS</span>
+                        </div>
+                        <div class="threat-trends" id="threatTrends">
+                            <!-- Trend bars will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Alerts Section -->
+                    <div class="soc-section">
+                        <div class="soc-section-header">
+                            <span>Critical Alerts</span>
+                            <span class="soc-badge" id="alertCount">4 NEW</span>
+                        </div>
+                        <div class="alert-list" id="alertList">
+                            <!-- Alerts will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const grid = document.getElementById('socIntelligenceGrid');
+            
+            // Main metrics
+            const socMetrics = [
+                {
+                    icon: '🎯',
+                    value: '99.7%',
+                    label: 'Detection Rate'
+                },
+                {
+                    icon: '⚡',
+                    value: DashboardData.responseTime,
+                    label: 'Response Time'
+                },
+                {
+                    icon: '🛡️',
+                    value: DashboardData.activeThreats,
+                    label: 'Active Incidents'
+                },
+                {
+                    icon: '🔍',
+                    value: '2.4M',
+                    label: 'Events/Hour'
+                }
+            ];
+
+            // Populate main metrics
+            socMetrics.forEach((metric, index) => {
+                setTimeout(() => {
+                    const metricDiv = document.createElement('div');
+                    metricDiv.className = 'soc-metric';
+                    metricDiv.onclick = () => showSOCMetricDetails(metric.label);
+                    metricDiv.innerHTML = `
+                        <div class="soc-metric-icon">${metric.icon}</div>
+                        <div class="soc-metric-value" id="soc-${index}">${metric.value}</div>
+                        <div class="soc-metric-label">${metric.label}</div>
+                    `;
+                    grid.appendChild(metricDiv);
+                }, 300 + (index * 150));
+            });
+
+            // Populate threat trends
+            const trendContainer = document.getElementById('threatTrends');
+            const trendData = [30, 45, 60, 40, 80, 65, 90]; // Sample trend data
+            
+            setTimeout(() => {
+                trendData.forEach((value, index) => {
+                    const bar = document.createElement('div');
+                    bar.className = 'trend-bar';
+                    bar.style.height = `${value}%`;
+                    bar.title = `Day ${index + 1}: ${Math.floor(value * 2.4)} threats`;
+                    bar.onclick = () => showTrendDetails(index + 1, value);
+                    trendContainer.appendChild(bar);
+                });
+            }, 1500);
+
+            // Populate recent alerts
+            const alertContainer = document.getElementById('alertList');
+            const alerts = [
+                { icon: '⚠️', text: 'Brute force attempt blocked', time: '2m ago' },
+                { icon: '🚨', text: 'Anomalous traffic pattern detected', time: '15m ago' },
+                { icon: '🔐', text: 'Certificate expiry warning', time: '1h ago' },
+                { icon: '🌍', text: 'Geo-location anomaly flagged', time: '2h ago' }
+            ];
+
+            alerts.forEach((alert, index) => {
+                setTimeout(() => {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert-item';
+                    alertDiv.onclick = () => showAlertDetails(alert);
+                    alertDiv.innerHTML = `
+                        <span class="alert-icon">${alert.icon}</span>
+                        <span>${alert.text}</span>
+                        <span class="alert-time">${alert.time}</span>
+                    `;
+                    alertContainer.appendChild(alertDiv);
+                }, 2000 + (index * 200));
+            });
+        }
+
+        function showTrendDetails(day, value) {
+            if (window.sentinelChat && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`SOC Intelligence: Day ${day} threat analysis - ${Math.floor(value * 2.4)} threats detected. Pattern analysis shows ${value > 70 ? 'elevated' : 'normal'} activity levels. ML correlation confidence: 98.7%.`, false);
+                }
+            }, 300);
+        }
+
+        function showAlertDetails(alert) {
+            if (window.sentinelChat && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`SOC Alert Details: ${alert.text} (${alert.time}). Automated response deployed. No manual intervention required. Alert correlation shows ${Math.random() > 0.5 ? 'isolated incident' : 'part of larger pattern'}.`, false);
+                }
+            }, 300);
+        }
+
+        function addRandomGlobalUpdate() {
+            const newUpdates = [
+                {
+                    type: 'system',
+                    title: 'Agent Health Check Complete',
+                    message: 'Global fleet health scan completed. 99.98% of agents reporting optimal status.',
+                    timestamp: 'Just now',
+                    source: 'Fleet Management',
+                    priority: 'low'
+                },
+                {
+                    type: 'security',
+                    title: 'Threat Pattern Analysis',
+                    message: 'Command center identified new attack vector targeting VPN infrastructure.',
+                    timestamp: 'Just now',
+                    source: 'Threat Research',
+                    priority: 'high'
+                },
+                {
+                    type: 'info',
+                    title: 'Network Latency Optimization',
+                    message: 'Global routing optimization deployed. Average response time improved by 15ms.',
+                    timestamp: 'Just now',
+                    source: 'Network Operations',
+                    priority: 'low'
+                }
+            ];
+
+            const container = document.getElementById('networkUpdates');
+            if (!container) return;
+
+            // Remove oldest update if we have 5 or more
+            if (container.children.length >= 5) {
+                container.removeChild(container.lastChild);
+            }
+
+            // Add new update at the top
+            const randomUpdate = newUpdates[Math.floor(Math.random() * newUpdates.length)];
+            const updateItem = document.createElement('div');
+            updateItem.className = `network-update-item ${randomUpdate.type}`;
+            updateItem.onclick = () => openUpdateDetails(randomUpdate);
+            
+            updateItem.innerHTML = `
+                <div class="update-header">
+                    <div class="update-title">${randomUpdate.title}</div>
+                    <div class="update-timestamp">${randomUpdate.timestamp}</div>
+                </div>
+                <div class="update-message">${randomUpdate.message}</div>
+                <div class="update-source">
+                    <span>📡</span>
+                    <span>${randomUpdate.source}</span>
+                    <div class="update-priority ${randomUpdate.priority}">${randomUpdate.priority}</div>
+                </div>
+            `;
+            
+            container.insertBefore(updateItem, container.firstChild);
+        }
+
+        function updateSOCIntelligence() {
+            // Occasionally update SOC metrics
+            if (Math.random() > 0.85) {
+                const threatElement = document.getElementById('soc-2');
+                if (threatElement) {
+                    const current = parseInt(threatElement.textContent);
+                    const newValue = Math.max(0, current + Math.floor(Math.random() * 3 - 1));
+                    threatElement.textContent = newValue;
+                    DashboardData.activeThreats = newValue;
+                    syncDashboardNumbers();
+                }
+            }
+        }
+
+        function updateDashboardMetrics() {
+            // Occasionally change threat count
+            if (Math.random() > 0.9) {
+                const current = DashboardData.activeThreats;
+                DashboardData.activeThreats = Math.max(0, current + Math.floor(Math.random() * 3 - 1));
+                syncDashboardNumbers();
+            }
+            
+            // Update blocked count
+            const blocked = parseFloat(DashboardData.blockedAttacks.replace('K', ''));
+            DashboardData.blockedAttacks = (blocked + 0.1).toFixed(1) + 'K';
+
+            // Update decisions per minute
+            const decisionsEl = document.getElementById('decisionsPerMin');
+            if (decisionsEl) {
+                const decisions = 2.3 + Math.random() * 0.3;
+                decisionsEl.textContent = decisions.toFixed(1) + 'K';
+            }
+
+            // Sync all numbers
+            syncDashboardNumbers();
+        }
+
+        function updateNetworkStatusIndicators() {
+            // Occasionally update Global Network status indicators
+            const indicators = document.querySelectorAll('.module-status-dot');
+            indicators.forEach(indicator => {
+                if (Math.random() > 0.95) {
+                    // Briefly show warning state
+                    indicator.style.backgroundColor = 'var(--warning)';
+                    setTimeout(() => {
+                        indicator.style.backgroundColor = 'currentColor';
+                    }, 2000);
+                }
+            });
+        }
+
+        function manageAgent(agentKey) {
+            if (typeof SubAgentConfigs !== 'undefined') {
+                const agent = SubAgentConfigs[agentKey];
+                if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                    window.sentinelChat.toggle();
+                }
+                setTimeout(() => {
+                    if (window.sentinelChat) {
+                        window.sentinelChat.addMessage(`Accessing ${agent.name} management interface...`, false, 'system');
+                        setTimeout(() => {
+                            window.sentinelChat.addMessage(`${agent.name}: ${agent.description}. Status: ${agent.status}. Use "help" for available commands.`, false);
+                        }, 800);
+                    }
+                }, 300);
+            }
+        }
+
+        function openUpdateDetails(update) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`Global Network Update Details:
+• Title: ${update.title}
+• Source: ${update.source}
+• Priority: ${update.priority.toUpperCase()}
+• Time: ${update.timestamp}
+• Message: ${update.message}
+• Impact: This update affects your agent's security posture and performance
+• Action Required: No manual intervention needed - updates applied automatically`, false);
+                }
+            }, 300);
+        }
+
+        function showSOCMetricDetails(metric) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    const details = {
+                        'Detection Rate': 'SOC Intelligence: 99.7% threat detection rate across all monitored assets. ML models continuously learning from global threat intelligence feeds.',
+                        'Response Time': `SOC Intelligence: Average ${DashboardData.responseTime} from initial event to threat identification. Sub-second detection enables rapid response.`,
+                        'Active Incidents': `SOC Intelligence: ${DashboardData.activeThreats} incidents currently under investigation. All contained with no business impact. Response teams engaged.`,
+                        'Events/Hour': 'SOC Intelligence: Processing 2.4M security events per hour. Advanced correlation reduces false positives by 94%.',
+                    };
+                    window.sentinelChat.addMessage(details[metric] || `SOC Intelligence: Detailed metrics for ${metric} available through analytics dashboard.`, false);
+                }
+            }, 300);
+        }
+
+        function showMainAgentDetails() {
+            if (typeof SentinelState !== 'undefined' && !SentinelState.chatOpen && window.sentinelChat) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`Main Agent: Central AI orchestrating ${DashboardData.subAgentCount} sub-agents including VPNMonitor and encryption specialists. Currently protecting ${DashboardData.deviceCount} devices with ${DashboardData.vpnConnections} VPN connections. ${DashboardData.activeThreats} active threats being monitored. All communications protected with hybrid encryption. Global Network Updates sync active with real-time notifications from AI Sentinel command center.`, false);
+                }
+            }, 300);
+        }
+
+        function showStatusDetails(type) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                let message = '';
+                switch(type) {
+                    case 'devices':
+                        message = `Main Agent: ${DashboardData.deviceCount} devices protected with comprehensive monitoring. NetworkMapper coordinates device discovery and security assessment.`;
+                        break;
+                    case 'encryption':
+                        message = 'EncryptionManager: Hybrid encryption mode active combining classical (AES-256, ChaCha20) and post-quantum (Kyber-1024, Dilithium-3) algorithms.';
+                        break;
+                    case 'response':
+                        message = `DefenseOrchestrator: Average ${DashboardData.responseTime} response time including threat detection, analysis, and automated mitigation deployment.`;
+                        break;
+                    case 'vpn':
+                        message = `VPNMonitor: ${DashboardData.vpnConnections} active VPN connections secured with hybrid key exchange. OpenVPN, WireGuard, and IPSec protocols monitored.`;
+                        break;
+                    case 'updates':
+                        message = 'Main Agent: Global Network Updates synchronization active. Real-time threat intelligence and system updates from AI Sentinel command center.';
+                        break;
+                }
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(message, false);
+                }
+            }, 300);
+        }
+
+        function showDefenseDetails(type) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                let message = '';
+                switch(type) {
+                    case 'threats':
+                        message = `DefenseOrchestrator: ${DashboardData.activeThreats} active threats under continuous monitoring. ML-powered analysis with ${DashboardData.responseTime} average response time. Threat level: ELEVATED due to recent attack patterns.`;
+                        break;
+                    case 'attacks':
+                        message = `DefenseOrchestrator: ${DashboardData.blockedAttacks} attacks blocked today with automated mitigation. 15% increase reflects enhanced detection capabilities and threat landscape evolution.`;
+                        break;
+                    case 'honeypots':
+                        message = `DefenseOrchestrator: ${DashboardData.activeHoneypots} honeypots actively monitoring for intrusion attempts. 124 interactions recorded, providing valuable threat intelligence for defensive posture.`;
+                        break;
+                    case 'quarantine':
+                        message = `DefenseOrchestrator: ${DashboardData.quarantinedIPs} IP addresses currently quarantined. Auto-isolation protocols activated based on behavioral analysis and threat correlation.`;
+                        break;
+                    case 'playbooks':
+                        message = `DefenseOrchestrator: ${DashboardData.playbooksExecuted} automated response playbooks executed. Auto-encrypt, threat response, and compliance verification actions deployed without manual intervention.`;
+                        break;
+                    case 'response':
+                        message = `DefenseOrchestrator: Maintaining optimal ${DashboardData.responseTime} response time for threat detection and mitigation deployment. Sub-second response ensures minimal impact window.`;
+                        break;
+                }
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(message, false);
+                }
+            }, 300);
+        }
+
+        function showEncryptionStatus(type) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`EncryptionManager: Hybrid encryption status - Advanced post-quantum algorithms (Kyber-1024, Dilithium-3, SPHINCS+) combined with proven classical encryption (AES-256-GCM, ChaCha20-Poly1305). All ${DashboardData.subAgentCount} sub-agents coordinating with quantum-resistant protection across ${DashboardData.deviceCount} devices and ${DashboardData.vpnConnections} VPN connections.`, false);
+                }
+            }, 300);
+        }
+
+        function openTicketSystem() {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('Support Ticket System: Our super admin panel includes an integrated ticket support system. You can submit tickets directly through the Main Agent interface. Please describe your issue and our support team will respond within 24 hours. For critical security issues, use priority escalation commands.', false, 'system');
+                }
+            }, 300);
+        }
+
+        // Cleanup activity feed on page unload
+        window.addEventListener('beforeunload', () => {
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                activityFeedManager.stopAutoGeneration(dashboardFeedId);
+            }
+        });
+
+        // Global functions for compatibility
+        window.toggleChat = () => {
+            if (window.sentinelChat) {
+                window.sentinelChat.toggle();
+            }
+        };
+        
+        window.sendChatMessage = () => {
+            const input = document.getElementById('aiChatInput');
+            if (input && input.value.trim() && window.sentinelChat) {
+                window.sentinelChat.sendMessage(input.value.trim());
+                input.value = '';
+            }
+        };
+        
+        window.handleChatKeyPress = (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        };
+        
+        window.showAgentShutdownModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'flex';
+        };
+        
+        window.closeModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'none';
+        };
+        
+        window.closeModalOnOverlay = (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        };
+        
+        window.confirmAgentShutdown = () => {
+            if (typeof SentinelState !== 'undefined') {
+                SentinelState.agentActive = !SentinelState.agentActive;
+                
+                // Update UI elements
+                const agentStatus = document.querySelector('.agent-status');
+                const agentTitle = document.querySelector('.agent-title');
+                const agentStatusText = document.querySelector('.agent-status-text');
+                
+                if (SentinelState.agentActive) {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
+                        agentStatus.style.borderColor = '#00ff88';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Active';
+                        agentTitle.style.color = 'var(--primary)';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Autonomous with Manual Override';
+                    }
+                    
+                    // Resume activity feed
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.startAutoGeneration(dashboardFeedId, 7000);
+                    }
+                } else {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
+                        agentStatus.style.borderColor = '#ffaa00';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Paused';
+                        agentTitle.style.color = '#ffaa00';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Manual Control Only';
+                    }
+                    
+                    // Pause activity feed
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.stopAutoGeneration(dashboardFeedId);
+                    }
+                }
+                
+                closeModal();
+                
+                if (SentinelState.chatOpen && window.sentinelChat) {
+                    const status = SentinelState.agentActive ? 'resumed autonomous operation' : 'switched to manual control mode';
+                    window.sentinelChat.addMessage(`⚠️ Main Agent has ${status}. CLI mode available if external connections fail. Global Network Updates sync ${SentinelState.agentActive ? 'maintained' : 'reduced'}.`, false, 'system');
+                }
+            }
+        };
+        
+        window.handleLogout = () => {
+            if (confirm('Are you sure you want to logout? The AI agent will continue protecting your network autonomously with Global Network Updates oversight.')) {
+                localStorage.removeItem('sentinel_auth');
+                localStorage.removeItem('sentinel_scale');
+                window.location.href = 'index.html';
+            }
+        };
+    </script>
+</body>
+</html>
