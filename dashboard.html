@@ -326,7 +326,7 @@
             font-weight: bold;
         }
 
-        /* System Status Banner - FIXED SIZING FROM SHARED.JS */
+        /* System Status Banner - PERFECT CENTERING */
         .system-status-banner {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -338,10 +338,9 @@
             position: relative;
             overflow: hidden;
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
+            gap: 0;
             min-height: 90px !important;
             max-height: 90px !important;
         }
@@ -366,7 +365,7 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            padding: 5px 12px !important;
+            padding: 5px 8px !important;
             border-radius: 8px;
             position: relative;
             z-index: 1;
@@ -378,6 +377,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            flex: 1;
+            margin: 0 8px;
         }
 
         .banner-stat:hover {
@@ -1256,7 +1257,7 @@
             border-top: 1px solid var(--border);
             border-radius: 20px 20px 0 0;
             padding: 40px 30px 30px;
-            margin-top: 50px;
+            margin-top: 30px;
             backdrop-filter: blur(15px);
             box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
             position: relative;
