@@ -39,7 +39,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 15px;
             overflow-x: hidden;
             position: relative;
         }
@@ -110,18 +110,16 @@
             }
         }
 
-        /* Login Container - OPTIMIZED HEIGHT */
+        /* Login Container - PROPERLY COMPACT */
         .login-container {
             position: relative;
             z-index: 1;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 20px 25px;
+            padding: 16px 20px;
             width: 100%;
-            max-width: 450px;
-            max-height: 95vh;
-            overflow-y: auto;
+            max-width: 420px;
             backdrop-filter: blur(20px);
             box-shadow: 
                 0 25px 50px rgba(0, 0, 0, 0.5),
@@ -163,17 +161,17 @@
             }
         }
 
-        /* Enhanced Logo - COMPACT */
+        /* Enhanced Logo - ULTRA COMPACT */
         .logo-section {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             position: relative;
         }
 
         .sentinel-logo {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 10px;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 8px;
             position: relative;
             display: flex;
             align-items: center;
@@ -188,8 +186,8 @@
             position: relative;
             animation: shieldPulse 3s ease-in-out infinite;
             box-shadow: 
-                0 0 30px rgba(0, 255, 136, 0.5),
-                inset 0 0 20px rgba(0, 255, 136, 0.3);
+                0 0 25px rgba(0, 255, 136, 0.5),
+                inset 0 0 15px rgba(0, 255, 136, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -197,10 +195,10 @@
 
         .logo-particles {
             position: absolute;
-            width: 130%;
-            height: 130%;
-            top: -15%;
-            left: -15%;
+            width: 120%;
+            height: 120%;
+            top: -10%;
+            left: -10%;
             pointer-events: none;
         }
 
@@ -230,21 +228,21 @@
 
         .logo-eye {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
             background: var(--bg-darker);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 
-                inset 0 0 20px rgba(0, 255, 136, 0.3),
-                0 0 15px rgba(0, 0, 0, 0.5);
+                inset 0 0 15px rgba(0, 255, 136, 0.3),
+                0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .logo-iris {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             background: var(--gradient-1);
             border-radius: 50%;
             position: relative;
@@ -254,62 +252,62 @@
             align-items: center;
             justify-content: center;
             box-shadow: 
-                0 0 20px rgba(0, 255, 136, 0.8),
-                inset 0 0 15px rgba(255, 255, 255, 0.2);
+                0 0 15px rgba(0, 255, 136, 0.8),
+                inset 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         .logo-iris::before {
             content: '';
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: var(--bg-darker);
             border-radius: 50%;
-            box-shadow: inset 0 0 8px rgba(0, 255, 136, 0.5);
+            box-shadow: inset 0 0 5px rgba(0, 255, 136, 0.5);
         }
 
         @keyframes shieldPulse {
             0%, 100% { 
                 transform: scale(1);
-                box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+                box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
             }
             50% { 
                 transform: scale(1.05);
-                box-shadow: 0 0 40px rgba(0, 255, 136, 0.8);
+                box-shadow: 0 0 35px rgba(0, 255, 136, 0.8);
             }
         }
 
         @keyframes irisGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
-            50% { box-shadow: 0 0 30px rgba(0, 204, 255, 0.8); }
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(0, 204, 255, 0.8); }
         }
 
         .login-title {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: bold;
             background: var(--gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: 2px;
-            margin-bottom: 4px;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            letter-spacing: 1.5px;
+            margin-bottom: 2px;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
         }
 
         .login-subtitle {
             color: var(--text-secondary);
-            font-size: 11px;
+            font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Agent Status Badge - COMPACT */
+        /* Agent Status Badge - ULTRA COMPACT */
         .agent-status-badge {
             background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(0, 255, 136, 0.1) 100%);
             border: 1px solid rgba(124, 58, 237, 0.5);
-            border-radius: 10px;
-            padding: 8px 12px;
-            margin: 12px 0;
+            border-radius: 8px;
+            padding: 6px 8px;
+            margin: 8px 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -334,67 +332,67 @@
         .agent-status-content {
             position: relative;
             z-index: 1;
-            font-size: 10px;
+            font-size: 8px;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            line-height: 1.3;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
         }
 
         .agent-status-title {
             color: var(--accent);
             font-weight: bold;
-            margin-bottom: 2px;
-            font-size: 11px;
+            margin-bottom: 1px;
+            font-size: 9px;
         }
 
-        /* Enhanced Form - COMPACT */
+        /* Enhanced Form - ULTRA COMPACT */
         .login-form {
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .input-group {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             position: relative;
         }
 
         .input-label {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 4px;
-            font-size: 11px;
+            gap: 5px;
+            margin-bottom: 3px;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             color: var(--text-secondary);
         }
 
         .input-icon {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
             background: rgba(0, 255, 136, 0.2);
-            border-radius: 4px;
+            border-radius: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            font-size: 9px;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
             animation: iconPulse 3s ease-in-out infinite;
         }
 
         @keyframes iconPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
-            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 136, 0.3); }
+            50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(0, 255, 136, 0.5); }
         }
 
         .input-field {
             width: 100%;
-            padding: 12px 14px;
+            padding: 10px 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             font-family: inherit;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
@@ -405,8 +403,8 @@
             border-color: var(--primary);
             background: rgba(0, 255, 136, 0.05);
             box-shadow: 
-                0 0 20px rgba(0, 255, 136, 0.3),
-                inset 0 0 15px rgba(0, 255, 136, 0.05);
+                0 0 15px rgba(0, 255, 136, 0.3),
+                inset 0 0 10px rgba(0, 255, 136, 0.05);
             transform: translateY(-1px);
         }
 
@@ -416,34 +414,34 @@
         }
 
         .input-description {
-            font-size: 9px;
+            font-size: 7px;
             color: var(--text-secondary);
-            margin-top: 3px;
-            margin-left: 24px;
-            opacity: 0.8;
-            line-height: 1.3;
+            margin-top: 2px;
+            margin-left: 19px;
+            opacity: 0.7;
+            line-height: 1.2;
         }
 
         /* Enhanced Login Button - COMPACT */
         .login-btn {
             width: 100%;
-            padding: 14px;
+            padding: 11px;
             background: var(--gradient-1);
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--bg-darker);
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            margin-top: 18px;
+            margin-top: 12px;
             box-shadow: 
-                0 4px 15px rgba(0, 255, 136, 0.3),
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
+                0 3px 12px rgba(0, 255, 136, 0.3),
+                inset 0 0 12px rgba(255, 255, 255, 0.1);
         }
 
         .login-btn::before {
@@ -464,8 +462,8 @@
         .login-btn:hover {
             transform: translateY(-2px);
             box-shadow: 
-                0 8px 25px rgba(0, 255, 136, 0.5),
-                inset 0 0 25px rgba(255, 255, 255, 0.2);
+                0 6px 20px rgba(0, 255, 136, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .login-btn:active {
@@ -474,98 +472,86 @@
 
         /* Enhanced Status Message - COMPACT */
         .status-message {
-            margin-top: 12px;
+            margin-top: 8px;
             text-align: center;
-            font-size: 11px;
-            min-height: 16px;
+            font-size: 9px;
+            min-height: 12px;
             color: var(--text-secondary);
             transition: all 0.3s ease;
         }
 
         .status-message.error {
             color: var(--danger);
-            text-shadow: 0 0 8px currentColor;
+            text-shadow: 0 0 6px currentColor;
         }
 
         .status-message.success {
             color: var(--success);
-            text-shadow: 0 0 8px currentColor;
+            text-shadow: 0 0 6px currentColor;
         }
 
-        /* Enhanced Demo Info - COMPACT */
+        /* Enhanced Demo Info - ULTRA COMPACT */
         .demo-info {
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
-            font-size: 10px;
+            font-size: 8px;
             color: var(--text-secondary);
         }
 
         .demo-info p {
-            margin-bottom: 6px;
-            line-height: 1.3;
+            margin-bottom: 4px;
+            line-height: 1.2;
         }
 
         .demo-credentials {
             background: rgba(0, 255, 136, 0.05);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 8px;
-            margin-top: 6px;
+            border-radius: 5px;
+            padding: 6px;
+            margin-top: 4px;
             font-family: 'Courier New', monospace;
             backdrop-filter: blur(10px);
             box-shadow: 
-                0 4px 15px rgba(0, 255, 136, 0.1),
-                inset 0 0 15px rgba(0, 255, 136, 0.02);
-            font-size: 10px;
-            line-height: 1.4;
+                0 3px 10px rgba(0, 255, 136, 0.1),
+                inset 0 0 10px rgba(0, 255, 136, 0.02);
+            font-size: 8px;
+            line-height: 1.3;
         }
 
         .demo-instructions {
             background: rgba(0, 204, 255, 0.05);
             border: 1px solid rgba(0, 204, 255, 0.3);
-            border-radius: 6px;
-            padding: 8px;
-            margin-top: 8px;
-            font-size: 9px;
-            line-height: 1.4;
+            border-radius: 5px;
+            padding: 6px;
+            margin-top: 6px;
+            font-size: 7px;
+            line-height: 1.3;
         }
 
         .demo-instructions strong {
             color: var(--secondary);
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 10px;
-        }
-
-        .demo-credentials-highlight {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.4);
-            border-radius: 4px;
-            padding: 4px 8px;
-            margin: 4px 0;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 10px;
+            letter-spacing: 0.5px;
+            font-size: 8px;
         }
 
         /* Enhanced Loading Animation */
         .loading {
             display: inline-block;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             border: 2px solid var(--bg-darker);
             border-radius: 50%;
             border-top-color: var(--bg-darker);
             border-right-color: rgba(255, 255, 255, 0.3);
             animation: quantumSpin 1s ease-in-out infinite;
             vertical-align: middle;
-            margin-right: 8px;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            margin-right: 6px;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
         @keyframes quantumSpin {
@@ -579,11 +565,9 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 25px;
+            padding: 20px;
             width: 100%;
-            max-width: 400px;
-            max-height: 95vh;
-            overflow-y: auto;
+            max-width: 380px;
             backdrop-filter: blur(20px);
             box-shadow: 
                 0 25px 50px rgba(0, 0, 0, 0.5),
@@ -594,42 +578,42 @@
         }
 
         .twofa-icon {
-            font-size: 36px;
-            margin-bottom: 15px;
+            font-size: 30px;
+            margin-bottom: 10px;
             animation: shieldPulse 3s ease-in-out infinite;
         }
 
         .twofa-title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             color: var(--primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
         }
 
         .twofa-subtitle {
             color: var(--text-secondary);
-            font-size: 12px;
-            margin-bottom: 20px;
-            line-height: 1.4;
+            font-size: 10px;
+            margin-bottom: 15px;
+            line-height: 1.3;
         }
 
         .twofa-input-container {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 6px;
+            margin-bottom: 15px;
         }
 
         .twofa-input {
-            width: 45px;
-            height: 50px;
+            width: 40px;
+            height: 45px;
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--text-primary);
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             text-align: center;
             transition: all 0.3s ease;
@@ -645,46 +629,46 @@
         .twofa-demo-note {
             background: rgba(0, 255, 136, 0.1);
             border: 1px solid var(--primary);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 12px;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 15px;
+            font-size: 10px;
         }
 
         .twofa-demo-code {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             color: var(--primary);
-            margin-top: 4px;
-            letter-spacing: 3px;
+            margin-top: 3px;
+            letter-spacing: 2px;
             font-family: 'Courier New', monospace;
         }
 
         .twofa-btn {
             width: 100%;
-            padding: 14px;
+            padding: 11px;
             background: var(--gradient-1);
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--bg-darker);
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
             box-shadow: 
-                0 4px 15px rgba(0, 255, 136, 0.3),
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
+                0 3px 12px rgba(0, 255, 136, 0.3),
+                inset 0 0 12px rgba(255, 255, 255, 0.1);
         }
 
         .twofa-btn:hover {
             transform: translateY(-2px);
             box-shadow: 
-                0 8px 25px rgba(0, 255, 136, 0.5),
-                inset 0 0 25px rgba(255, 255, 255, 0.2);
+                0 6px 20px rgba(0, 255, 136, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .twofa-btn:disabled {
@@ -696,133 +680,88 @@
         /* Mobile Responsive - OPTIMIZED */
         @media (max-width: 600px) {
             body {
-                padding: 8px;
+                padding: 10px;
             }
             
             .login-container {
-                padding: 18px 16px;
+                padding: 14px 16px;
                 border-radius: 12px;
-                max-height: 98vh;
             }
             
             .login-title {
-                font-size: 20px;
+                font-size: 16px;
             }
             
             .sentinel-logo {
-                width: 55px;
-                height: 55px;
+                width: 45px;
+                height: 45px;
             }
             
             .logo-eye {
-                width: 28px;
-                height: 28px;
+                width: 22px;
+                height: 22px;
             }
             
             .logo-iris {
-                width: 18px;
-                height: 18px;
+                width: 14px;
+                height: 14px;
             }
             
             .logo-iris::before {
-                width: 7px;
-                height: 7px;
+                width: 5px;
+                height: 5px;
             }
             
             .input-field {
-                padding: 11px 12px;
+                padding: 9px 10px;
                 font-size: 16px; /* Prevent zoom on iOS */
             }
             
             .login-btn {
-                padding: 13px;
-                font-size: 13px;
+                padding: 10px;
+                font-size: 11px;
             }
 
             .twofa-container {
-                padding: 20px 16px;
-                max-height: 98vh;
+                padding: 16px;
             }
 
             .twofa-input {
-                width: 40px;
-                height: 45px;
-                font-size: 18px;
-            }
-
-            .demo-info {
-                margin-top: 12px;
-                padding-top: 12px;
+                width: 35px;
+                height: 40px;
+                font-size: 16px;
             }
         }
 
         @media (max-width: 400px) {
             body {
-                padding: 5px;
+                padding: 8px;
             }
             
             .login-container {
-                padding: 15px 12px;
+                padding: 12px 14px;
             }
             
             .login-title {
-                font-size: 18px;
+                font-size: 14px;
                 letter-spacing: 1px;
             }
             
             .login-subtitle {
-                font-size: 10px;
+                font-size: 8px;
             }
             
             .input-label {
-                font-size: 10px;
+                font-size: 8px;
             }
             
             .demo-info {
-                font-size: 9px;
-            }
-            
-            .sentinel-logo {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .logo-eye {
-                width: 25px;
-                height: 25px;
-            }
-            
-            .logo-iris {
-                width: 16px;
-                height: 16px;
-            }
-
-            .agent-status-badge {
-                padding: 6px 8px;
-                margin: 8px 0;
-            }
-
-            .demo-instructions {
-                padding: 6px;
-                font-size: 8px;
-            }
-        }
-
-        /* Landscape Mobile - ULTRA COMPACT */
-        @media (max-height: 600px) and (orientation: landscape) {
-            body {
-                padding: 5px;
-            }
-            
-            .login-container {
-                padding: 12px 20px;
-                max-height: 98vh;
+                font-size: 7px;
             }
             
             .sentinel-logo {
                 width: 40px;
                 height: 40px;
-                margin-bottom: 6px;
             }
             
             .logo-eye {
@@ -831,32 +770,64 @@
             }
             
             .logo-iris {
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
+            }
+
+            .agent-status-badge {
+                padding: 4px 6px;
+                margin: 6px 0;
+            }
+        }
+
+        /* Landscape Mobile - MINIMAL SPACE */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+            
+            .login-container {
+                padding: 8px 16px;
+            }
+            
+            .sentinel-logo {
+                width: 35px;
+                height: 35px;
+                margin-bottom: 4px;
+            }
+            
+            .logo-eye {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .logo-iris {
+                width: 12px;
+                height: 12px;
             }
             
             .login-title {
-                font-size: 16px;
-                margin-bottom: 2px;
+                font-size: 14px;
+                margin-bottom: 1px;
             }
 
             .login-subtitle {
-                font-size: 9px;
+                font-size: 7px;
                 margin-bottom: 0;
             }
 
             .agent-status-badge {
-                padding: 5px 8px;
-                margin: 6px 0;
-                font-size: 9px;
+                padding: 3px 6px;
+                margin: 4px 0;
+                font-size: 7px;
             }
             
             .input-group {
-                margin-bottom: 8px;
+                margin-bottom: 5px;
             }
 
             .input-field {
-                padding: 8px 10px;
+                padding: 6px 8px;
             }
 
             .input-description {
@@ -864,13 +835,13 @@
             }
             
             .login-btn {
-                padding: 10px;
-                margin-top: 10px;
+                padding: 8px;
+                margin-top: 6px;
             }
             
             .demo-info {
-                margin-top: 8px;
-                padding-top: 8px;
+                margin-top: 6px;
+                padding-top: 6px;
             }
 
             .demo-instructions {
@@ -878,26 +849,8 @@
             }
 
             .demo-credentials {
-                padding: 6px;
-                font-size: 9px;
-            }
-        }
-
-        /* Short screens optimization */
-        @media (max-height: 700px) {
-            .login-container {
-                max-height: 95vh;
-                overflow-y: auto;
-            }
-            
-            .input-description {
-                font-size: 8px;
-                margin-top: 2px;
-            }
-            
-            .demo-instructions {
-                font-size: 8px;
-                padding: 6px;
+                padding: 4px;
+                font-size: 7px;
             }
         }
 
