@@ -37,29 +37,17 @@ const SentinelUtils = {
 
 // Initialize environment detection - BYPASS FOR DIRECT SCAN
 function initializeEnvironmentDetection() {
-    // Hide environment detection - go straight to scanning interface
+    console.log('Bypassing environment detection - going directly to scan interface');
+    
+    // Hide environment detection completely
     const envDetection = document.getElementById('environmentDetection');
     if (envDetection) {
         envDetection.style.display = 'none';
     }
     
-    // Auto-configure for business scale by default or use saved preference
-    const savedScale = localStorage.getItem('sentinel_scale');
-    if (savedScale && ScaleConfigs && ScaleConfigs[savedScale]) {
-        selectScale(savedScale, false);
-    } else {
-        // Default to business scale for immediate scanning
-        if (typeof ScaleConfigs !== 'undefined' && ScaleConfigs.business) {
-            selectScale('business', false);
-        } else {
-            // If ScaleConfigs not available, show basic scanning interface
-            showDirectScanInterface();
-        }
-    }
-}
-
-// Show direct scan interface without scale detection
-function showDirectScanInterface() {
+    // Show main sections immediately
+    showMainSections();
+    
     // Show sub-agent status
     const subAgentStatus = document.getElementById('subAgentStatus');
     if (subAgentStatus) {
@@ -73,8 +61,47 @@ function showDirectScanInterface() {
         populateScanningPanels();
     }
     
+    // Auto-configure for business scale by default
+    if (typeof ScaleConfigs !== 'undefined' && ScaleConfigs.business) {
+        selectScale('business', false);
+    } else {
+        // If ScaleConfigs not available, show basic scanning interface
+        showDirectScanInterface();
+    }
+}
+
+// Show direct scan interface without scale detection
+function showDirectScanInterface() {
+    console.log('Showing direct scan interface');
+    
+    // Show sub-agent status
+    const subAgentStatus = document.getElementById('subAgentStatus');
+    if (subAgentStatus) {
+        subAgentStatus.style.display = 'flex';
+    }
+    
+    // Show scanning sections immediately
+    const scanningSections = document.getElementById('scanningSections');
+    if (scanningSections) {
+        scanningSections.style.display = 'grid';
+        populateScanningPanels();
+    }
+    
+    // Show network overview and device discovery
+    showMainSections();
+    
     // Update scale indicator to show ready state
     updateScaleIndicatorForReady();
+    
+    // Initialize with sample data
+    initializeDataForScale('business', { 
+        text: 'READY',
+        className: 'scale-business',
+        icon: '🌐',
+        description: 'Network discovery ready • Dual-layer scanning • Reports to Main Agent'
+    });
+    
+    populateAllContent();
 }
 
 // Update scale indicator for ready state
@@ -90,34 +117,75 @@ function updateScaleIndicatorForReady() {
     }
 }
 
-// Bypass the auto-scan modal and go directly to configured interface
+// Enhanced Auto-scan function that shows scan results modal directly
 function startAutoScan() {
-    // Skip the scanning progress - this should not be shown on direct access
-    // Instead, if no scale is set, configure one
-    if (!currentScale) {
-        if (typeof ScaleConfigs !== 'undefined' && ScaleConfigs.business) {
-            selectScale('business', true);
-        } else {
-            showDirectScanInterface();
-        }
-        return;
+    console.log('Starting auto-scan process');
+    
+    // Disable the scan button and show scanning state
+    const autoScanBtn = document.getElementById('autoScanBtn');
+    if (autoScanBtn) {
+        autoScanBtn.disabled = true;
+        autoScanBtn.innerHTML = `
+            <span class="scan-icon">🔍</span>
+            <span class="scan-text">Scanning Network...</span>
+            <span class="scan-subtitle">Dual-Layer Discovery In Progress</span>
+        `;
     }
     
-    console.log('Network discovery already configured for:', currentScale);
-    
-    // Track scan access in chat
-    if (window.sentinelChat && SentinelState.chatOpen) {
-        sentinelChat.addMessage('🔍 NetworkMapper: Network discovery interface active. Ready for dual-layer scanning operations.', false, 'system');
+    // Show progress for user feedback
+    const scanProgress = document.getElementById('scanProgress');
+    if (scanProgress) {
+        scanProgress.style.display = 'block';
+        
+        const progressFill = scanProgress.querySelector('.progress-fill');
+        const progressText = scanProgress.querySelector('.progress-text');
+        
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 15 + 5;
+            if (progress > 95) progress = 95;
+            
+            if (progressFill) progressFill.style.width = progress + '%';
+            if (progressText) {
+                if (progress < 30) {
+                    progressText.textContent = 'Initializing external reconnaissance...';
+                } else if (progress < 60) {
+                    progressText.textContent = 'Deploying internal discovery agent...';
+                } else if (progress < 85) {
+                    progressText.textContent = 'Analyzing network topology...';
+                } else {
+                    progressText.textContent = 'Finalizing security assessment...';
+                }
+            }
+            
+            if (progress >= 95) {
+                clearInterval(progressInterval);
+                setTimeout(() => {
+                    completeAutoScan();
+                }, 1000);
+            }
+        }, 200);
+    } else {
+        // If no progress element, complete scan after delay
+        setTimeout(() => {
+            completeAutoScan();
+        }, 3000);
     }
-}
-            }, 1000);
-        }
-    }, 1000);
     
     // Track scan initiation in chat
     if (window.sentinelChat && SentinelState.chatOpen) {
         sentinelChat.addMessage('🔍 NetworkMapper: Dual-layer scan initiated. External reconnaissance via Shodan API and internal discovery via deployed agent. Coordinating with ThreatScanner and EncryptionDeployer...', false, 'system');
     }
+}
+
+function completeAutoScan() {
+    // Hide progress
+    const scanProgress = document.getElementById('scanProgress');
+    if (scanProgress) scanProgress.style.display = 'none';
+    
+    // Simulate network scan and show results
+    const recommendation = simulateNetworkScan();
+    showScanResults(recommendation);
 }
 
 function simulateNetworkScan() {
@@ -1474,27 +1542,14 @@ function resetToInitialState() {
    // Remove scale class from body
    document.body.className = '';
    
-   // Show environment detection
-   const envDetection = document.getElementById('environmentDetection');
-   if (envDetection) {
-       envDetection.style.display = 'block';
-   }
-   
-   // Update detection title for rescan context
-   const detectionTitle = document.querySelector('.detection-title');
-   const detectionDescription = document.querySelector('.detection-description');
-   
-   if (detectionTitle) {
-       detectionTitle.textContent = '🔄 Network Discovery Reset';
-   }
-   
-   if (detectionDescription) {
-       detectionDescription.textContent = 'AI Sentinel-X has reset the network discovery configuration. Please run the dual-layer scan to re-analyze your infrastructure and configure the optimal security solution.';
-   }
+   // Restart initialization instead of showing environment detection
+   setTimeout(() => {
+       initializeEnvironmentDetection();
+   }, 1000);
    
    // Add final chat message
    setTimeout(() => {
-       sentinelChat.addMessage('✅ Network discovery reset complete. Environment detection reinitialized. Please run the dual-layer scan to continue.', false, 'system');
+       sentinelChat.addMessage('✅ Network discovery reset complete. Restarting scan interface...', false, 'system');
    }, 500);
 }
 
