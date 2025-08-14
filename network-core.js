@@ -35,64 +35,81 @@ const SentinelUtils = {
     }
 };
 
-// Initialize environment detection
+// Initialize environment detection - BYPASS FOR DIRECT SCAN
 function initializeEnvironmentDetection() {
-    // Auto-detect based on stored preference or simulate detection
+    // Hide environment detection - go straight to scanning interface
+    const envDetection = document.getElementById('environmentDetection');
+    if (envDetection) {
+        envDetection.style.display = 'none';
+    }
+    
+    // Auto-configure for business scale by default or use saved preference
     const savedScale = localStorage.getItem('sentinel_scale');
-    if (savedScale && ScaleConfigs[savedScale]) {
+    if (savedScale && ScaleConfigs && ScaleConfigs[savedScale]) {
         selectScale(savedScale, false);
     } else {
-        // Show selection interface
-        const envDetection = document.getElementById('environmentDetection');
-        if (envDetection) {
-            envDetection.style.display = 'block';
+        // Default to business scale for immediate scanning
+        if (typeof ScaleConfigs !== 'undefined' && ScaleConfigs.business) {
+            selectScale('business', false);
+        } else {
+            // If ScaleConfigs not available, show basic scanning interface
+            showDirectScanInterface();
         }
     }
 }
 
-function startAutoScan() {
-    console.log('Starting enhanced auto scan...');
-    const autoScanBtn = document.getElementById('autoScanBtn');
-    const scanProgress = document.getElementById('scanProgress');
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
+// Show direct scan interface without scale detection
+function showDirectScanInterface() {
+    // Show sub-agent status
+    const subAgentStatus = document.getElementById('subAgentStatus');
+    if (subAgentStatus) {
+        subAgentStatus.style.display = 'flex';
+    }
     
-    if (!autoScanBtn || !scanProgress || !progressFill || !progressText) {
-        console.error('Missing scan elements');
+    // Show scanning sections immediately
+    const scanningSections = document.getElementById('scanningSections');
+    if (scanningSections) {
+        scanningSections.style.display = 'grid';
+        populateScanningPanels();
+    }
+    
+    // Update scale indicator to show ready state
+    updateScaleIndicatorForReady();
+}
+
+// Update scale indicator for ready state
+function updateScaleIndicatorForReady() {
+    const scaleIndicator = document.getElementById('scaleIndicator');
+    const scaleIcon = document.getElementById('scaleIcon');
+    const scaleText = document.getElementById('scaleText');
+    
+    if (scaleIndicator && scaleIcon && scaleText) {
+        scaleIndicator.className = 'scale-indicator scale-business';
+        scaleIcon.textContent = '🌐';
+        scaleText.textContent = 'READY';
+    }
+}
+
+// Bypass the auto-scan modal and go directly to configured interface
+function startAutoScan() {
+    // Skip the scanning progress - this should not be shown on direct access
+    // Instead, if no scale is set, configure one
+    if (!currentScale) {
+        if (typeof ScaleConfigs !== 'undefined' && ScaleConfigs.business) {
+            selectScale('business', true);
+        } else {
+            showDirectScanInterface();
+        }
         return;
     }
     
-    // Disable button and show progress
-    autoScanBtn.disabled = true;
-    scanProgress.style.display = 'block';
+    console.log('Network discovery already configured for:', currentScale);
     
-    // Enhanced scan steps for dual-layer scanning
-    const scanSteps = [
-        { progress: 10, text: "Initializing dual-layer scan..." },
-        { progress: 20, text: "Connecting to Shodan API for external scan..." },
-        { progress: 35, text: "Scanning public IP addresses..." },
-        { progress: 50, text: "Deploying internal agent..." },
-        { progress: 65, text: "Discovering internal network topology..." },
-        { progress: 80, text: "Analyzing security posture..." },
-        { progress: 90, text: "Correlating with threat intelligence..." },
-        { progress: 100, text: "Scan complete! Preparing recommendation..." }
-    ];
-    
-    let currentStep = 0;
-    
-    const interval = setInterval(() => {
-        if (currentStep < scanSteps.length) {
-            const step = scanSteps[currentStep];
-            progressFill.style.width = step.progress + '%';
-            progressText.textContent = step.text;
-            currentStep++;
-        } else {
-            clearInterval(interval);
-            
-            // Simulate scan results and recommendation
-            setTimeout(() => {
-                const recommendation = simulateNetworkScan();
-                showScanResults(recommendation);
+    // Track scan access in chat
+    if (window.sentinelChat && SentinelState.chatOpen) {
+        sentinelChat.addMessage('🔍 NetworkMapper: Network discovery interface active. Ready for dual-layer scanning operations.', false, 'system');
+    }
+}
             }, 1000);
         }
     }, 1000);
