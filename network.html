@@ -1,0 +1,3110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Discovery | AI Sentinel-X</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --accent: #7c3aed;
+            --danger: #ff0044;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060912;
+            --bg-card: rgba(10, 20, 40, 0.8);
+            --border: rgba(0, 255, 136, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #00ccff 100%);
+            --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
+            --gradient-network: linear-gradient(135deg, #00ccff 0%, #0066ff 100%);
+            --gradient-external: linear-gradient(135deg, #ff0044 0%, #ff6644 100%);
+            --gradient-internal: linear-gradient(135deg, #00ff88 0%, #00cc66 100%);
+            --gradient-datacenter: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            --gradient-business: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+            --gradient-hybrid: linear-gradient(135deg, #00ff88 0%, #7c3aed 50%, #00ccff 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Consolas', 'Monaco', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Neural Network Background Canvas */
+        #neuralCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-shield {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            animation: shieldPulse 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-eye {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-iris {
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+        }
+
+        .rotating-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--primary);
+        }
+
+        .dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+        .dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
+        .dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Scale Detection Indicator */
+        .scale-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .scale-individual {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .scale-business {
+            background: rgba(147, 51, 234, 0.1);
+            border-color: #9333ea;
+            color: #9333ea;
+        }
+
+        .scale-enterprise {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: #ff6b35;
+            color: #ff6b35;
+        }
+
+        /* Encryption Status Badges */
+        .encryption-badges {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .encryption-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .encryption-badge:hover {
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .status-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: statusPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .agent-status:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .agent-icon {
+            font-size: 20px;
+        }
+
+        .agent-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .agent-status-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 0, 68, 0.3);
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: var(--danger);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 68, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--border);
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            font-weight: bold;
+        }
+
+        /* Sub-Agent Status - NetworkMapper */
+        .sub-agent-status {
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.1) 0%, rgba(0, 255, 136, 0.05) 100%);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px 20px !important;
+            margin-bottom: 25px !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(15px);
+            min-height: 90px !important;
+            max-height: 90px !important;
+        }
+
+        .sub-agent-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .sub-agent-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(0, 204, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .sub-agent-details h3 {
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .sub-agent-details p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .sub-agent-metrics {
+            display: flex;
+            gap: 30px;
+            flex-shrink: 0;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px !important;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 3px;
+        }
+
+        .metric-label {
+            font-size: 12px !important;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* NEW: Encryption Gap Alert */
+        .encryption-gap-alert {
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.15) 0%, rgba(255, 68, 68, 0.1) 100%);
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            animation: alertPulse 3s ease-in-out infinite;
+            backdrop-filter: blur(15px);
+        }
+
+        .encryption-gap-alert.active {
+            display: flex;
+        }
+
+        @keyframes alertPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 170, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 170, 0, 0.6); }
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--warning);
+            margin-bottom: 8px;
+        }
+
+        .alert-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .alert-button {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .alert-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Enhanced Environment Detection */
+        .environment-detection {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+        }
+
+        .detection-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detection-description {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Auto-Scan Section */
+        .auto-scan-section {
+            margin-bottom: 40px;
+        }
+
+        .auto-scan-btn {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 20px;
+            padding: 20px 40px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+            min-width: 280px;
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .auto-scan-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 255, 136, 0.4);
+        }
+
+        .auto-scan-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .scan-icon {
+            font-size: 24px;
+        }
+
+        .scan-text {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scan-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Scan Progress */
+        .scan-progress {
+            margin-top: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            background: var(--gradient-1);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* IP Range Manager */
+        .ip-range-manager {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            display: none;
+        }
+
+        .ip-range-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ip-range-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ip-range-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .add-range-btn {
+            background: var(--gradient-datacenter);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+        }
+
+        .add-range-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .add-range-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .reset-config-btn {
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.1) 0%, rgba(0, 204, 255, 0.05) 100%);
+            border: 2px solid rgba(255, 170, 0, 0.4);
+            border-radius: 20px;
+            padding: 10px 20px;
+            color: var(--warning);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .reset-config-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.2) 0%, rgba(0, 204, 255, 0.1) 100%);
+            border-color: var(--warning);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 170, 0, 0.3);
+        }
+
+        .reset-config-btn .icon {
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .reset-config-btn:hover .icon {
+            transform: rotate(180deg);
+        }
+
+        /* IP Ranges Grid */
+        .ip-ranges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        /* Interactive Dashboard */
+        .dashboard-interactive {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            display: none;
+        }
+
+        .interactive-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .interactive-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Dual Layer Scanning - NEW FROM HYBRID DEMO */
+        .scanning-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .scan-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .scan-panel.external {
+            border-color: rgba(255, 0, 68, 0.3);
+        }
+
+        .scan-panel.internal {
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .scan-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .panel-title.external {
+            background: var(--gradient-external);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .panel-title.internal {
+            background: var(--gradient-internal);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .scan-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scan-status.active {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .scan-status.ready {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .scan-status.scanning {
+            background: rgba(0, 204, 255, 0.2);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        .scan-placeholder {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(255, 0, 68, 0.05) 0%, rgba(255, 68, 68, 0.02) 100%);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 0, 68, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .placeholder-content {
+            margin-bottom: 25px;
+        }
+
+        .placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.6;
+        }
+
+        .placeholder-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .placeholder-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .scan-network-btn {
+            background: var(--gradient-external);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .scan-network-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 68, 0.3);
+        }
+
+        .placeholder-stats {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            padding: 15px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .placeholder-stat {
+            text-align: center;
+        }
+
+        .placeholder-stat .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .placeholder-stat .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .scan-results {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 204, 255, 0.05) 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .result-value {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .service-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .service-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .service-details {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .service-encryption {
+            font-size: 11px;
+            color: var(--primary);
+        }
+
+        .service-status {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-secure {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .status-update {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .status-vulnerable {
+            background: rgba(255, 0, 68, 0.2);
+            color: var(--danger);
+        }
+
+        /* Network Overview */
+        .network-overview {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            display: none;
+        }
+
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .overview-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .overview-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .overview-card:hover {
+            background: rgba(0, 255, 136, 0.05);
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+        }
+
+        .overview-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .overview-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .overview-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Device Discovery */
+        .device-discovery {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            display: none;
+        }
+
+        .discovery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .discovery-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .device-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: deviceSlideIn 0.5s ease;
+        }
+
+        .device-card:hover {
+            background: rgba(0, 255, 136, 0.05);
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+        }
+
+        .device-card.new-device {
+            border-color: var(--secondary);
+            animation: newDeviceGlow 2s ease-in-out;
+        }
+
+        @keyframes deviceSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes newDeviceGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 204, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(0, 204, 255, 0.6); }
+        }
+
+        .device-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .device-icon {
+            font-size: 32px;
+        }
+
+        .device-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .device-ip {
+            font-size: 12px;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .device-services {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .device-ai-status {
+            font-size: 11px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .device-encryption {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Activity Feed - Using shared.js infrastructure */
+        .activity-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feed-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .feed-item {
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s ease;
+            animation: feedSlide 0.3s ease;
+        }
+
+        @keyframes feedSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feed-item.warning {
+            background: rgba(255, 170, 0, 0.05);
+            border-left-color: var(--warning);
+        }
+
+        .feed-item.danger {
+            background: rgba(255, 0, 68, 0.05);
+            border-left-color: var(--danger);
+        }
+
+        .feed-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feed-message {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .feed-agent {
+            font-size: 11px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* Checkout Section - NEW */
+        .checkout-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            display: none;
+            text-align: center;
+        }
+
+        .checkout-header {
+            margin-bottom: 30px;
+        }
+
+        .checkout-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .checkout-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .pricing-summary {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pricing-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .pricing-label {
+            color: var(--text-secondary);
+        }
+
+        .pricing-value {
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+
+        .checkout-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .checkout-btn {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 40px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .security-note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* IP Range Card Styling */
+        .ip-range-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(15px);
+        }
+
+        .ip-range-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+            border-color: var(--primary);
+        }
+
+        .range-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .range-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .range-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-warning {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .range-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .range-metrics {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+        }
+
+        .range-metric {
+            text-align: center;
+            flex: 1;
+        }
+
+        .range-metric-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .range-metric-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-overlay:not(.hidden) {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn-primary {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Modal Input Styles */
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* AI Chat Widget - Matching encryption.html style */
+        .ai-chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .ai-chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+            font-size: 28px;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .ai-chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .ai-chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 400px;
+            height: 500px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .ai-chat-window.active {
+            display: flex;
+            animation: chatSlideIn 0.3s ease;
+        }
+
+        @keyframes chatSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-chat-header {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ai-chat-close {
+            cursor: pointer;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .cli-mode-indicator {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--warning);
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .cli-mode-indicator.active {
+            display: block;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-message {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-message-bubble {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .ai-message-bubble.user {
+            background: rgba(0, 204, 255, 0.1);
+            border-color: var(--secondary);
+            align-self: flex-end;
+        }
+
+        .ai-message-bubble.system {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--accent);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .ai-message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .ai-chat-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .ai-chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .ai-chat-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .ai-chat-send {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: linear-gradient(135deg, rgba(10, 20, 40, 0.95) 0%, rgba(6, 9, 18, 0.98) 100%);
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+            backdrop-filter: blur(20px);
+        }
+
+        .footer-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 40px 20px 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr repeat(5, 1fr);
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary);
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .footer-brand i {
+            font-size: 32px;
+            color: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        .footer-brand span {
+            font-size: 24px;
+            font-weight: bold;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            color: var(--bg-darker);
+            transform: translateY(-2px);
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .contact-info i {
+            color: var(--primary);
+            width: 16px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding: 20px 0;
+        }
+
+        .footer-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-bottom p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .scanning-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .device-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-chat-window {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 140px);
+                right: -20px;
+                bottom: 80px;
+            }
+            
+            .ip-range-controls {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .reset-config-btn,
+            .add-range-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .range-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .range-metrics {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .sub-agent-metrics {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .sub-agent-status {
+                flex-direction: column;
+                text-align: center;
+                min-height: auto !important;
+                max-height: none !important;
+            }
+
+            .encryption-gap-alert {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+            
+            .footer-bottom-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Check authentication
+        const auth = localStorage.getItem('sentinel_auth');
+        if (!auth) {
+            window.location.href = 'index.html';
+        } else {
+            const authData = JSON.parse(auth);
+            if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
+                localStorage.removeItem('sentinel_auth');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+    <!-- Neural Network Background -->
+    <canvas id="neuralCanvas"></canvas>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="rotating-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="logo-shield">
+                            <div class="logo-eye">
+                                <div class="logo-iris"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="brand-name">AI SENTINEL-X</h1>
+                        <p class="brand-tagline">Autonomous Cyber Defense</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <!-- Adaptive Scale Indicator -->
+                    <div class="scale-indicator scale-individual" id="scaleIndicator">
+                        <span id="scaleIcon">🔍</span>
+                        <span id="scaleText">DETECTING</span>
+                    </div>
+                    
+                    <!-- Updated Encryption Badge -->
+                    <div class="encryption-badges">
+                        <div class="encryption-badge" onclick="showEncryptionStatus()">
+                            <div class="status-light"></div>
+                            <span>HYBRID MODE ACTIVE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="agent-status" onclick="showAgentShutdownModal()">
+                        <span class="agent-icon">🤖</span>
+                        <div class="agent-info">
+                            <span class="agent-title">AI Agent Active</span>
+                            <span class="agent-status-text" id="agentModeText">Adaptive Configuration</span>
+                        </div>
+                    </div>
+                    
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <a href="dashboard.html" class="nav-tab">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="threats.html" class="nav-tab">
+                <span>🛡️</span>
+                <span>Threats</span>
+            </a>
+            <a href="#" class="nav-tab active">
+                <span>🌐</span>
+                <span>Network</span>
+            </a>
+            <a href="defense.html" class="nav-tab">
+                <span>⚔️</span>
+                <span>Defense</span>
+            </a>
+            <a href="ai-engine.html" class="nav-tab">
+                <span>🧠</span>
+                <span>AI Engine</span>
+            </a>
+            <a href="encryption.html" class="nav-tab">
+                <span>🔐</span>
+                <span>Encryption</span>
+            </a>
+            <a href="analytics.html" class="nav-tab">
+                <span>📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="vpn.html" class="nav-tab">
+                <span>🔒</span>
+                <span>VPNMonitor</span>
+            </a>
+            <a href="settings.html" class="nav-tab">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- Sub-Agent Status Banner - VISIBLE ON LANDING -->
+        <div class="sub-agent-status" id="subAgentStatus">
+            <div class="sub-agent-info">
+                <div class="sub-agent-icon">🌐</div>
+                <div class="sub-agent-details">
+                    <h3 id="subAgentTitle">NetworkMapper Sub-Agent</h3>
+                    <p id="subAgentDescription">Adaptive network discovery • Scale detection • Reports to Main Agent</p>
+                </div>
+            </div>
+            <div class="sub-agent-metrics">
+                <div class="metric">
+                    <div class="metric-value" id="totalNetworks">-</div>
+                    <div class="metric-label" id="networksLabel">Scanning</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="discoveredDevices">-</div>
+                    <div class="metric-label">Detecting</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="openServices">-</div>
+                    <div class="metric-label">Services</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="newDevices">-</div>
+                    <div class="metric-label">New (24h)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW: Encryption Gap Alert (Hidden by default) -->
+        <div class="encryption-gap-alert" id="encryptionGapAlert">
+            <div class="alert-content">
+                <div class="alert-title">⚠️ Encryption Gaps Detected</div>
+                <div class="alert-description" id="gapDescription">3 devices are not encrypted and require immediate attention.</div>
+            </div>
+            <button class="alert-button" onclick="remediateEncryptionGaps()">Remediate Now</button>
+        </div>
+
+        <!-- Environment Detection with Auto-Scan -->
+        <div class="environment-detection" id="environmentDetection">
+            <div class="detection-title">🎯 Comprehensive Network Discovery</div>
+            <div class="detection-description">
+                AI Sentinel-X performs dual-layer network discovery using external reconnaissance (Shodan API) and internal agent scanning. Our autonomous system will map your entire infrastructure, identify vulnerabilities, and recommend the optimal security configuration based on your network size and complexity.
+            </div>
+            
+            <div class="auto-scan-section">
+                <button class="auto-scan-btn" onclick="startAutoScan()" id="autoScanBtn">
+                    <span class="scan-icon">🔍</span>
+                    <span class="scan-text">Start Network Discovery</span>
+                   <span class="scan-subtitle">External + Internal Dual-Layer Scan</span>
+               </button>
+               <div class="scan-progress" id="scanProgress" style="display: none;">
+                   <div class="progress-bar">
+                       <div class="progress-fill" id="progressFill"></div>
+                   </div>
+                   <div class="progress-text" id="progressText">Initializing dual-layer scan...</div>
+               </div>
+           </div>
+       </div>
+
+       <!-- IP Range Manager (Hidden until configured) -->
+       <div class="ip-range-manager" id="ipRangeManager" style="display: none;">
+           <div class="ip-range-header">
+               <h2 class="ip-range-title" id="ipRangeTitle">Network Range Management</h2>
+               <div class="ip-range-controls">
+                   <button class="add-range-btn" onclick="showAddRangeModal()" id="addRangeBtn">Add IP Range</button>
+                   <button class="reset-config-btn" onclick="showRescanModal()" title="Reset network discovery and reconfigure environment">
+                       <span class="icon">🔄</span>
+                       <span>Reset Configuration</span>
+                   </button>
+               </div>
+           </div>
+           
+           <div class="ip-ranges-grid" id="ipRangesGrid">
+               <!-- IP ranges will be populated here -->
+           </div>
+       </div>
+
+       <!-- Interactive Dashboard Section -->
+       <div class="dashboard-interactive" id="dashboardInteractive" style="display: none;">
+           <div class="interactive-header">
+               <h2 class="interactive-title" id="interactiveTitle">Network Discovery Dashboard</h2>
+               <div class="auto-scan-controls">
+                   <span style="color: var(--text-secondary); font-size: 14px;" id="scanDetails">Continuous Monitoring Active</span>
+                   <button class="reset-config-btn" onclick="showRescanModal()" title="Reset network discovery and reconfigure environment">
+                       <span class="icon">🔄</span>
+                       <span>Reset Configuration</span>
+                   </button>
+               </div>
+           </div>
+           <p style="color: var(--text-secondary); text-align: center; font-size: 14px; line-height: 1.6;" id="dashboardDescription">
+               🤖 <strong>Autonomous scanning active</strong> • Hybrid-resistant encryption • No manual intervention required
+           </p>
+       </div>
+
+       <!-- Dual Layer Scanning Sections -->
+       <div class="scanning-sections" id="scanningSections" style="display: none;">
+           <!-- External Scan Panel -->
+           <div class="scan-panel external">
+               <div class="panel-header">
+                   <h2 class="panel-title external">External Scan (Shodan)</h2>
+                   <div class="scan-status ready" id="externalScanStatus">
+                       <div class="status-dot"></div>
+                       <span>READY</span>
+                   </div>
+               </div>
+               
+               <!-- Initial State - API Key Required -->
+               <div class="scan-placeholder" id="externalPlaceholder">
+                   <div class="placeholder-content">
+                       <div class="placeholder-icon">🔍</div>
+                       <div class="placeholder-title">External Scan Ready</div>
+                       <div class="placeholder-description">Click below to configure Shodan.io API key for external reconnaissance</div>
+                       <button class="scan-network-btn" onclick="showShodanKeyModal()">
+                           <span>🌐</span>
+                           <span>Scan Network</span>
+                       </button>
+                   </div>
+                   <div class="placeholder-stats">
+                       <div class="placeholder-stat">
+                           <span class="stat-value">-</span>
+                           <span class="stat-label">Public IPs</span>
+                       </div>
+                       <div class="placeholder-stat">
+                           <span class="stat-value">-</span>
+                           <span class="stat-label">Open Ports</span>
+                       </div>
+                       <div class="placeholder-stat">
+                           <span class="stat-value">-</span>
+                           <span class="stat-label">Services</span>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Results State - Hidden Initially -->
+               <div class="scan-results hidden" id="externalResults">
+                   <div class="result-item">
+                       <span class="result-label">Organization</span>
+                       <span class="result-value" id="orgName">-</span>
+                   </div>
+                   <div class="result-item">
+                       <span class="result-label">ISP</span>
+                       <span class="result-value" id="ispName">-</span>
+                   </div>
+                   <div class="result-item">
+                       <span class="result-label">Location</span>
+                       <span class="result-value" id="location">-</span>
+                   </div>
+                   <div class="result-item">
+                       <span class="result-label">Open Ports</span>
+                       <span class="result-value" id="openPorts" style="color: var(--warning);">-</span>
+                   </div>
+                   <div class="result-item">
+                       <span class="result-label">Vulnerabilities</span>
+                       <span class="result-value" id="vulnCount" style="color: var(--danger);">-</span>
+                   </div>
+               </div>
+
+               <div class="service-list hidden" id="externalServicesList">
+                   <!-- External services will be populated here -->
+               </div>
+           </div>
+
+           <!-- Internal Scan Panel -->
+           <div class="scan-panel internal">
+               <div class="panel-header">
+                   <h2 class="panel-title internal">Internal Scan (Agent)</h2>
+                   <div class="scan-status active">
+                       <div class="status-dot"></div>
+                       <span>AUTO-DISCOVERING</span>
+                   </div>
+               </div>
+               
+               <div class="scan-results">
+                   <div class="result-item">
+                       <span class="result-label">Network Range</span>
+                       <span class="result-value" id="networkRange">192.168.1.0/24</span>
+                   </div>
+                   <div class="result-item">
+                       <span class="result-label">Active Hosts</span>
+                       <span class="result-value" id="activeHosts" style="color: var(--success);">246</span>
+                   </div>
+                   <div class="result-item">
+                       <span class="result-label">New Devices (24h)</span>
+                       <span class="result-value" id="newDevicesInternal" style="color: var(--secondary);">14</span>
+                   </div>
+                   <div class="result-item">
+                       <span class="result-label">Unpatched Systems</span>
+                       <span class="result-value" id="unpatchedSystems" style="color: var(--warning);">18</span>
+                   </div>
+                   <div class="result-item">
+                       <span class="result-label">AI Monitoring</span>
+                       <span class="result-value" style="color: var(--accent);">REAL-TIME</span>
+                   </div>
+               </div>
+
+               <div class="service-list" id="internalServicesList">
+                   <!-- Internal services will be populated here -->
+               </div>
+           </div>
+       </div>
+
+       <!-- Network Overview -->
+       <div class="network-overview" id="networkOverview" style="display: none;">
+           <div class="overview-header">
+               <h2 class="overview-title" id="overviewTitle">Network Overview</h2>
+           </div>
+           <div class="overview-grid" id="overviewGrid">
+               <!-- Overview cards will be populated here -->
+           </div>
+       </div>
+
+       <!-- Device Discovery -->
+       <div class="device-discovery" id="deviceDiscovery" style="display: none;">
+           <div class="discovery-header">
+               <h2 class="discovery-title" id="discoveryTitle">Device Discovery</h2>
+           </div>
+           <div class="device-grid" id="deviceGrid">
+               <!-- Device cards will be populated here -->
+           </div>
+       </div>
+
+       <!-- Network Activity Feed -->
+       <div class="activity-feed" id="networkActivityFeed" style="display: none;">
+           <div class="feed-header">
+               <h2 class="feed-title">
+                   <span>🌐</span>
+                   <span>Network Activity Feed</span>
+               </h2>
+               <div class="live-indicator">
+                   <div class="live-dot"></div>
+                   <span>LIVE</span>
+               </div>
+           </div>
+           <div class="feed-content" id="networkActivityFeedContent">
+               <!-- Feed items will be populated by ActivityFeedManager -->
+           </div>
+       </div>
+
+       <!-- Checkout Section -->
+       <div class="checkout-section" id="checkoutSection" style="display: none;">
+           <div class="checkout-header">
+               <h2 class="checkout-title">Complete Your Security Setup</h2>
+               <p class="checkout-subtitle">Your network scan is complete. Subscribe to activate AI Sentinel-X protection.</p>
+           </div>
+
+           <div class="pricing-summary" id="pricingSummary">
+               <!-- Pricing will be populated based on selected package -->
+           </div>
+
+           <div class="checkout-form">
+               <button class="checkout-btn" onclick="processCheckout()">
+                   <span>🔒</span>
+                   <span>Secure Checkout with Stripe</span>
+               </button>
+               <div class="security-note">
+                   <span>🛡️</span>
+                   <span>256-bit SSL encryption • PCI compliant • Instant activation</span>
+               </div>
+           </div>
+       </div>
+
+   </div>
+
+   <!-- Shodan API Key Modal -->
+   <div class="modal-overlay hidden" id="shodanKeyModal" onclick="closeModalOnOverlay(event)">
+       <div class="modal">
+           <div class="modal-header">
+               <h2 class="modal-title">🌐 Configure Shodan.io External Scanning</h2>
+           </div>
+           <div class="modal-content">
+               <p>To perform external reconnaissance scanning via Shodan.io, please enter your API key:</p>
+               <div class="input-group">
+                   <label for="shodanApiKey">Shodan.io API Key:</label>
+                   <input type="password" id="shodanApiKey" placeholder="Enter your Shodan API key" class="modal-input">
+                   <small style="color: var(--text-secondary); font-size: 12px; margin-top: 5px;">
+                       Don't have an API key? <a href="https://shodan.io" target="_blank" style="color: var(--primary);">Get one from Shodan.io</a>
+                   </small>
+               </div>
+               <div class="security-note" style="margin-top: 15px;">
+                   <span>🔒</span>
+                   <span style="font-size: 12px; color: var(--text-secondary);">Your API key is securely encrypted and never stored permanently</span>
+               </div>
+           </div>
+           <div class="modal-actions">
+               <button class="modal-btn modal-btn-primary" onclick="confirmShodanScan()">Start External Scan</button>
+               <button class="modal-btn modal-btn-secondary" onclick="closeShodanKeyModal()">Cancel</button>
+           </div>
+       </div>
+   </div>
+
+   <!-- Add Range Modal -->
+   <div class="modal-overlay" id="addRangeModal" onclick="closeModalOnOverlay(event)">
+       <div class="modal">
+           <div class="modal-header">
+               <h2 class="modal-title" id="addRangeModalTitle">🌐 Add IP Range</h2>
+           </div>
+           <div class="modal-content">
+               <div class="input-group">
+                   <label for="rangeName">Range Name:</label>
+                   <input type="text" id="rangeName" placeholder="e.g., Main Office" class="modal-input">
+               </div>
+               <div class="input-group">
+                   <label for="ipRange">IP Range (CIDR):</label>
+                   <input type="text" id="ipRange" placeholder="e.g., 192.168.1.0/24" class="modal-input">
+               </div>
+               <div class="input-group">
+                   <label for="location">Location:</label>
+                   <input type="text" id="location" placeholder="e.g., New York, US" class="modal-input">
+               </div>
+               <div class="input-group">
+                   <label for="organization">Organization:</label>
+                   <input type="text" id="organization" placeholder="e.g., Company ISP" class="modal-input">
+               </div>
+           </div>
+           <div class="modal-actions">
+               <button class="modal-btn modal-btn-primary" onclick="addIPRange()">Add Range</button>
+               <button class="modal-btn modal-btn-secondary" onclick="closeAddRangeModal()">Cancel</button>
+           </div>
+       </div>
+   </div>
+
+   <!-- Rescan Modal -->
+   <div class="modal-overlay" id="rescanModal" onclick="closeModalOnOverlay(event)">
+       <div class="modal">
+           <div class="modal-header">
+               <h2 class="modal-title">🔄 Reset Network Discovery</h2>
+           </div>
+           <div class="modal-content">
+               <p>This will reset the network discovery configuration and return you to the environment detection screen. All current network data will be cleared.</p>
+               <p><strong>Warning:</strong> This action cannot be undone. The AI agent will need to reconfigure your environment from scratch.</p>
+           </div>
+           <div class="modal-actions">
+               <button class="modal-btn modal-btn-primary" onclick="confirmRescan()">Reset Configuration</button>
+               <button class="modal-btn modal-btn-secondary" onclick="closeRescanModal()">Cancel</button>
+           </div>
+       </div>
+   </div>
+
+   <!-- Agent Shutdown Modal -->
+   <div class="modal-overlay" id="agentShutdownModal" onclick="closeModalOnOverlay(event)">
+       <div class="modal">
+           <div class="modal-header">
+               <h2 class="modal-title">⚠️ Agent Control Toggle</h2>
+           </div>
+           <div class="modal-content">
+               Toggle autonomous mode? When paused, manual control remains available through the AI chat bot CLI. System will fallback to local control mode if external APIs are offline.
+           </div>
+           <div class="modal-actions">
+               <button class="modal-btn modal-btn-primary" onclick="confirmAgentShutdown()">Toggle Agent Mode</button>
+               <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
+           </div>
+       </div>
+   </div>
+
+   <!-- AI Chat Widget -->
+   <div class="ai-chat-widget">
+       <div class="ai-chat-window" id="aiChatWindow">
+           <div class="ai-chat-header">
+               <div class="ai-chat-status">
+                   <span class="chat-status-dot"></span>
+                   <span>NETWORKMAPPER ONLINE</span>
+               </div>
+               <button class="ai-chat-close" onclick="toggleChat()">×</button>
+           </div>
+           <div class="cli-mode-indicator" id="cliModeIndicator">
+               ⚠️ CLI MODE - NetworkMapper Offline
+           </div>
+           <div class="ai-chat-messages" id="aiChatMessages">
+               <div class="ai-message">
+                   <div class="ai-message-bubble">
+                       Welcome to AI Sentinel-X V4 Network Discovery. I'm NetworkMapper, coordinating with ThreatScanner, EncryptionDeployer, and other sub-agents. I perform dual-layer scanning: external reconnaissance via Shodan API and internal discovery through our deployed agent. Ready to map your infrastructure comprehensively.
+                   </div>
+                   <div class="ai-message-time">Just now</div>
+               </div>
+           </div>
+           <div class="ai-chat-input-container">
+               <input 
+                   type="text" 
+                   class="ai-chat-input" 
+                   id="aiChatInput" 
+                   placeholder="Ask about network discovery, encryption gaps, or security configuration..."
+                   onkeypress="handleChatKeyPress(event)"
+               >
+               <button class="ai-chat-send" id="aiChatSend" onclick="sendChatMessage()">SEND</button>
+           </div>
+       </div>
+       <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
+   </div>
+
+   <footer class="footer">
+       <div class="footer-container">
+           <div class="footer-content">
+               <div class="footer-section">
+                   <div class="footer-brand">
+                       <i class="fas fa-shield-alt"></i>
+                       <span>AI SENTINEL-X</span>
+                   </div>
+                   <p>Advanced autonomous cyber defense platform for comprehensive threat detection and network analysis.</p>
+               </div>
+               
+               <div class="footer-section">
+                   <h4>Platform</h4>
+                   <ul>
+                       <li><a href="dashboard.html">Dashboard</a></li>
+                       <li><a href="network.html">Network Scanner</a></li>
+                       <li><a href="threats.html">Threat Analysis</a></li>
+                       <li><a href="defense.html">Defense Systems</a></li>
+                   </ul>
+               </div>
+               
+               <div class="footer-section">
+                   <h4>Security</h4>
+                   <ul>
+                       <li><a href="encryption.html">Hybrid Encryption</a></li>
+                       <li><a href="vpn.html">VPN Monitoring</a></li>
+                       <li><a href="#">Compliance</a></li>
+                       <li><a href="#">Threat Intelligence</a></li>
+                   </ul>
+               </div>
+               
+               <div class="footer-section">
+                   <h4>Resources</h4>
+                   <ul>
+                       <li><a href="#">Documentation</a></li>
+                       <li><a href="#">API Reference</a></li>
+                       <li><a href="#">Security Best Practices</a></li>
+                       <li><a href="#">Knowledge Base</a></li>
+                   </ul>
+               </div>
+               
+               <div class="footer-section">
+                   <h4>Support</h4>
+                   <ul>
+                       <li><a href="#">Help Center</a></li>
+                       <li><a href="#">Contact Support</a></li>
+                       <li><a href="#">System Status</a></li>
+                       <li><a href="#">Security Alerts</a></li>
+                   </ul>
+               </div>
+               
+               <div class="footer-section">
+                   <h4>Connect</h4>
+                   <div class="social-links">
+                       <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                       <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                       <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                       <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                   </div>
+                   <div class="contact-info">
+                       <p><i class="fas fa-envelope"></i> support@sentinel-x.ai</p>
+                       <p><i class="fas fa-phone"></i> 1-800-CYBER-01</p>
+                   </div>
+               </div>
+           </div>
+           
+           <div class="footer-bottom">
+               <div class="footer-bottom-content">
+                   <p>&copy; 2024 AI Sentinel-X. All rights reserved.</p>
+                   <div class="footer-links">
+                       <a href="#">Privacy Policy</a>
+                       <a href="#">Terms of Service</a>
+                       <a href="#">Cookie Policy</a>
+                       <a href="#">Compliance</a>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </footer>
+
+   <script src="shared.js"></script>
+   <script src="network-core.js"></script>
+   <script>
+       // Network page-specific configurations using shared.js infrastructure
+       let networkFeedId = 'network-feed';
+
+       // Enhanced initialization for V4
+       document.addEventListener('DOMContentLoaded', () => {
+           console.log('Network V4 module loaded');
+           setTimeout(() => {
+               initializeNetworkPage();
+           }, 100);
+       });
+
+       function initializeNetworkPage() {
+           // Initialize neural background from shared.js
+           if (typeof initNeuralBackground === 'function') {
+               initNeuralBackground();
+           }
+
+           // Initialize page context from shared.js
+           if (typeof initializePageContext === 'function') {
+               initializePageContext();
+           }
+
+           // Initialize chat system from shared.js
+           if (typeof SentinelChat !== 'undefined') {
+               window.sentinelChat = new SentinelChat();
+           }
+
+           // Initialize encryption status click handler
+           window.showEncryptionStatus = function() {
+               if (window.sentinelChat && !SentinelState.chatOpen) {
+                   window.sentinelChat.toggle();
+               }
+               setTimeout(() => {
+                   if (window.sentinelChat) {
+                       window.sentinelChat.addMessage('NetworkMapper: Hybrid encryption active across all discovered devices. Classical algorithms (AES-256-GCM, ChaCha20-Poly1305) combined with post-quantum (Kyber-1024, Dilithium-3, SPHINCS+). Coordinating with EncryptionManager for comprehensive protection.', false);
+                   }
+               }, 300);
+           };
+
+           // Initialize V4 features
+           initializeV4Features();
+           
+           // Initialize environment detection if needed
+           if (typeof initializeEnvironmentDetection === 'function') {
+               initializeEnvironmentDetection();
+           }
+           
+           // Auto-update metrics periodically
+           setInterval(() => {
+               if (window.currentScale) {
+                   updateMetrics();
+                   checkEncryptionGaps();
+               }
+           }, 8000);
+       }
+
+       function initializeV4Features() {
+           // Enhanced dual-layer scanning data
+           window.externalServices = [
+               {
+                   name: 'HTTPS (443/tcp)',
+                   details: 'nginx/1.18.0 • TLS 1.3',
+                   encryption: '🔐 AES-256-GCM + CRYSTALS-Kyber',
+                   status: 'Secure',
+                   statusClass: 'status-secure'
+               },
+               {
+                   name: 'SSH (22/tcp)',
+                   details: 'OpenSSH_7.4 • Key Auth Only',
+                   encryption: '🔐 Hybrid: Classical + PQ Keys',
+                   status: 'Secure',
+                   statusClass: 'status-secure'
+               },
+               {
+                   name: 'RDP (3389/tcp)',
+                   details: 'Windows Server 2019 • NLA + TLS 1.2',
+                   encryption: '⚠️ Classical only - upgrade needed',
+                   status: 'Monitor',
+                   statusClass: 'status-update'
+               },
+               {
+                   name: 'SMB (445/tcp)',
+                   details: 'SMBv2 • Outdated',
+                   encryption: '❌ Weak encryption',
+                   status: 'Vulnerable',
+                   statusClass: 'status-vulnerable'
+               }
+           ];
+
+           window.internalServices = [
+               {
+                   name: 'Domain Controllers',
+                   details: '2 servers • AD DS • Kerberos',
+                   encryption: '🔐 Full hybrid encryption',
+                   status: 'Secure',
+                   statusClass: 'status-secure'
+               },
+               {
+                   name: 'Database Servers',
+                   details: '5 instances • TDE enabled',
+                   encryption: '🔐 AES-256 + Kyber-1024',
+                   status: 'Secure',
+                   statusClass: 'status-secure'
+               },
+               {
+                   name: 'IoT Devices',
+                   details: '47 devices • Mixed security',
+                   encryption: '⚠️ Partial encryption support',
+                   status: 'Monitor',
+                   statusClass: 'status-update'
+               },
+               {
+                   name: 'Workstations',
+                   details: '189 systems • BitLocker enabled',
+                   encryption: '🔐 Hybrid disk encryption',
+                   status: 'Update',
+                   statusClass: 'status-update'
+               }
+           ];
+       }
+
+       // Setup activity feed when scale is selected
+       function setupNetworkActivityFeed() {
+           const feedContainer = document.getElementById('networkActivityFeed');
+           if (feedContainer && window.currentScale) {
+               feedContainer.style.display = 'flex';
+               
+               // Initialize network activity feed using shared.js ActivityFeedManager
+               if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                   activityFeedManager.initializeFeed(networkFeedId, 'network');
+                   activityFeedManager.setFeedContainer(networkFeedId, 'networkActivityFeedContent');
+                   
+                   // Add initial messages based on scale
+                   if (window.currentScale === 'individual') {
+                       activityFeedManager.addMessage(networkFeedId, '🌐 NetworkMapper: External scan via Shodan API - 1 public IP detected', '', 'NetworkMapper');
+                       activityFeedManager.addMessage(networkFeedId, '🔍 NetworkMapper: Internal agent deployed - scanning 192.168.1.0/24', '', 'NetworkMapper');
+                       activityFeedManager.addMessage(networkFeedId, '✅ ThreatScanner: No critical vulnerabilities on external surface', '', 'NetworkMapper → ThreatScanner');
+                       activityFeedManager.addMessage(networkFeedId, '🔐 EncryptionDeployer: Hybrid encryption verified on primary server', 'encryption', 'NetworkMapper → EncryptionDeployer');
+                   } else if (window.currentScale === 'business') {
+                       activityFeedManager.addMessage(networkFeedId, '🏢 NetworkMapper: Multi-site scan initiated - 3 locations detected', '', 'NetworkMapper');
+                       activityFeedManager.addMessage(networkFeedId, '🌐 External scan: 3 public IPs across Columbia, Atlanta, Charlotte', '', 'NetworkMapper');
+                       activityFeedManager.addMessage(networkFeedId, '🔍 Internal discovery: 127 devices mapped across all sites', '', 'NetworkMapper');
+                       activityFeedManager.addMessage(networkFeedId, '⚠️ ThreatScanner: 2 medium-risk vulnerabilities detected', 'warning', 'NetworkMapper → ThreatScanner');
+                   } else if (window.currentScale === 'enterprise') {
+                       activityFeedManager.addMessage(networkFeedId, '🏭 NetworkMapper: Enterprise scan across 3 data centers', '', 'NetworkMapper');
+                       activityFeedManager.addMessage(networkFeedId, '🌐 External reconnaissance: 12 public IPs, 156 services mapped', '', 'NetworkMapper');
+                       activityFeedManager.addMessage(networkFeedId, '🔍 Internal discovery: 1,926 devices across global infrastructure', '', 'NetworkMapper');
+                       activityFeedManager.addMessage(networkFeedId, '🛡️ ThreatScanner: Advanced persistent threat indicators analyzed', '', 'NetworkMapper → ThreatScanner');
+                   }
+                   
+                   // Start auto-generation for network feed
+                   activityFeedManager.startAutoGeneration(networkFeedId, 5000);
+               }
+           }
+       }
+
+       // Shodan modal functions
+       window.showShodanKeyModal = function() {
+           const modal = document.getElementById('shodanKeyModal');
+           if (modal) {
+               modal.classList.remove('hidden');
+               // Focus on the input field
+               setTimeout(() => {
+                   const input = document.getElementById('shodanApiKey');
+                   if (input) input.focus();
+               }, 100);
+           }
+       };
+
+       window.closeShodanKeyModal = function() {
+           const modal = document.getElementById('shodanKeyModal');
+           if (modal) {
+               modal.classList.add('hidden');
+               // Clear the input
+               const input = document.getElementById('shodanApiKey');
+               if (input) input.value = '';
+           }
+       };
+
+       window.confirmShodanScan = function() {
+           const input = document.getElementById('shodanApiKey');
+           const apiKey = input ? input.value.trim() : '';
+           
+           if (!apiKey) {
+               if (window.sentinelChat && !SentinelState.chatOpen) {
+                   window.sentinelChat.toggle();
+               }
+               setTimeout(() => {
+                   if (window.sentinelChat) {
+                       window.sentinelChat.addMessage('⚠️ NetworkMapper: Please enter a valid Shodan.io API key to perform external reconnaissance scanning.', false, 'system');
+                   }
+               }, 300);
+               return;
+           }
+
+           // Close modal and start scanning
+           closeShodanKeyModal();
+           
+           // Show scanning status
+           const status = document.getElementById('externalScanStatus');
+           if (status) {
+               status.className = 'scan-status scanning';
+               status.innerHTML = '<div class="status-dot"></div><span>SCANNING</span>';
+           }
+
+           // Add chat message
+           if (window.sentinelChat && !SentinelState.chatOpen) {
+               window.sentinelChat.toggle();
+           }
+           setTimeout(() => {
+               if (window.sentinelChat) {
+                   window.sentinelChat.addMessage('🔍 NetworkMapper: Shodan.io API key configured. Initiating external reconnaissance scan...', false, 'system');
+               }
+           }, 300);
+
+           // Simulate scanning delay then show results with fake API key data
+           setTimeout(() => {
+               showExternalScanResults();
+           }, 3000);
+       };
+
+       function showExternalScanResults() {
+           // Hide placeholder and show results
+           const placeholder = document.getElementById('externalPlaceholder');
+           const results = document.getElementById('externalResults');
+           const servicesList = document.getElementById('externalServicesList');
+
+           if (placeholder) placeholder.style.display = 'none';
+           if (results) results.classList.remove('hidden');
+           if (servicesList) servicesList.classList.remove('hidden');
+
+           // Update status
+           const status = document.getElementById('externalScanStatus');
+           if (status) {
+               status.className = 'scan-status active';
+               status.innerHTML = '<div class="status-dot"></div><span>ACTIVE</span>';
+           }
+
+           // Populate with fake data based on current scale
+           const sampleData = generateSampleExternalData();
+           
+           // Update result values
+           document.getElementById('orgName').textContent = sampleData.organization;
+           document.getElementById('ispName').textContent = sampleData.isp;
+           document.getElementById('location').textContent = sampleData.location;
+           document.getElementById('openPorts').textContent = sampleData.openPorts;
+           document.getElementById('vulnCount').textContent = sampleData.vulnerabilities;
+
+           // Populate services list using the existing function
+           if (typeof populateScanningPanels === 'function') {
+               populateScanningPanels();
+           }
+
+           // Add success message to chat
+           setTimeout(() => {
+               if (window.sentinelChat) {
+                   window.sentinelChat.addMessage(`✅ NetworkMapper: External scan complete via Shodan.io! Discovered ${sampleData.openPorts} open ports on ${sampleData.publicIPs} public IPs. ${sampleData.vulnerabilities} potential vulnerabilities detected. Coordinating with ThreatScanner for risk assessment.`, false, 'system');
+               }
+           }, 1000);
+       }
+
+       function generateSampleExternalData() {
+           const organizations = ['Acme Corporation', 'Global Tech Inc', 'Business Solutions LLC', 'Enterprise Networks'];
+           const isps = ['Business Fiber Network', 'Corporate Internet', 'Enterprise ISP', 'Fiber Solutions'];
+           const locations = ['Columbia, SC, US', 'Atlanta, GA, US', 'Charlotte, NC, US', 'Virginia, US'];
+           
+           return {
+               organization: organizations[Math.floor(Math.random() * organizations.length)],
+               isp: isps[Math.floor(Math.random() * isps.length)],
+               location: locations[Math.floor(Math.random() * locations.length)],
+               publicIPs: Math.floor(Math.random() * 5) + 1,
+               openPorts: Math.floor(Math.random() * 10) + 3,
+               vulnerabilities: Math.floor(Math.random() * 3) + 1
+           };
+       }
+
+       // Override remediateEncryptionGaps to open chat
+       window.remediateEncryptionGaps = function() {
+           if (!window.sentinelChat) {
+               console.error('Chat system not available');
+               return;
+           }
+
+           // Open chat if not already open
+           if (!SentinelState.chatOpen) {
+               sentinelChat.toggle();
+           }
+
+           setTimeout(() => {
+               sentinelChat.addMessage('remediate encryption gaps', true);
+               
+               setTimeout(() => {
+                   sentinelChat.addMessage('NetworkMapper: Initiating encryption gap remediation. Coordinating with EncryptionDeployer and CertificateManager...', false, 'system');
+               }, 500);
+               
+               setTimeout(() => {
+                   sentinelChat.addMessage(`EncryptionDeployer: Analyzing unencrypted devices. Deploying hybrid-resistant encryption modules. Working with CertificateManager for key distribution.`, false);
+               }, 1200);
+               
+               setTimeout(() => {
+                   sentinelChat.addMessage('EncryptionDeployer: Deployment in progress. Using TLS 1.3 + Kyber-1024 for network traffic, AES-256-GCM + Dilithium-3 for data at rest.', false);
+               }, 2500);
+               
+               // Simulate completion
+               setTimeout(() => {
+                   sentinelChat.addMessage(`✅ EncryptionDeployer: Remediation complete! All devices now protected with hybrid-resistant encryption. NetworkMapper verified. No gaps detected.`, false);
+                   
+                   // Hide the alert
+                   hideEncryptionGapAlert();
+               }, 4000);
+               
+           }, 300);
+       };
+
+       // Cleanup activity feed on page unload
+       window.addEventListener('beforeunload', () => {
+           if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+               activityFeedManager.stopAutoGeneration(networkFeedId);
+           }
+       });
+
+       // Global functions for compatibility - leveraging shared chat system
+       window.toggleChat = () => {
+           if (window.sentinelChat) {
+               window.sentinelChat.toggle();
+           }
+       };
+       
+       window.sendChatMessage = () => {
+           const input = document.getElementById('aiChatInput');
+           if (input && input.value.trim() && window.sentinelChat) {
+               window.sentinelChat.sendMessage(input.value.trim());
+               input.value = '';
+           }
+       };
+       
+       window.handleChatKeyPress = (e) => {
+           if (e.key === 'Enter') {
+               sendChatMessage();
+           }
+       };
+       
+       window.showAgentShutdownModal = () => {
+           const modal = document.getElementById('agentShutdownModal');
+           if (modal) modal.style.display = 'flex';
+       };
+       
+       window.closeModal = () => {
+           const modal = document.getElementById('agentShutdownModal');
+           if (modal) modal.style.display = 'none';
+       };
+       
+       window.closeModalOnOverlay = (e) => {
+           if (e.target.classList.contains('modal-overlay')) {
+               const modalId = e.target.id;
+               if (modalId === 'addRangeModal') {
+                   closeAddRangeModal();
+               } else if (modalId === 'rescanModal') {
+                   closeRescanModal();
+               } else if (modalId === 'agentShutdownModal') {
+                   closeModal();
+               } else if (modalId === 'shodanKeyModal') {
+                   closeShodanKeyModal();
+               }
+           }
+       };
+       
+       window.confirmAgentShutdown = () => {
+           if (typeof SentinelState !== 'undefined') {
+               SentinelState.agentActive = !SentinelState.agentActive;
+               
+               // Update UI elements
+               const agentStatus = document.querySelector('.agent-status');
+               const agentTitle = document.querySelector('.agent-title');
+               const agentStatusText = document.querySelector('.agent-status-text');
+               const cliIndicator = document.getElementById('cliModeIndicator');
+               
+               if (SentinelState.agentActive) {
+                   if (agentStatus) {
+                       agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
+                       agentStatus.style.borderColor = '#00ff88';
+                   }
+                   if (agentTitle) {
+                       agentTitle.textContent = 'AI Agent Active';
+                       agentTitle.style.color = 'var(--primary)';
+                   }
+                   if (agentStatusText) {
+                       agentStatusText.textContent = 'Adaptive Configuration';
+                   }
+                   if (cliIndicator) {
+                       cliIndicator.classList.remove('active');
+                   }
+                   
+                   // Resume activity feeds
+                   if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                       activityFeedManager.resumeAllFeeds();
+                   }
+               } else {
+                   if (agentStatus) {
+                       agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
+                       agentStatus.style.borderColor = '#ffaa00';
+                   }
+                   if (agentTitle) {
+                       agentTitle.textContent = 'AI Agent Paused';
+                       agentTitle.style.color = '#ffaa00';
+                   }
+                   if (agentStatusText) {
+                       agentStatusText.textContent = 'Manual Control Only';
+                   }
+                   if (cliIndicator) {
+                       cliIndicator.classList.add('active');
+                   }
+                   
+                   // Pause activity feeds
+                   if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                       activityFeedManager.pauseAllFeeds();
+                   }
+               }
+               
+               closeModal();
+               
+               if (SentinelState.chatOpen && window.sentinelChat) {
+                   const status = SentinelState.agentActive ? 'resumed autonomous operation' : 'switched to manual control mode';
+                   window.sentinelChat.addMessage(`⚠️ Main Agent has ${status}. Network discovery ${SentinelState.agentActive ? 'continuing' : 'paused'}.`, false, 'system');
+               }
+           }
+       };
+       
+       window.handleLogout = () => {
+           if (confirm('Are you sure you want to logout? The AI agent will continue protecting your network autonomously.')) {
+               localStorage.removeItem('sentinel_auth');
+               localStorage.removeItem('sentinel_scale');
+               window.location.href = 'index.html';
+           }
+       };
+   </script>
+</body>
+</html>
