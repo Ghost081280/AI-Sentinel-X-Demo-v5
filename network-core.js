@@ -10,6 +10,7 @@ let internalDevices = [];
 let deviceCounter = 1;
 let scanningActive = true;
 let discoveryActive = true;
+let shodanApiKey = '';
 
 // Utility functions
 const SentinelUtils = {
@@ -1145,6 +1146,135 @@ function createServiceItem(service) {
    return item;
 }
 
+// SHODAN INTEGRATION FUNCTIONS
+function showShodanKeyModal() {
+    const modal = document.getElementById('shodanKeyModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        // Focus on the input field
+        setTimeout(() => {
+            const input = document.getElementById('shodanApiKey');
+            if (input) input.focus();
+        }, 100);
+    }
+}
+
+function closeShodanKeyModal() {
+    const modal = document.getElementById('shodanKeyModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        // Clear the input
+        const input = document.getElementById('shodanApiKey');
+        if (input) input.value = '';
+    }
+}
+
+function confirmShodanScan() {
+    const input = document.getElementById('shodanApiKey');
+    const apiKey = input ? input.value.trim() : '';
+    
+    if (!apiKey) {
+        if (window.sentinelChat && !SentinelState.chatOpen) {
+            window.sentinelChat.toggle();
+        }
+        setTimeout(() => {
+            if (window.sentinelChat) {
+                window.sentinelChat.addMessage('⚠️ NetworkMapper: Please enter a valid Shodan.io API key to perform external reconnaissance scanning.', false, 'system');
+            }
+        }, 300);
+        return;
+    }
+
+    // Store the API key (in a real app, this would be securely stored)
+    shodanApiKey = apiKey;
+    
+    // Close modal and start scanning
+    closeShodanKeyModal();
+    
+    // Show scanning status
+    const status = document.getElementById('externalScanStatus');
+    if (status) {
+        status.className = 'scan-status scanning';
+        status.innerHTML = '<div class="status-dot"></div><span>SCANNING</span>';
+    }
+
+    // Add chat message
+    if (window.sentinelChat && !SentinelState.chatOpen) {
+        window.sentinelChat.toggle();
+    }
+    setTimeout(() => {
+        if (window.sentinelChat) {
+            window.sentinelChat.addMessage('🔍 NetworkMapper: Shodan.io API key configured. Initiating external reconnaissance scan...', false, 'system');
+        }
+    }, 300);
+
+    // Simulate scanning delay then show results
+    setTimeout(() => {
+        showExternalScanResults();
+    }, 3000);
+}
+
+function showExternalScanResults() {
+    // Hide placeholder and show results
+    const placeholder = document.getElementById('externalPlaceholder');
+    const results = document.getElementById('externalResults');
+    const servicesList = document.getElementById('externalServicesList');
+
+    if (placeholder) placeholder.style.display = 'none';
+    if (results) results.classList.remove('hidden');
+    if (servicesList) servicesList.classList.remove('hidden');
+
+    // Update status
+    const status = document.getElementById('externalScanStatus');
+    if (status) {
+        status.className = 'scan-status active';
+        status.innerHTML = '<div class="status-dot"></div><span>ACTIVE</span>';
+    }
+
+    // Populate with fake data based on current scale
+    const sampleData = generateSampleExternalData();
+    
+    // Update result values
+    const orgName = document.getElementById('orgName');
+    const ispName = document.getElementById('ispName');
+    const location = document.getElementById('location');
+    const openPorts = document.getElementById('openPorts');
+    const vulnCount = document.getElementById('vulnCount');
+
+    if (orgName) orgName.textContent = sampleData.organization;
+    if (ispName) ispName.textContent = sampleData.isp;
+    if (location) location.textContent = sampleData.location;
+    if (openPorts) openPorts.textContent = sampleData.openPorts;
+    if (vulnCount) vulnCount.textContent = sampleData.vulnerabilities;
+
+    // Populate services list using the existing function
+    if (typeof populateScanningPanels === 'function') {
+        populateScanningPanels();
+    }
+
+    // Add success message to chat
+    setTimeout(() => {
+        if (window.sentinelChat) {
+            window.sentinelChat.addMessage(`✅ NetworkMapper: External scan complete via Shodan.io! Discovered ${sampleData.openPorts} open ports on ${sampleData.publicIPs} public IPs. ${sampleData.vulnerabilities} potential vulnerabilities detected. Coordinating with ThreatScanner for risk assessment.`, false, 'system');
+        }
+    }, 1000);
+}
+
+function generateSampleExternalData() {
+    const organizations = ['Acme Corporation', 'Global Tech Inc', 'Business Solutions LLC', 'Enterprise Networks'];
+    const isps = ['Business Fiber Network', 'Corporate Internet', 'Enterprise ISP', 'Fiber Solutions'];
+    const locations = ['Columbia, SC, US', 'Atlanta, GA, US', 'Charlotte, NC, US', 'Virginia, US'];
+    
+    return {
+        organization: organizations[Math.floor(Math.random() * organizations.length)],
+        isp: isps[Math.floor(Math.random() * isps.length)],
+        location: locations[Math.floor(Math.random() * locations.length)],
+        publicIPs: Math.floor(Math.random() * 5) + 1,
+        openPorts: Math.floor(Math.random() * 10) + 3,
+        vulnerabilities: Math.floor(Math.random() * 3) + 1
+    };
+}
+
 // Modal and interaction functions
 function showAddRangeModal() {
    const modal = document.getElementById('addRangeModal');
@@ -1501,6 +1631,13 @@ window.simulateEncryptionGaps = simulateEncryptionGaps;
 window.resetToInitialState = resetToInitialState;
 window.updateMetrics = updateMetrics;
 
+// Shodan integration exports
+window.showShodanKeyModal = showShodanKeyModal;
+window.closeShodanKeyModal = closeShodanKeyModal;
+window.confirmShodanScan = confirmShodanScan;
+window.showExternalScanResults = showExternalScanResults;
+window.generateSampleExternalData = generateSampleExternalData;
+
 // Modal close handler
 function closeModalOnOverlay(event) {
    if (event.target.classList.contains('modal-overlay')) {
@@ -1513,6 +1650,8 @@ function closeModalOnOverlay(event) {
            if (window.SentinelEventHandlers) {
                SentinelEventHandlers.closeModal(modalId);
            }
+       } else if (modalId === 'shodanKeyModal') {
+           closeShodanKeyModal();
        }
    }
 }
@@ -1528,6 +1667,44 @@ function closeModal() {
    if (window.SentinelEventHandlers) {
        SentinelEventHandlers.closeModal();
    }
+}
+
+// Remediate encryption gaps function
+function remediateEncryptionGaps() {
+   if (!window.sentinelChat) {
+       console.error('Chat system not available');
+       return;
+   }
+
+   // Open chat if not already open
+   if (!SentinelState.chatOpen) {
+       sentinelChat.toggle();
+   }
+
+   setTimeout(() => {
+       sentinelChat.addMessage('remediate encryption gaps', true);
+       
+       setTimeout(() => {
+           sentinelChat.addMessage('NetworkMapper: Initiating encryption gap remediation. Coordinating with EncryptionDeployer and CertificateManager...', false, 'system');
+       }, 500);
+       
+       setTimeout(() => {
+           sentinelChat.addMessage(`EncryptionDeployer: Analyzing unencrypted devices. Deploying hybrid-resistant encryption modules. Working with CertificateManager for key distribution.`, false);
+       }, 1200);
+       
+       setTimeout(() => {
+           sentinelChat.addMessage('EncryptionDeployer: Deployment in progress. Using TLS 1.3 + Kyber-1024 for network traffic, AES-256-GCM + Dilithium-3 for data at rest.', false);
+       }, 2500);
+       
+       // Simulate completion
+       setTimeout(() => {
+           sentinelChat.addMessage(`✅ EncryptionDeployer: Remediation complete! All devices now protected with hybrid-resistant encryption. NetworkMapper verified. No gaps detected.`, false);
+           
+           // Hide the alert
+           hideEncryptionGapAlert();
+       }, 4000);
+       
+   }, 300);
 }
 
 // Initialize when DOM is ready
@@ -1562,6 +1739,10 @@ if (typeof module !== 'undefined' && module.exports) {
        showCheckoutSection,
        hideEncryptionGapAlert,
        checkEncryptionGaps,
-       simulateEncryptionGaps
+       simulateEncryptionGaps,
+       showShodanKeyModal,
+       closeShodanKeyModal,
+       confirmShodanScan,
+       showExternalScanResults
    };
 }
