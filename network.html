@@ -2059,64 +2059,9 @@
             <button class="alert-button" onclick="remediateEncryptionGaps()">Remediate Now</button>
         </div>
 
-        <!-- Environment Detection with Auto-Scan -->
-        <div class="environment-detection" id="environmentDetection">
-            <div class="detection-title">🎯 Comprehensive Network Discovery</div>
-            <div class="detection-description">
-                AI Sentinel-X performs dual-layer network discovery using external reconnaissance (Shodan API) and internal agent scanning. Our autonomous system will map your entire infrastructure, identify vulnerabilities, and recommend the optimal security configuration based on your network size and complexity.
-            </div>
-            
-            <div class="auto-scan-section">
-                <button class="auto-scan-btn" onclick="startAutoScan()" id="autoScanBtn">
-                    <span class="scan-icon">🔍</span>
-                    <span class="scan-text">Start Network Discovery</span>
-                   <span class="scan-subtitle">External + Internal Dual-Layer Scan</span>
-               </button>
-               <div class="scan-progress" id="scanProgress" style="display: none;">
-                   <div class="progress-bar">
-                       <div class="progress-fill" id="progressFill"></div>
-                   </div>
-                   <div class="progress-text" id="progressText">Initializing dual-layer scan...</div>
-               </div>
-           </div>
-       </div>
+        <!-- Environment Detection - REMOVED FOR DIRECT SCANNING -->
 
-       <!-- IP Range Manager (Hidden until configured) -->
-       <div class="ip-range-manager" id="ipRangeManager" style="display: none;">
-           <div class="ip-range-header">
-               <h2 class="ip-range-title" id="ipRangeTitle">Network Range Management</h2>
-               <div class="ip-range-controls">
-                   <button class="add-range-btn" onclick="showAddRangeModal()" id="addRangeBtn">Add IP Range</button>
-                   <button class="reset-config-btn" onclick="showRescanModal()" title="Reset network discovery and reconfigure environment">
-                       <span class="icon">🔄</span>
-                       <span>Reset Configuration</span>
-                   </button>
-               </div>
-           </div>
-           
-           <div class="ip-ranges-grid" id="ipRangesGrid">
-               <!-- IP ranges will be populated here -->
-           </div>
-       </div>
-
-       <!-- Interactive Dashboard Section -->
-       <div class="dashboard-interactive" id="dashboardInteractive" style="display: none;">
-           <div class="interactive-header">
-               <h2 class="interactive-title" id="interactiveTitle">Network Discovery Dashboard</h2>
-               <div class="auto-scan-controls">
-                   <span style="color: var(--text-secondary); font-size: 14px;" id="scanDetails">Continuous Monitoring Active</span>
-                   <button class="reset-config-btn" onclick="showRescanModal()" title="Reset network discovery and reconfigure environment">
-                       <span class="icon">🔄</span>
-                       <span>Reset Configuration</span>
-                   </button>
-               </div>
-           </div>
-           <p style="color: var(--text-secondary); text-align: center; font-size: 14px; line-height: 1.6;" id="dashboardDescription">
-               🤖 <strong>Autonomous scanning active</strong> • Hybrid-resistant encryption • No manual intervention required
-           </p>
-       </div>
-
-       <!-- Dual Layer Scanning Sections -->
+        <!-- Sub-Agent Status Banner - VISIBLE ON LANDING -->
        <div class="scanning-sections" id="scanningSections" style="display: none;">
            <!-- External Scan Panel -->
            <div class="scan-panel external">
