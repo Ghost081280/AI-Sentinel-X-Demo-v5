@@ -733,7 +733,7 @@
             letter-spacing: 1px;
         }
 
-        /* Dual Layer Scanning - NEW FROM HYBRID DEMO */
+        /* Dual Layer Scanning */
         .scanning-sections {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -1204,7 +1204,7 @@
             color: var(--text-secondary);
         }
 
-        /* Activity Feed - Using shared.js infrastructure */
+        /* Activity Feed */
         .activity-feed {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -1316,7 +1316,7 @@
             font-style: italic;
         }
 
-        /* Checkout Section - NEW */
+        /* Checkout Section */
         .checkout-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -1640,7 +1640,7 @@
             letter-spacing: 1px;
         }
 
-        /* AI Chat Widget - Matching encryption.html style */
+        /* AI Chat Widget */
         .ai-chat-widget {
             position: fixed;
             bottom: 30px;
@@ -1827,167 +1827,7 @@
             text-transform: uppercase;
         }
 
-        /* Footer Styles */
-        .footer {
-            background: linear-gradient(135deg, rgba(10, 20, 40, 0.95) 0%, rgba(6, 9, 18, 0.98) 100%);
-            border-top: 1px solid var(--border);
-            margin-top: 50px;
-            backdrop-filter: blur(20px);
-        }
-
-        .footer-container {
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: 40px 20px 0;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 2fr repeat(5, 1fr);
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-
-        .footer-section h4 {
-            color: var(--primary);
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 8px;
-        }
-
-        .footer-section ul li a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section ul li a:hover {
-            color: var(--primary);
-        }
-
-        .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .footer-brand i {
-            font-size: 32px;
-            color: var(--primary);
-            filter: drop-shadow(0 0 10px var(--primary));
-        }
-
-        .footer-brand span {
-            font-size: 24px;
-            font-weight: bold;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .footer-section p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: var(--primary);
-            color: var(--bg-darker);
-            transform: translateY(-2px);
-        }
-
-        .contact-info p {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 13px;
-        }
-
-        .contact-info i {
-            color: var(--primary);
-            width: 16px;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--border);
-            padding: 20px 0;
-        }
-
-        .footer-bottom-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .footer-bottom p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin: 0;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
         /* Mobile Responsive */
-        @media (max-width: 1200px) {
-            .footer-content {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 30px;
-            }
-        }
-
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -2050,22 +1890,6 @@
                 gap: 15px;
                 text-align: center;
             }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
-                text-align: center;
-            }
-            
-            .footer-bottom-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .footer-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
         }
 
         /* Custom Scrollbar */
@@ -2090,7 +1914,7 @@
 </head>
 <body>
     <script>
-        // Check authentication
+        // Check authentication - go directly to scan after login
         const auth = localStorage.getItem('sentinel_auth');
         if (!auth) {
             window.location.href = 'index.html';
@@ -2587,86 +2411,6 @@
        <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
    </div>
 
-   <footer class="footer">
-       <div class="footer-container">
-           <div class="footer-content">
-               <div class="footer-section">
-                   <div class="footer-brand">
-                       <i class="fas fa-shield-alt"></i>
-                       <span>AI SENTINEL-X</span>
-                   </div>
-                   <p>Advanced autonomous cyber defense platform for comprehensive threat detection and network analysis.</p>
-               </div>
-               
-               <div class="footer-section">
-                   <h4>Platform</h4>
-                   <ul>
-                       <li><a href="dashboard.html">Dashboard</a></li>
-                       <li><a href="network.html">Network Scanner</a></li>
-                       <li><a href="threats.html">Threat Analysis</a></li>
-                       <li><a href="defense.html">Defense Systems</a></li>
-                   </ul>
-               </div>
-               
-               <div class="footer-section">
-                   <h4>Security</h4>
-                   <ul>
-                       <li><a href="encryption.html">Hybrid Encryption</a></li>
-                       <li><a href="vpn.html">VPN Monitoring</a></li>
-                       <li><a href="#">Compliance</a></li>
-                       <li><a href="#">Threat Intelligence</a></li>
-                   </ul>
-               </div>
-               
-               <div class="footer-section">
-                   <h4>Resources</h4>
-                   <ul>
-                       <li><a href="#">Documentation</a></li>
-                       <li><a href="#">API Reference</a></li>
-                       <li><a href="#">Security Best Practices</a></li>
-                       <li><a href="#">Knowledge Base</a></li>
-                   </ul>
-               </div>
-               
-               <div class="footer-section">
-                   <h4>Support</h4>
-                   <ul>
-                       <li><a href="#">Help Center</a></li>
-                       <li><a href="#">Contact Support</a></li>
-                       <li><a href="#">System Status</a></li>
-                       <li><a href="#">Security Alerts</a></li>
-                   </ul>
-               </div>
-               
-               <div class="footer-section">
-                   <h4>Connect</h4>
-                   <div class="social-links">
-                       <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                       <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                       <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                       <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
-                   </div>
-                   <div class="contact-info">
-                       <p><i class="fas fa-envelope"></i> support@sentinel-x.ai</p>
-                       <p><i class="fas fa-phone"></i> 1-800-CYBER-01</p>
-                   </div>
-               </div>
-           </div>
-           
-           <div class="footer-bottom">
-               <div class="footer-bottom-content">
-                   <p>&copy; 2024 AI Sentinel-X. All rights reserved.</p>
-                   <div class="footer-links">
-                       <a href="#">Privacy Policy</a>
-                       <a href="#">Terms of Service</a>
-                       <a href="#">Cookie Policy</a>
-                       <a href="#">Compliance</a>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </footer>
-
    <script src="shared.js"></script>
    <script src="network-core.js"></script>
    <script>
@@ -2825,164 +2569,6 @@
                }
            }
        }
-
-       // Shodan modal functions
-       window.showShodanKeyModal = function() {
-           const modal = document.getElementById('shodanKeyModal');
-           if (modal) {
-               modal.classList.remove('hidden');
-               // Focus on the input field
-               setTimeout(() => {
-                   const input = document.getElementById('shodanApiKey');
-                   if (input) input.focus();
-               }, 100);
-           }
-       };
-
-       window.closeShodanKeyModal = function() {
-           const modal = document.getElementById('shodanKeyModal');
-           if (modal) {
-               modal.classList.add('hidden');
-               // Clear the input
-               const input = document.getElementById('shodanApiKey');
-               if (input) input.value = '';
-           }
-       };
-
-       window.confirmShodanScan = function() {
-           const input = document.getElementById('shodanApiKey');
-           const apiKey = input ? input.value.trim() : '';
-           
-           if (!apiKey) {
-               if (window.sentinelChat && !SentinelState.chatOpen) {
-                   window.sentinelChat.toggle();
-               }
-               setTimeout(() => {
-                   if (window.sentinelChat) {
-                       window.sentinelChat.addMessage('⚠️ NetworkMapper: Please enter a valid Shodan.io API key to perform external reconnaissance scanning.', false, 'system');
-                   }
-               }, 300);
-               return;
-           }
-
-           // Close modal and start scanning
-           closeShodanKeyModal();
-           
-           // Show scanning status
-           const status = document.getElementById('externalScanStatus');
-           if (status) {
-               status.className = 'scan-status scanning';
-               status.innerHTML = '<div class="status-dot"></div><span>SCANNING</span>';
-           }
-
-           // Add chat message
-           if (window.sentinelChat && !SentinelState.chatOpen) {
-               window.sentinelChat.toggle();
-           }
-           setTimeout(() => {
-               if (window.sentinelChat) {
-                   window.sentinelChat.addMessage('🔍 NetworkMapper: Shodan.io API key configured. Initiating external reconnaissance scan...', false, 'system');
-               }
-           }, 300);
-
-           // Simulate scanning delay then show results with fake API key data
-           setTimeout(() => {
-               showExternalScanResults();
-           }, 3000);
-       };
-
-       function showExternalScanResults() {
-           // Hide placeholder and show results
-           const placeholder = document.getElementById('externalPlaceholder');
-           const results = document.getElementById('externalResults');
-           const servicesList = document.getElementById('externalServicesList');
-
-           if (placeholder) placeholder.style.display = 'none';
-           if (results) results.classList.remove('hidden');
-           if (servicesList) servicesList.classList.remove('hidden');
-
-           // Update status
-           const status = document.getElementById('externalScanStatus');
-           if (status) {
-               status.className = 'scan-status active';
-               status.innerHTML = '<div class="status-dot"></div><span>ACTIVE</span>';
-           }
-
-           // Populate with fake data based on current scale
-           const sampleData = generateSampleExternalData();
-           
-           // Update result values
-           document.getElementById('orgName').textContent = sampleData.organization;
-           document.getElementById('ispName').textContent = sampleData.isp;
-           document.getElementById('location').textContent = sampleData.location;
-           document.getElementById('openPorts').textContent = sampleData.openPorts;
-           document.getElementById('vulnCount').textContent = sampleData.vulnerabilities;
-
-           // Populate services list using the existing function
-           if (typeof populateScanningPanels === 'function') {
-               populateScanningPanels();
-           }
-
-           // Add success message to chat
-           setTimeout(() => {
-               if (window.sentinelChat) {
-                   window.sentinelChat.addMessage(`✅ NetworkMapper: External scan complete via Shodan.io! Discovered ${sampleData.openPorts} open ports on ${sampleData.publicIPs} public IPs. ${sampleData.vulnerabilities} potential vulnerabilities detected. Coordinating with ThreatScanner for risk assessment.`, false, 'system');
-               }
-           }, 1000);
-       }
-
-       function generateSampleExternalData() {
-           const organizations = ['Acme Corporation', 'Global Tech Inc', 'Business Solutions LLC', 'Enterprise Networks'];
-           const isps = ['Business Fiber Network', 'Corporate Internet', 'Enterprise ISP', 'Fiber Solutions'];
-           const locations = ['Columbia, SC, US', 'Atlanta, GA, US', 'Charlotte, NC, US', 'Virginia, US'];
-           
-           return {
-               organization: organizations[Math.floor(Math.random() * organizations.length)],
-               isp: isps[Math.floor(Math.random() * isps.length)],
-               location: locations[Math.floor(Math.random() * locations.length)],
-               publicIPs: Math.floor(Math.random() * 5) + 1,
-               openPorts: Math.floor(Math.random() * 10) + 3,
-               vulnerabilities: Math.floor(Math.random() * 3) + 1
-           };
-       }
-
-       // Override remediateEncryptionGaps to open chat
-       window.remediateEncryptionGaps = function() {
-           if (!window.sentinelChat) {
-               console.error('Chat system not available');
-               return;
-           }
-
-           // Open chat if not already open
-           if (!SentinelState.chatOpen) {
-               sentinelChat.toggle();
-           }
-
-           setTimeout(() => {
-               sentinelChat.addMessage('remediate encryption gaps', true);
-               
-               setTimeout(() => {
-                   sentinelChat.addMessage('NetworkMapper: Initiating encryption gap remediation. Coordinating with EncryptionDeployer and CertificateManager...', false, 'system');
-               }, 500);
-               
-               setTimeout(() => {
-                   sentinelChat.addMessage(`EncryptionDeployer: Analyzing unencrypted devices. Deploying hybrid-resistant encryption modules. Working with CertificateManager for key distribution.`, false);
-               }, 1200);
-               
-               setTimeout(() => {
-                   sentinelChat.addMessage('EncryptionDeployer: Deployment in progress. Using TLS 1.3 + Kyber-1024 for network traffic, AES-256-GCM + Dilithium-3 for data at rest.', false);
-               }, 2500);
-               
-               // Simulate completion
-               setTimeout(() => {
-                   sentinelChat.addMessage(`✅ EncryptionDeployer: Remediation complete! All devices now protected with hybrid-resistant encryption. NetworkMapper verified. No gaps detected.`, false);
-                   
-                   // Hide the alert
-                   hideEncryptionGapAlert();
-               }, 4000);
-               
-           }, 300);
-       };
 
        // Cleanup activity feed on page unload
        window.addEventListener('beforeunload', () => {
