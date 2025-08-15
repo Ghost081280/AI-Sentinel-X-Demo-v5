@@ -1669,20 +1669,20 @@
             letter-spacing: 1px;
         }
 
-        /* COMPLETELY REBUILT FOOTER - GUARANTEED CENTERED */
-        .footer-streamlined {
+        /* Footer Styles - Matching dashboard.html */
+        .footer {
             background: var(--bg-card);
             border-top: 1px solid var(--border);
             border-radius: 20px 20px 0 0;
-            padding: 30px 20px;
-            margin-top: 40px;
+            padding: 40px 30px 30px;
+            margin-top: 30px;
             backdrop-filter: blur(15px);
             box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
         }
 
-        .footer-streamlined::before {
+        .footer::before {
             content: '';
             position: absolute;
             top: 0;
@@ -1690,7 +1690,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.02), transparent);
-            animation: footerScan 12s linear infinite;
+            animation: footerScan 15s linear infinite;
         }
 
         @keyframes footerScan {
@@ -1698,101 +1698,33 @@
             100% { left: 100%; }
         }
 
-        /* Footer Top Section */
-        .footer-top-section {
+        .footer-content {
             position: relative;
             z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
         }
 
-        /* Logo Section */
-        .footer-logo-section {
+        .footer-section {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 15px;
-        }
-
-        .footer-logo {
-            width: 50px;
-            height: 50px;
-            position: relative;
-            display: flex;
             align-items: center;
-            justify-content: center;
+            text-align: center;
         }
 
-        .footer-shield {
-            width: 35px;
-            height: 35px;
-            background: var(--gradient-shield);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            position: relative;
-            animation: footerShieldPulse 4s ease-in-out infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        @keyframes footerShieldPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .footer-eye {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: var(--bg-darker);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .footer-iris {
-            width: 12px;
-            height: 12px;
-            background: var(--gradient-1);
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
-        }
-
-        .footer-brand-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .footer-brand-name {
-            font-size: 18px;
+        .footer-section-title {
+            font-size: 16px;
             font-weight: bold;
-            letter-spacing: 1px;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 0;
-        }
-
-        .footer-brand-tagline {
-            font-size: 12px;
-            color: var(--text-secondary);
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin: 0;
-        }
-
-        /* CENTERED LINKS CONTAINER - THIS IS THE FIX */
-        .footer-links-container {
-            width: 100%;
+            margin-bottom: 5px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 25px;
-            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .footer-link {
@@ -1800,71 +1732,37 @@
             text-decoration: none;
             font-size: 14px;
             transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid transparent;
+            gap: 10px;
         }
 
         .footer-link:hover {
             color: var(--primary);
             background: rgba(0, 255, 136, 0.05);
-            border-color: rgba(0, 255, 136, 0.2);
-            transform: translateY(-1px);
+            transform: translateX(5px);
         }
 
-        /* Rotating dots for footer logo */
-        .footer-rotating-dots {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            animation: rotate 12s linear infinite;
-        }
-
-        .footer-dot {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 4px var(--primary);
-        }
-
-        .footer-dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
-        .footer-dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
-        .footer-dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
-
-        /* Footer Bottom Section */
-        .footer-bottom-section {
+        .footer-bottom {
             position: relative;
             z-index: 1;
             padding-top: 20px;
             border-top: 1px solid var(--border);
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .footer-copyright {
             color: var(--text-secondary);
             font-size: 12px;
             display: flex;
-            justify-content: center;
             align-items: center;
             gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        /* Desktop adjustments */
-        @media (min-width: 769px) {
-            .footer-top-section {
-                flex-direction: row;
-                justify-content: space-between;
-            }
-
-            .footer-links-container {
-                width: auto;
-            }
         }
 
         /* AI Chat Widget */
@@ -2545,57 +2443,53 @@
 
     </div>
 
-    <!-- Completely Rebuilt Footer with INLINE STYLES to FORCE Centering -->
-    <footer class="footer-streamlined" style="background: rgba(10, 20, 40, 0.8); border-top: 1px solid rgba(0, 255, 136, 0.2); border-radius: 20px 20px 0 0; padding: 30px 20px; margin-top: 40px;">
-        <!-- Main Footer Content -->
-        <div style="display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; width: 100% !important; gap: 30px !important;">
-            <!-- Logo Section -->
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <div class="footer-logo">
-                    <div class="footer-rotating-dots">
-                        <span class="footer-dot"></span>
-                        <span class="footer-dot"></span>
-                        <span class="footer-dot"></span>
-                    </div>
-                    <div class="footer-shield">
-                        <div class="footer-eye">
-                            <div class="footer-iris"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="footer-brand-info">
-                    <h3 class="footer-brand-name">AI Sentinel-X</h3>
-                    <p class="footer-brand-tagline">Autonomous Cyber Defense</p>
-                </div>
+    <!-- Footer matching dashboard.html exactly -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- Company Info -->
+            <div class="footer-section">
+                <h3 class="footer-section-title">
+                    <span>🛡️</span>
+                    <span>AI Sentinel-X</span>
+                </h3>
+                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 15px;">
+                    NetworkMapper Sub-Agent - Advanced network discovery and mapping with hybrid-resistant encryption protocols for comprehensive infrastructure protection.
+                </p>
             </div>
-            
-            <!-- FORCE CENTERED Links -->
-            <div style="width: 100% !important; display: flex !important; justify-content: center !important; align-items: center !important; gap: 20px !important; flex-wrap: wrap !important; margin: 0 auto !important; text-align: center !important;">
-                <a href="dashboard.html" style="color: #8892b0; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px;">
-                    <span>🏠</span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="mailto:support@ai-sentinel-x.com" style="color: #8892b0; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px;">
-                    <span>📧</span>
-                    <span>Support</span>
-                </a>
-                <a href="https://docs.ai-sentinel-x.com" target="_blank" style="color: #8892b0; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px;">
-                    <span>📚</span>
-                    <span>Documentation</span>
-                </a>
-                <a href="settings.html" style="color: #8892b0; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px;">
-                    <span>⚙️</span>
-                    <span>Settings</span>
-                </a>
+
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h3 class="footer-section-title">
+                    <span>🔗</span>
+                    <span>Quick Links</span>
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                    <a href="dashboard.html" class="footer-link">
+                        <span>🏠</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="mailto:support@ai-sentinel-x.com" class="footer-link">
+                        <span>📧</span>
+                        <span>Support</span>
+                    </a>
+                    <a href="https://docs.ai-sentinel-x.com" class="footer-link">
+                        <span>📚</span>
+                        <span>Documentation</span>
+                    </a>
+                    <a href="settings.html" class="footer-link">
+                        <span>⚙️</span>
+                        <span>Settings</span>
+                    </a>
+                </div>
             </div>
         </div>
-        
-        <!-- Copyright Section -->
-        <div style="text-align: center !important; width: 100% !important; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(0, 255, 136, 0.2);">
-            <div style="color: #8892b0; font-size: 12px; display: flex !important; justify-content: center !important; align-items: center; gap: 8px;">
-                <span>© 2025 AI Sentinel-X</span>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <span>©</span>
+                <span>2025 AI Sentinel-X. All rights reserved.</span>
                 <span>•</span>
-                <span>NetworkMapper</span>
+                <span>NetworkMapper Module</span>
             </div>
         </div>
     </footer>
