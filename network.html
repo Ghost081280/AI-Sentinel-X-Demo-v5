@@ -1672,12 +1672,12 @@
         /* COMPLETELY REBUILT FOOTER - AMAZING ORBITAL DESIGN */
         .footer {
             background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            border-radius: 25px 25px 0 0;
-            margin-top: 60px;
-            padding: 50px 0 30px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            margin: 40px 20px 20px 20px;
+            padding: 25px 0 15px;
             backdrop-filter: blur(20px);
-            box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
         }
@@ -1707,7 +1707,7 @@
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 30px;
+            padding: 0 40px;
             position: relative;
             z-index: 2;
         }
@@ -1717,15 +1717,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             position: relative;
-            height: 120px;
+            height: 70px;
         }
 
         .orbital-logo-container {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 70px;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1733,8 +1733,8 @@
 
         /* Main logo shield */
         .orbital-logo-shield {
-            width: 70px;
-            height: 70px;
+            width: 40px;
+            height: 40px;
             background: var(--gradient-shield);
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             position: relative;
@@ -1742,44 +1742,44 @@
             align-items: center;
             justify-content: center;
             animation: orbitalPulse 4s ease-in-out infinite;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
         }
 
         @keyframes orbitalPulse {
             0%, 100% { 
                 transform: scale(1); 
-                box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
             }
             50% { 
-                transform: scale(1.08); 
-                box-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
+                transform: scale(1.05); 
+                box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
             }
         }
 
         .orbital-logo-eye {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 24px;
+            height: 24px;
             background: var(--bg-darker);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid rgba(0, 255, 136, 0.3);
+            border: 1px solid rgba(0, 255, 136, 0.3);
         }
 
         .orbital-logo-iris {
-            width: 24px;
-            height: 24px;
+            width: 14px;
+            height: 14px;
             background: var(--gradient-1);
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
             animation: irisGlow 3s ease-in-out infinite;
         }
 
         @keyframes irisGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.8); }
-            50% { box-shadow: 0 0 35px rgba(0, 255, 136, 1); }
+            0%, 100% { box-shadow: 0 0 12px rgba(0, 255, 136, 0.8); }
+            50% { box-shadow: 0 0 18px rgba(0, 255, 136, 1); }
         }
 
         /* Three orbiting dots system */
@@ -1815,14 +1815,14 @@
 
         .orbital-dot {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            box-shadow: 0 0 12px currentColor;
+            box-shadow: 0 0 8px currentColor;
         }
 
         .orbital-dot:nth-child(1) {
-            top: -4px;
+            top: -3px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--primary);
@@ -1831,14 +1831,14 @@
 
         .orbital-dot:nth-child(2) {
             top: 50%;
-            right: -4px;
+            right: -3px;
             transform: translateY(-50%);
             background: var(--secondary);
             color: var(--secondary);
         }
 
         .orbital-dot:nth-child(3) {
-            bottom: -4px;
+            bottom: -3px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--accent);
@@ -1848,26 +1848,26 @@
         /* Brand title under logo */
         .footer-brand-title {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
         }
 
         .footer-brand-name {
-            font-size: 28px;
+            font-size: 20px;
             font-weight: bold;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             background: var(--gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             text-transform: uppercase;
         }
 
         .footer-brand-subtitle {
-            font-size: 14px;
+            font-size: 11px;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             font-weight: 600;
         }
 
@@ -1876,22 +1876,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 40px;
-            margin-bottom: 40px;
+            gap: 25px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
 
         .footer-nav-link {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 15px 25px;
+            gap: 8px;
+            padding: 10px 18px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
-            border-radius: 25px;
+            border-radius: 20px;
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -1925,7 +1925,7 @@
         }
 
         .footer-nav-icon {
-            font-size: 18px;
+            font-size: 14px;
             transition: transform 0.3s ease;
         }
 
@@ -1936,27 +1936,27 @@
         /* Bottom section with copyright */
         .footer-bottom {
             border-top: 1px solid var(--border);
-            padding-top: 25px;
+            padding-top: 15px;
             text-align: center;
         }
 
         .footer-copyright {
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 11px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
             font-weight: 500;
         }
 
         .footer-copyright-divider {
-            width: 4px;
-            height: 4px;
+            width: 3px;
+            height: 3px;
             background: var(--primary);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--primary);
+            box-shadow: 0 0 6px var(--primary);
         }
 
         /* AI Chat Widget - keeping clear of footer */
@@ -2212,36 +2212,40 @@
 
             /* Mobile footer adjustments */
             .footer-navigation {
-                gap: 20px;
+                gap: 15px;
             }
 
             .footer-nav-link {
-                padding: 12px 20px;
-                font-size: 13px;
+                padding: 8px 15px;
+                font-size: 11px;
             }
 
             .orbital-logo-container {
-                width: 100px;
-                height: 100px;
-            }
-
-            .orbital-logo-shield {
                 width: 60px;
                 height: 60px;
             }
 
-            .orbital-logo-eye {
+            .orbital-logo-shield {
                 width: 35px;
                 height: 35px;
             }
 
-            .orbital-logo-iris {
+            .orbital-logo-eye {
                 width: 20px;
                 height: 20px;
             }
 
+            .orbital-logo-iris {
+                width: 12px;
+                height: 12px;
+            }
+
             .footer-brand-name {
-                font-size: 24px;
+                font-size: 18px;
+            }
+
+            .footer {
+                margin: 30px 15px 15px 15px;
             }
         }
 
