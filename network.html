@@ -1669,12 +1669,12 @@
             letter-spacing: 1px;
         }
 
-        /* Streamlined Footer for Secondary Pages */
+        /* COMPLETELY REBUILT FOOTER - GUARANTEED CENTERED */
         .footer-streamlined {
             background: var(--bg-card);
             border-top: 1px solid var(--border);
             border-radius: 20px 20px 0 0;
-            padding: 30px;
+            padding: 30px 20px;
             margin-top: 40px;
             backdrop-filter: blur(15px);
             box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
@@ -1698,18 +1698,19 @@
             100% { left: 100%; }
         }
 
-        .footer-streamlined-content {
+        /* Footer Top Section */
+        .footer-top-section {
             position: relative;
             z-index: 1;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            flex-wrap: wrap;
             gap: 30px;
             margin-bottom: 20px;
         }
 
-        .footer-brand {
+        /* Logo Section */
+        .footer-logo-section {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -1784,12 +1785,14 @@
             margin: 0;
         }
 
-        .footer-links {
+        /* CENTERED LINKS CONTAINER - THIS IS THE FIX */
+        .footer-links-container {
+            width: 100%;
             display: flex;
-            gap: 25px;
-            align-items: center;
-            flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
         }
 
         .footer-link {
@@ -1810,21 +1813,6 @@
             background: rgba(0, 255, 136, 0.05);
             border-color: rgba(0, 255, 136, 0.2);
             transform: translateY(-1px);
-        }
-
-        .footer-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--success);
-            font-weight: 500;
         }
 
         /* Rotating dots for footer logo */
@@ -1848,7 +1836,8 @@
         .footer-dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
         .footer-dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
 
-        .footer-bottom-streamlined {
+        /* Footer Bottom Section */
+        .footer-bottom-section {
             position: relative;
             z-index: 1;
             padding-top: 20px;
@@ -1856,7 +1845,7 @@
             text-align: center;
         }
 
-        .footer-copyright-streamlined {
+        .footer-copyright {
             color: var(--text-secondary);
             font-size: 12px;
             display: flex;
@@ -1864,6 +1853,18 @@
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 769px) {
+            .footer-top-section {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .footer-links-container {
+                width: auto;
+            }
         }
 
         /* AI Chat Widget */
@@ -2544,10 +2545,12 @@
 
     </div>
 
-    <!-- Streamlined Footer for Secondary Pages -->
+    <!-- Completely Rebuilt Footer with Centered Links -->
     <footer class="footer-streamlined">
-        <div class="footer-streamlined-content">
-            <div class="footer-brand">
+        <!-- Top Section with Logo and Links -->
+        <div class="footer-top-section">
+            <!-- Logo Section -->
+            <div class="footer-logo-section">
                 <div class="footer-logo">
                     <div class="footer-rotating-dots">
                         <span class="footer-dot"></span>
@@ -2566,7 +2569,8 @@
                 </div>
             </div>
             
-            <div class="footer-links">
+            <!-- Centered Links Section -->
+            <div class="footer-links-container">
                 <a href="dashboard.html" class="footer-link">
                     <span>🏠</span>
                     <span>Dashboard</span>
@@ -2586,8 +2590,9 @@
             </div>
         </div>
         
-        <div class="footer-bottom-streamlined">
-            <div class="footer-copyright-streamlined">
+        <!-- Bottom Copyright Section -->
+        <div class="footer-bottom-section">
+            <div class="footer-copyright">
                 <span>© 2025 AI Sentinel-X</span>
                 <span>•</span>
                 <span>NetworkMapper</span>
