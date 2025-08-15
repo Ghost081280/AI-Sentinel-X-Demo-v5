@@ -1108,15 +1108,29 @@ function populateScanningPanels() {
    
    // Handle external services based on Shodan API status
    if (shodanApiConnected) {
-       // Hide overlay and show external services
+       // Hide overlay and show external services with proper status
        const overlay = document.getElementById('shodanApiOverlay');
-       if (overlay) overlay.classList.remove('active');
+       const status = document.getElementById('externalScanStatus');
        
+       if (overlay) overlay.classList.remove('active');
+       if (status) {
+           status.innerHTML = '<div class="status-dot"></div><span>AUTO-DISCOVERING</span>';
+           status.className = 'scan-status active';
+       }
+       
+       // Update external scan results to show discovered data
+       populateExternalScanResults();
        populateExternalServices();
    } else {
-       // Show overlay for API setup
+       // Show overlay for API setup and clear any existing data
        const overlay = document.getElementById('shodanApiOverlay');
        if (overlay) overlay.classList.add('active');
+       
+       // Clear external services list
+       const externalList = document.getElementById('externalServicesList');
+       if (externalList) {
+           externalList.innerHTML = '';
+       }
    }
 }
 
