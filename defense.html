@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DefenseOrchestrator | AI Sentinel-X</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --accent: #7c3aed;
+            --danger: #ff0044;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060912;
+            --bg-card: rgba(10, 20, 40, 0.8);
+            --border: rgba(0, 255, 136, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #00ccff 100%);
+            --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
+            --gradient-encryption: linear-gradient(135deg, #00ff88 0%, #00aa66 100%);
+            --gradient-quantum: linear-gradient(135deg, #7c3aed 0%, #ff00ff 50%, #00ccff 100%);
+            --gradient-hybrid: linear-gradient(135deg, #00ff88 0%, #7c3aed 50%, #00ccff 100%);
+            --gradient-defense: linear-gradient(135deg, #00ff88 0%, #00aa66 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Consolas', 'Monaco', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Neural Network Background Canvas */
+        #neuralCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px 15px 20px 20px;
+            padding: 25px 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* Logo */
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-shield {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            animation: shieldPulse 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .logo-eye {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-iris {
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+
+        .rotating-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate 12s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 4px var(--primary);
+        }
+
+        .dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+        .dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
+        .dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Encryption Status Badge - Matching dashboard.html style */
+        .encryption-badges {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .encryption-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .encryption-badge:hover {
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .status-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: statusPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .agent-status:hover {
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .agent-icon {
+            font-size: 20px;
+        }
+
+        .agent-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .agent-status-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 0, 68, 0.3);
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: var(--danger);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 68, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--border);
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            font-weight: bold;
+        }
+
+        /* Sub-Agent Status */
+        .sub-agent-status {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 170, 102, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            backdrop-filter: blur(15px);
+        }
+
+        .sub-agent-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sub-agent-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-defense);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .sub-agent-details h3 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .sub-agent-details p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .sub-agent-metrics {
+            display: flex;
+            gap: 30px;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Main Grid */
+        .defense-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Honeypot List */
+        .honeypot-list {
+            display: grid;
+            gap: 15px;
+            min-height: 400px;
+        }
+
+        .honeypot-item {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 255, 136, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .honeypot-item:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(0, 170, 102, 0.05) 100%);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .honeypot-info {
+            flex: 1;
+        }
+
+        .honeypot-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .honeypot-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .honeypot-ai-status {
+            font-size: 13px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .honeypot-status {
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 1px solid var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+
+        /* Response Timeline */
+        .timeline-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            min-height: 400px;
+        }
+
+        .timeline-event {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            animation: timelineSlide 0.5s ease;
+        }
+
+        @keyframes timelineSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .timeline-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .timeline-action {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .timeline-details {
+            font-size: 13px;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .timeline-agent {
+            font-size: 11px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* Security Playbooks Section */
+        .playbooks-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+        }
+
+        .playbook-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .playbook-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .playbook-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .playbook-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 6px currentColor);
+        }
+
+        .playbook-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .playbook-stats {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .playbook-agent {
+            font-size: 11px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* Multi-Agent Coordination Section */
+        .coordination-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+        }
+
+        .coordination-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .coordination-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .coordination-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .coordination-card {
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.1) 0%, rgba(0, 255, 136, 0.05) 100%);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .coordination-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 204, 255, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .coordination-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .coordination-card-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 6px currentColor);
+        }
+
+        .coordination-card-status {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .coordination-card-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            font-size: 18px;
+        }
+
+        .coordination-card-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .coordination-card-agents {
+            font-size: 12px;
+            color: var(--accent);
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 204, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 204, 255, 0.2);
+        }
+
+        /* Activity Feed using shared.js infrastructure */
+        .activity-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feed-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .feed-item {
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s ease;
+            animation: feedSlide 0.3s ease;
+        }
+
+        @keyframes feedSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feed-item.warning {
+            background: rgba(255, 170, 0, 0.05);
+            border-left-color: var(--warning);
+        }
+
+        .feed-item.danger {
+            background: rgba(255, 0, 68, 0.05);
+            border-left-color: var(--danger);
+        }
+
+        .feed-item.encryption {
+            background: rgba(124, 58, 237, 0.05);
+            border-left-color: var(--accent);
+        }
+
+        .feed-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feed-message {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .feed-agent {
+            font-size: 11px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* AI Chat Widget */
+        .ai-chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .ai-chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+            font-size: 28px;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .ai-chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .ai-chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 400px;
+            height: 500px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .ai-chat-window.active {
+            display: flex;
+            animation: chatSlideIn 0.3s ease;
+        }
+
+        @keyframes chatSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-chat-header {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .ai-chat-close {
+            cursor: pointer;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .cli-mode-indicator {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--warning);
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .cli-mode-indicator.active {
+            display: block;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-message {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-message-bubble {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .ai-message-bubble.user {
+            background: rgba(0, 204, 255, 0.1);
+            border-color: var(--secondary);
+            align-self: flex-end;
+        }
+
+        .ai-message-bubble.system {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--accent);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .ai-message-bubble code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .ai-message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .ai-chat-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .ai-chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .ai-chat-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .ai-chat-send {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Agent Shutdown Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn-primary {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            padding: 40px 0 20px 0;
+            border-top: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(10, 20, 40, 0.8) 0%, rgba(6, 9, 18, 0.9) 100%);
+            backdrop-filter: blur(15px);
+        }
+
+        .footer-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .footer-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .footer-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: statusPulse 3s ease-in-out infinite;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 4px 0;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .footer-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-stat-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-stat-value {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .footer-tech-stack {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tech-badge {
+            padding: 4px 8px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 8px;
+            font-size: 10px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .defense-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .coordination-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .encryption-badges {
+                order: -1;
+                justify-content: center;
+            }
+            
+            .nav-tabs {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .sub-agent-status {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .sub-agent-metrics {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .playbook-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-chat-window {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 140px);
+                right: -20px;
+                bottom: 80px;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Check authentication
+        const auth = localStorage.getItem('sentinel_auth');
+        if (!auth) {
+            window.location.href = 'index.html';
+        } else {
+            const authData = JSON.parse(auth);
+            if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
+                localStorage.removeItem('sentinel_auth');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+    <!-- Neural Network Background -->
+    <canvas id="neuralCanvas"></canvas>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="rotating-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="logo-shield">
+                            <div class="logo-eye">
+                                <div class="logo-iris"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="brand-name">AI SENTINEL-X</h1>
+                        <p class="brand-tagline">Autonomous Cyber Defense</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="encryption-badges">
+                        <div class="encryption-badge" onclick="showEncryptionStatus('hybrid')">
+                            <div class="status-light"></div>
+                            <span>HYBRID MODE ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="agent-status" onclick="showAgentShutdownModal()">
+                        <span class="agent-icon">🤖</span>
+                        <div class="agent-info">
+                            <span class="agent-title">AI Agent Active</span>
+                            <span class="agent-status-text" id="agentModeText">Autonomous with Manual Override</span>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <a href="dashboard.html" class="nav-tab">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="threats.html" class="nav-tab">
+                <span>🛡️</span>
+                <span>Threats</span>
+            </a>
+            <a href="network.html" class="nav-tab">
+                <span>🌐</span>
+                <span>Network</span>
+            </a>
+            <a href="#" class="nav-tab active">
+                <span>⚔️</span>
+                <span>Defense</span>
+            </a>
+            <a href="ai-engine.html" class="nav-tab">
+                <span>🧠</span>
+                <span>AI Engine</span>
+            </a>
+            <a href="encryption.html" class="nav-tab">
+                <span>🔐</span>
+                <span>Encryption</span>
+            </a>
+            <a href="analytics.html" class="nav-tab">
+                <span>📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="vpn.html" class="nav-tab">
+                <span>🔒</span>
+                <span>VPNMonitor</span>
+            </a>
+            <a href="settings.html" class="nav-tab">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- Sub-Agent Status -->
+        <div class="sub-agent-status">
+            <div class="sub-agent-info">
+                <div class="sub-agent-icon">⚔️</div>
+                <div class="sub-agent-details">
+                    <h3>DefenseOrchestrator Sub-Agent</h3>
+                    <p>Coordinating with ThreatScanner & NetworkMapper • Honeypot management • Automated response • Reports to Main Agent</p>
+                </div>
+            </div>
+            <div class="sub-agent-metrics">
+                <div class="metric">
+                    <div class="metric-value" id="activeHoneypots">8</div>
+                    <div class="metric-label">Honeypots</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="attacksTrapped">47</div>
+                    <div class="metric-label">Trapped</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="responsesExecuted">124</div>
+                    <div class="metric-label">Responses</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="agentCoordination">3</div>
+                    <div class="metric-label">Coordinated</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="defense-grid">
+            <!-- Honeypot Management -->
+            <div class="section-card">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <span>🍯</span>
+                        <span>Deception Systems</span>
+                    </h2>
+                </div>
+                <div class="honeypot-list" id="honeypotList">
+                    <!-- Honeypots will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Response Timeline -->
+            <div class="section-card">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <span>⚡</span>
+                        <span>Automated Response Timeline</span>
+                    </h2>
+                </div>
+                <div class="timeline-container" id="responseTimeline">
+                    <!-- Timeline events will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Multi-Agent Coordination Section -->
+        <div class="coordination-section">
+            <div class="coordination-header">
+                <div class="coordination-title">
+                    <span>🤝</span>
+                    <span>Multi-Agent Defense Coordination</span>
+                </div>
+                <span style="color: var(--text-secondary); font-size: 14px;">DefenseOrchestrator working with ThreatScanner & NetworkMapper</span>
+            </div>
+            <div class="coordination-grid" id="coordinationGrid">
+                <!-- Coordination cards will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Security Playbooks -->
+        <div class="playbooks-section">
+            <div class="panel-header">
+                <h2 class="panel-title">
+                    <span>📋</span>
+                    <span>Active Security Playbooks</span>
+                </h2>
+                <span style="color: var(--text-secondary); font-size: 14px;">Autonomous playbook discovery and execution across all sub-agents</span>
+            </div>
+            <div class="playbook-grid" id="playbookGrid">
+                <!-- Playbooks will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- DefenseOrchestrator Activity Feed -->
+        <div class="activity-feed">
+            <div class="feed-header">
+                <h2 class="feed-title">
+                    <span>⚔️</span>
+                    <span>DefenseOrchestrator Activity Feed</span>
+                </h2>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>LIVE</span>
+                </div>
+            </div>
+            <div class="feed-content" id="defenseActivityFeed">
+                <!-- Feed items will be populated by ActivityFeedManager -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-main">
+                <!-- Brand Column -->
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">⚔️</div>
+                        <div class="footer-logo-text">AI Sentinel-X</div>
+                    </div>
+                    <div class="footer-description">
+                        DefenseOrchestrator coordinates autonomous cyber defense across multiple sub-agents. Advanced honeypot management, automated response orchestration, and multi-agent playbook execution provide comprehensive protection with real-time threat mitigation capabilities.
+                    </div>
+                    <div class="footer-status">
+                        <div class="footer-status-dot"></div>
+                        <span>DefenseOrchestrator Online</span>
+                    </div>
+                </div>
+
+                <!-- Defense Tools -->
+                <div class="footer-section">
+                    <h4>Defense Systems</h4>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('honeypots')">🍯 Honeypot Management</a>
+                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('response')">⚡ Response Automation</a>
+                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('coordination')">🤝 Agent Coordination</a>
+                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('playbooks')">📋 Security Playbooks</a>
+                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('mitigation')">🛡️ Threat Mitigation</a>
+                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('quarantine')">🔒 Auto-Quarantine</a>
+                    </div>
+                </div>
+
+                <!-- Sub-Agent Integration -->
+                <div class="footer-section">
+                    <h4>Sub-Agent Network</h4>
+                    <div class="footer-links">
+                        <a href="threats.html" class="footer-link">🛡️ ThreatScanner Integration</a>
+                        <a href="network.html" class="footer-link">🌐 NetworkMapper Coordination</a>
+                        <a href="analytics.html" class="footer-link">📊 AnalyticsEngine Support</a>
+                        <a href="encryption.html" class="footer-link">🔐 EncryptionManager Sync</a>
+                        <a href="ai-engine.html" class="footer-link">🧠 AI Engine Collaboration</a>
+                        <a href="vpn.html" class="footer-link">🔒 VPNMonitor Coordination</a>
+                    </div>
+                </div>
+
+                <!-- Live Defense Stats -->
+                <div class="footer-section">
+                    <h4>Live Defense Metrics</h4>
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <span class="footer-stat-label">Active Honeypots</span>
+                            <span class="footer-stat-value" id="footerHoneypots">8</span>
+                        </div>
+                        <div class="footer-stat">
+                            <span class="footer-stat-label">Attacks Trapped</span>
+                            <span class="footer-stat-value" id="footerTrapped">47</span>
+                        </div>
+                        <div class="footer-stat">
+                            <span class="footer-stat-label">Auto-Responses</span>
+                            <span class="footer-stat-value" id="footerResponses">124</span>
+                        </div>
+                        <div class="footer-stat">
+                            <span class="footer-stat-label">Playbook Executions</span>
+                            <span class="footer-stat-value" id="footerPlaybooks">67</span>
+                        </div>
+                        <div class="footer-stat">
+                            <span class="footer-stat-label">Coordination Score</span>
+                            <span class="footer-stat-value">98.7%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    © 2025 AI Sentinel-X Defense Platform. DefenseOrchestrator sub-agent with autonomous threat response and multi-agent coordination.
+                </div>
+                <div class="footer-tech-stack">
+                    <span class="tech-badge">Hybrid Encryption</span>
+                    <span class="tech-badge">Auto-Response</span>
+                    <span class="tech-badge">ML Coordination</span>
+                    <span class="tech-badge">Real-time Defense</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Agent Shutdown Modal -->
+    <div class="modal-overlay" id="agentShutdownModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">⚠️ Agent Control Toggle</h2>
+            </div>
+            <div class="modal-content">
+                Toggle autonomous mode? When paused, manual control remains available through the AI chat bot CLI. System will fallback to local control mode if external APIs are offline.
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" onclick="confirmAgentShutdown()">Toggle Agent Mode</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Widget -->
+    <div class="ai-chat-widget">
+        <div class="ai-chat-window" id="aiChatWindow">
+            <div class="ai-chat-header">
+                <div class="ai-chat-status">
+                    <span class="chat-status-dot"></span>
+                    <span>MAIN AGENT ONLINE</span>
+                </div>
+                <button class="ai-chat-close" onclick="toggleChat()">×</button>
+            </div>
+            <div class="cli-mode-indicator" id="cliModeIndicator">
+                ⚠️ CLI MODE - Main Agent Offline
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-message">
+                    <div class="ai-message-bubble">
+                        DefenseOrchestrator online. Coordinating with ThreatScanner for threat detection and NetworkMapper for asset discovery. Managing 8 honeypots and executing multi-agent security playbooks for comprehensive autonomous cyber defense.
+                    </div>
+                    <div class="ai-message-time">Just now</div>
+                </div>
+            </div>
+            <div class="ai-chat-input-container">
+                <input 
+                    type="text" 
+                    class="ai-chat-input" 
+                    id="aiChatInput" 
+                    placeholder="Command the Main Agent"
+                    onkeypress="handleChatKeyPress(event)"
+                >
+                <button class="ai-chat-send" id="aiChatSend" onclick="sendChatMessage()">SEND</button>
+            </div>
+        </div>
+        <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Defense page-specific configurations
+        let defenseAutoExecution = true;
+        let autoTimelineInterval;
+        let defenseFeedId = 'defense-feed';
+
+        // Defense data structures with multi-agent coordination
+        const DefenseData = {
+            honeypots: [
+                {
+                    id: 'ssh',
+                    name: 'SSH Honeypot',
+                    icon: '🔐',
+                    details: 'Port 22 • 12 intrusions trapped',
+                    status: 'ACTIVE',
+                    aiStatus: 'DefenseOrchestrator + ThreatScanner: Monitoring brute force attempts'
+                },
+                {
+                    id: 'web',
+                    name: 'Web Application Decoy',
+                    icon: '🌐',
+                    details: 'Port 8080 • WordPress simulation',
+                    status: 'ACTIVE',
+                    aiStatus: 'DefenseOrchestrator + NetworkMapper: Collecting attack patterns'
+                },
+                {
+                    id: 'database',
+                    name: 'Database Honeypot',
+                    icon: '🗄️',
+                    details: 'Port 3306 • MySQL with fake data',
+                    status: 'ACTIVE',
+                    aiStatus: 'DefenseOrchestrator + ThreatScanner: Learning SQL injection patterns'
+                },
+                {
+                    id: 'ftp',
+                    name: 'FTP Server Trap',
+                    icon: '📁',
+                    details: 'Port 21 • Ready to deploy',
+                    status: 'STANDBY',
+                    aiStatus: 'DefenseOrchestrator: On standby for activation coordination'
+                },
+                {
+                    id: 'email',
+                    name: 'Email Server Decoy',
+                    icon: '📧',
+                    details: 'Port 25 • Collecting phishing attempts',
+                    status: 'ACTIVE',
+                    aiStatus: 'DefenseOrchestrator + ThreatScanner: 89 phishing attempts trapped'
+                },
+                {
+                    id: 'rdp',
+                    name: 'RDP Honeypot',
+                    icon: '🖥️',
+                    details: 'Port 3389 • Windows Server simulation',
+                    status: 'ACTIVE',
+                    aiStatus: 'DefenseOrchestrator + NetworkMapper: Analyzing credential attacks'
+                }
+            ],
+            playbooks: [
+                {
+                    id: 'ddos',
+                    icon: '⚡',
+                    name: 'DDoS Mitigation',
+                    stats: 'Executed 34 times today',
+                    agent: 'DefenseOrchestrator → ThreatScanner'
+                },
+                {
+                    id: 'malware',
+                    icon: '🦠',
+                    name: 'Malware Containment',
+                    stats: 'Executed 12 times today',
+                    agent: 'DefenseOrchestrator → NetworkMapper'
+                },
+                {
+                    id: 'phishing',
+                    icon: '🎣',
+                    name: 'Phishing Response',
+                    stats: 'Executed 89 times today',
+                    agent: 'DefenseOrchestrator → ThreatScanner'
+                },
+                {
+                    id: 'insider',
+                    icon: '👤',
+                    name: 'Insider Threat',
+                    stats: 'Executed 5 times today',
+                    agent: 'DefenseOrchestrator → LogAgent'
+                },
+                {
+                    id: 'ransomware',
+                    icon: '🔒',
+                    name: 'Ransomware Defense',
+                    stats: 'Executed 8 times today',
+                    agent: 'DefenseOrchestrator → EncryptionManager'
+                },
+                {
+                    id: 'zeroday',
+                    icon: '🎯',
+                    name: 'Zero-Day Response',
+                    stats: 'Executed 3 times today',
+                    agent: 'DefenseOrchestrator → AnalyticsEngine'
+                },
+                {
+                    id: 'lateral',
+                    icon: '🔄',
+                    name: 'Lateral Movement Defense',
+                    stats: 'Executed 7 times today',
+                    agent: 'DefenseOrchestrator → NetworkMapper'
+                },
+                {
+                    id: 'data_exfil',
+                    icon: '📤',
+                    name: 'Data Exfiltration Block',
+                    stats: 'Executed 15 times today',
+                    agent: 'DefenseOrchestrator → EncryptionManager'
+                }
+            ],
+            coordination: [
+                {
+                    id: 'threat-defense',
+                    name: 'Threat Detection & Response',
+                    description: 'Real-time coordination between threat detection and automated response systems',
+                    icon: '🛡️',
+                    agents: 'DefenseOrchestrator ↔ ThreatScanner',
+                    status: 'ACTIVE'
+                },
+                {
+                    id: 'network-defense',
+                    name: 'Network Discovery & Protection',
+                    description: 'Automatic deployment of defense measures to newly discovered network assets',
+                    icon: '🌐',
+                    agents: 'DefenseOrchestrator ↔ NetworkMapper',
+                    status: 'ACTIVE'
+                },
+                {
+                    id: 'intelligence-defense',
+                    name: 'Intelligence-Driven Defense',
+                    description: 'ML-powered defense adaptation based on analytics and threat intelligence',
+                    icon: '🧠',
+                    agents: 'DefenseOrchestrator ↔ AnalyticsEngine',
+                    status: 'ACTIVE'
+                }
+            ]
+        };
+
+        // Defense page initialization using shared.js infrastructure
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                initializeDefensePage();
+            }, 100);
+        });
+
+        function initializeDefensePage() {
+            // Initialize neural background first
+            if (typeof initNeuralBackground === 'function') {
+                initNeuralBackground();
+            }
+
+            // Initialize page context
+            if (typeof initializePageContext === 'function') {
+                initializePageContext();
+            }
+
+            // Initialize defense activity feed using shared.js ActivityFeedManager
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                // Initialize defense feed
+                activityFeedManager.initializeFeed(defenseFeedId, 'defense');
+                activityFeedManager.setFeedContainer(defenseFeedId, 'defenseActivityFeed');
+                
+                // Add initial messages showing multi-agent coordination
+                activityFeedManager.addMessage(defenseFeedId, '⚔️ DefenseOrchestrator coordinating with ThreatScanner and NetworkMapper for comprehensive autonomous cyber defense', '', 'DefenseOrchestrator');
+                activityFeedManager.addMessage(defenseFeedId, '🍯 Honeypot management: 8 active deception systems with multi-agent threat correlation', '', 'DefenseOrchestrator');
+                activityFeedManager.addMessage(defenseFeedId, '🤝 Multi-agent coordination: 3 active partnerships for intelligent defense automation', '', 'DefenseOrchestrator → Main Agent');
+                activityFeedManager.addMessage(defenseFeedId, '📋 Security playbooks: 8 response automations across multiple sub-agents', '', 'DefenseOrchestrator');
+                
+                // Start auto-generation every 6 seconds for defense feed
+                activityFeedManager.startAutoGeneration(defenseFeedId, 6000);
+            } else {
+                console.log('ActivityFeedManager not available yet, retrying...');
+                setTimeout(initializeDefensePage, 200);
+                return;
+            }
+
+            // Initialize chat system
+            if (typeof SentinelChat !== 'undefined') {
+                window.sentinelChat = new SentinelChat();
+            }
+
+            // Populate defense data sections
+            populateHoneypots();
+            populateCoordination();
+            populateSecurityPlaybooks();
+            initializeTimeline();
+            
+            // Start automated systems
+            startTimelineGeneration();
+            
+            // Start periodic updates
+            setInterval(() => {
+                updateDefenseMetrics();
+            }, 4000);
+
+            // Update footer stats periodically
+            setInterval(() => {
+                updateFooterStats();
+            }, 5000);
+        }
+
+        function populateHoneypots() {
+            const list = document.getElementById('honeypotList');
+            if (!list) return;
+            
+            list.innerHTML = '';
+
+            DefenseData.honeypots.forEach(honeypot => {
+                const item = document.createElement('div');
+                item.className = 'honeypot-item';
+                item.onclick = () => showHoneypotDetails(honeypot.id);
+                
+                item.innerHTML = `
+                    <div class="honeypot-info">
+                        <div class="honeypot-name">
+                            <span>${honeypot.icon}</span>
+                            <span>${honeypot.name}</span>
+                        </div>
+                        <div class="honeypot-details">${honeypot.details}</div>
+                        <div class="honeypot-ai-status">${honeypot.aiStatus}</div>
+                    </div>
+                    <div class="honeypot-status ${honeypot.status === 'STANDBY' ? 'status-inactive' : ''}">${honeypot.status}</div>
+                `;
+                
+                list.appendChild(item);
+            });
+        }
+
+        function populateCoordination() {
+            const grid = document.getElementById('coordinationGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+
+            DefenseData.coordination.forEach(coord => {
+                const card = document.createElement('div');
+                card.className = 'coordination-card';
+                card.onclick = () => showCoordinationDetails(coord.id);
+                
+                card.innerHTML = `
+                    <div class="coordination-card-header">
+                        <div style="text-align: center; flex: 1;">
+                            <div class="coordination-card-icon">${coord.icon}</div>
+                        </div>
+                        <div class="coordination-card-status">${coord.status}</div>
+                    </div>
+                    <div class="coordination-card-name">${coord.name}</div>
+                    <div class="coordination-card-description">${coord.description}</div>
+                    <div class="coordination-card-agents">${coord.agents}</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function populateSecurityPlaybooks() {
+            const grid = document.getElementById('playbookGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+
+            DefenseData.playbooks.forEach(playbook => {
+                const card = document.createElement('div');
+                card.className = 'playbook-card';
+                card.onclick = () => showPlaybookDetails(playbook.id);
+                
+                card.innerHTML = `
+                    <div class="playbook-icon">${playbook.icon}</div>
+                    <div class="playbook-name">${playbook.name}</div>
+                    <div class="playbook-stats">${playbook.stats}</div>
+                    <div class="playbook-agent">${playbook.agent}</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function initializeTimeline() {
+            const timeline = document.getElementById('responseTimeline');
+            if (!timeline) return;
+            
+            // Initial timeline events showing multi-agent coordination
+            const initialEvents = [
+                { 
+                    icon: '🤝', 
+                    action: 'Multi-Agent Coordination', 
+                    time: new Date(),
+                    details: 'DefenseOrchestrator coordinated with ThreatScanner to neutralize zero-day exploit targeting web services.',
+                    agent: 'DefenseOrchestrator → ThreatScanner'
+                },
+                { 
+                    icon: '🛡️', 
+                    action: 'Blocked Attack', 
+                    time: new Date(Date.now() - 300000),
+                    details: 'SQL injection attempt blocked on web honeypot. ThreatScanner pattern matching active.',
+                    agent: 'DefenseOrchestrator + ThreatScanner'
+                },
+                { 
+                    icon: '🍯', 
+                    action: 'Honeypot Triggered', 
+                    time: new Date(Date.now() - 600000),
+                    details: 'SSH honeypot accessed from 185.220.101.45. NetworkMapper correlating with asset discovery.',
+                    agent: 'DefenseOrchestrator + NetworkMapper'
+                },
+                { 
+                    icon: '🧠', 
+                    action: 'Intelligence Update', 
+                    time: new Date(Date.now() - 900000),
+                    details: 'AnalyticsEngine provided threat prediction model updates for enhanced defense posture.',
+                    agent: 'DefenseOrchestrator + AnalyticsEngine'
+                }
+            ];
+
+            initialEvents.forEach(event => addTimelineEvent(event));
+        }
+
+        function addTimelineEvent(event) {
+            const timeline = document.getElementById('responseTimeline');
+            if (!timeline) return;
+            
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'timeline-event';
+            
+            const time = event.time.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            eventDiv.innerHTML = `
+                <div class="timeline-icon">${event.icon}</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">${time}</div>
+                    <div class="timeline-action">${event.action}</div>
+                    <div class="timeline-details">${event.details}</div>
+                    <div class="timeline-agent">via ${event.agent}</div>
+                </div>
+            `;
+            
+            timeline.insertBefore(eventDiv, timeline.firstChild);
+            
+            // Keep only last 10 events
+            while (timeline.children.length > 10) {
+                timeline.removeChild(timeline.lastChild);
+            }
+        }
+
+        function startTimelineGeneration() {
+            if (autoTimelineInterval) clearInterval(autoTimelineInterval);
+            
+            autoTimelineInterval = setInterval(() => {
+                if (defenseAutoExecution && typeof SentinelState !== 'undefined' && SentinelState.agentActive) {
+                    generateTimelineEvent();
+                }
+            }, 15000); // Generate every 15 seconds
+        }
+
+        function generateTimelineEvent() {
+            const events = [
+                { 
+                    icon: '🤝', 
+                    action: 'Multi-Agent Response', 
+                    details: 'DefenseOrchestrator + ThreatScanner coordinated to block ' + Math.floor(Math.random() * 5 + 1) + ' simultaneous attacks.',
+                    agent: 'DefenseOrchestrator + ThreatScanner'
+                },
+                { 
+                    icon: '🌐', 
+                    action: 'Network Asset Protection', 
+                    details: 'NetworkMapper discovered new device. DefenseOrchestrator deployed protection automatically.',
+                    agent: 'DefenseOrchestrator + NetworkMapper'
+                },
+                { 
+                    icon: '🧠', 
+                    action: 'Intelligence-Driven Defense', 
+                    details: 'AnalyticsEngine predicted attack vector. DefenseOrchestrator preemptively strengthened defenses.',
+                    agent: 'DefenseOrchestrator + AnalyticsEngine'
+                },
+                { 
+                    icon: '🔒', 
+                    action: 'Encryption Coordination', 
+                    details: 'EncryptionManager rotated keys. DefenseOrchestrator updated security protocols accordingly.',
+                    agent: 'DefenseOrchestrator + EncryptionManager'
+                },
+                { 
+                    icon: '🛡️', 
+                    action: 'Attack Blocked', 
+                    details: `${['DDoS', 'SQL Injection', 'XSS', 'Brute Force'][Math.floor(Math.random() * 4)]} attack blocked via multi-agent coordination.`,
+                    agent: 'DefenseOrchestrator'
+                },
+                { 
+                    icon: '🍯', 
+                    action: 'Honeypot Triggered', 
+                    details: 'Honeypot detected intrusion. ThreatScanner analyzing patterns for threat intelligence.',
+                    agent: 'DefenseOrchestrator + ThreatScanner'
+                }
+            ];
+            
+            if (Math.random() > 0.6) {
+                const event = events[Math.floor(Math.random() * events.length)];
+                event.time = new Date();
+                addTimelineEvent(event);
+                
+                // Also add to activity feed using ActivityFeedManager
+                if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                    activityFeedManager.addMessage(defenseFeedId, `⚡ ${event.action}: ${event.details}`, '', event.agent);
+                }
+            }
+        }
+
+        function updateDefenseMetrics() {
+            // Occasionally update defense metrics
+            if (Math.random() > 0.88) {
+                const trapped = document.getElementById('attacksTrapped');
+                if (trapped) {
+                    const current = parseInt(trapped.textContent);
+                    trapped.textContent = current + Math.floor(Math.random() * 3 + 1);
+                }
+                
+                const responses = document.getElementById('responsesExecuted');
+                if (responses) {
+                    const currentResponses = parseInt(responses.textContent);
+                    responses.textContent = currentResponses + 1;
+                }
+            }
+        }
+
+        function updateFooterStats() {
+            // Update footer stats to match main metrics
+            const mainHoneypots = document.getElementById('activeHoneypots')?.textContent;
+            const mainTrapped = document.getElementById('attacksTrapped')?.textContent;
+            const mainResponses = document.getElementById('responsesExecuted')?.textContent;
+            
+            if (mainHoneypots) {
+                const footerHoneypots = document.getElementById('footerHoneypots');
+                if (footerHoneypots) footerHoneypots.textContent = mainHoneypots;
+            }
+            
+            if (mainTrapped) {
+                const footerTrapped = document.getElementById('footerTrapped');
+                if (footerTrapped) footerTrapped.textContent = mainTrapped;
+            }
+            
+            if (mainResponses) {
+                const footerResponses = document.getElementById('footerResponses');
+                if (footerResponses) footerResponses.textContent = mainResponses;
+            }
+            
+            // Update playbook executions
+            const footerPlaybooks = document.getElementById('footerPlaybooks');
+            if (footerPlaybooks && Math.random() > 0.9) {
+                const current = parseInt(footerPlaybooks.textContent);
+                footerPlaybooks.textContent = current + 1;
+            }
+        }
+
+        // Footer navigation function
+        function navigateToDefenseSection(section) {
+            if (window.sentinelChat && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    const sectionDetails = {
+                        'honeypots': 'DefenseOrchestrator: Managing 8 active honeypots with multi-agent threat correlation. SSH, Web, Database, FTP, Email, and RDP deception systems active. ThreatScanner integration provides real-time attack pattern analysis.',
+                        'response': 'DefenseOrchestrator: Automated response timeline shows real-time threat mitigation. Multi-agent coordination with ThreatScanner and NetworkMapper ensures comprehensive protection across all attack vectors.',
+                        'coordination': 'DefenseOrchestrator: Multi-agent coordination active with ThreatScanner, NetworkMapper, and AnalyticsEngine. Real-time threat sharing and collaborative defense strategies provide enhanced security posture.',
+                        'playbooks': 'DefenseOrchestrator: 8 active security playbooks executing across sub-agents. DDoS mitigation, malware containment, phishing response, and zero-day defense automated with hybrid encryption protection.',
+                        'mitigation': 'DefenseOrchestrator: Advanced threat mitigation using ML-powered coordination. Predictive defense models and behavioral analysis provide proactive protection against emerging threats.',
+                        'quarantine': 'DefenseOrchestrator: Auto-quarantine systems isolate compromised endpoints instantly. Network segmentation and rapid containment prevent lateral movement with sub-agent coordination.'
+                    };
+                    window.sentinelChat.addMessage(sectionDetails[section] || 'DefenseOrchestrator section details not found.', false);
+                }
+            }, 300);
+        }
+
+        // Detail view functions using shared chat system
+        function showHoneypotDetails(honeypotId) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`Routing to DefenseOrchestrator sub-agent...`, false, 'system');
+                    setTimeout(() => {
+                        const details = {
+                            'ssh': 'DefenseOrchestrator + ThreatScanner: SSH Honeypot monitoring 3 active sessions. 147 login attempts logged with threat correlation. Tracking 12 unique attack sources across network.',
+                            'web': 'DefenseOrchestrator + NetworkMapper: Web Decoy capturing SQL injections. Session data correlated with asset discovery. Real-time threat pattern analysis active.',
+                            'database': 'DefenseOrchestrator + ThreatScanner: Database Honeypot with fake records. ML threat analysis via AnalyticsEngine. 23 SQL injection attempts today.',
+                            'ftp': 'DefenseOrchestrator: FTP Trap on standby. Ready for instant multi-agent deployment coordination. Will integrate with ThreatScanner for attack analysis.',
+                            'email': 'DefenseOrchestrator + ThreatScanner: Email Decoy trapped 89 phishing emails. Campaign detection with threat intelligence correlation active.',
+                            'rdp': 'DefenseOrchestrator + NetworkMapper: RDP Honeypot simulating Windows Server. 45 credential attacks captured with network topology correlation.'
+                        };
+                        window.sentinelChat.addMessage(`${details[honeypotId]}`, false);
+                    }, 800);
+                }
+            }, 300);
+        }
+
+        function showCoordinationDetails(coordId) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('Accessing multi-agent coordination details...', false, 'system');
+                    setTimeout(() => {
+                        const details = {
+                            'threat-defense': 'Threat Detection & Response Coordination: DefenseOrchestrator receives real-time threat alerts from ThreatScanner and automatically deploys countermeasures. Average response time: 0.3 seconds. 147 coordinated responses today.',
+                            'network-defense': 'Network Discovery & Protection Coordination: NetworkMapper reports new assets to DefenseOrchestrator for automatic protection deployment. 15 new devices secured today with immediate honeypot and firewall rule deployment.',
+                            'intelligence-defense': 'Intelligence-Driven Defense Coordination: AnalyticsEngine provides predictive models to DefenseOrchestrator for proactive defense adjustments. ML-powered threat prediction accuracy: 99.7%.'
+                        };
+                        window.sentinelChat.addMessage(`${details[coordId]}`, false);
+                    }, 800);
+                }
+            }, 300);
+        }
+
+        function showPlaybookDetails(playbookId) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                const details = {
+                    'ddos': 'DDoS Playbook: Rate limiting + traffic filtering via multi-agent coordination. DefenseOrchestrator works with ThreatScanner for pattern recognition. Average mitigation time: 1.2 seconds.',
+                    'malware': 'Malware Playbook: Instant host isolation by DefenseOrchestrator. NetworkMapper identifies infected systems across network topology. All samples analyzed via AnalyticsEngine.',
+                    'phishing': 'Phishing Playbook: Email quarantine + user notification system. DefenseOrchestrator coordinates with ThreatScanner for campaign detection. 89 attacks neutralized today.',
+                    'insider': 'Insider Threat Playbook: Evidence collection by LogAgent with DefenseOrchestrator coordination. Multi-agent behavioral analysis via AnalyticsEngine for pattern detection.',
+                    'ransomware': 'Ransomware Defense Playbook: Instant backup trigger coordination with EncryptionManager. DefenseOrchestrator orchestrates full system response across all agents.',
+                    'zeroday': 'Zero-Day Response Playbook: Virtual patches deployed via DefenseOrchestrator + AnalyticsEngine coordination. Predictive threat modeling prevents unknown attack vectors.',
+                    'lateral': 'Lateral Movement Defense: Network segmentation enforcement via DefenseOrchestrator + NetworkMapper. Real-time traffic analysis isolates suspicious patterns.',
+                    'data_exfil': 'Data Exfiltration Block: Real-time DLP via EncryptionManager + DefenseOrchestrator coordination. Automated encryption of sensitive data during transfer attempts.'
+                };
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`${details[playbookId]}`, false);
+                }
+            }, 300);
+        }
+
+        function showEncryptionStatus(type) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`EncryptionManager: Hybrid encryption coordinating with DefenseOrchestrator for security operations. Post-quantum algorithms (Kyber-1024, Dilithium-3) protecting all defense coordination channels and response data.`, false);
+                }
+            }, 300);
+        }
+
+        // Cleanup activity feed on page unload
+        window.addEventListener('beforeunload', () => {
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                activityFeedManager.stopAutoGeneration(defenseFeedId);
+            }
+            if (autoTimelineInterval) {
+                clearInterval(autoTimelineInterval);
+            }
+        });
+
+        // Global functions for compatibility - leveraging shared chat system
+        window.toggleChat = () => {
+            if (window.sentinelChat) {
+                window.sentinelChat.toggle();
+            }
+        };
+        
+        window.sendChatMessage = () => {
+            const input = document.getElementById('aiChatInput');
+            if (input && input.value.trim() && window.sentinelChat) {
+                window.sentinelChat.sendMessage(input.value.trim());
+                input.value = '';
+            }
+        };
+        
+        window.handleChatKeyPress = (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        };
+        
+        window.showAgentShutdownModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'flex';
+        };
+        
+        window.closeModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'none';
+        };
+        
+        window.closeModalOnOverlay = (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        };
+        
+        window.confirmAgentShutdown = () => {
+            if (typeof SentinelState !== 'undefined') {
+                SentinelState.agentActive = !SentinelState.agentActive;
+                
+                // Update UI elements
+                const agentStatus = document.querySelector('.agent-status');
+                const agentTitle = document.querySelector('.agent-title');
+                const agentStatusText = document.querySelector('.agent-status-text');
+                
+                if (SentinelState.agentActive) {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
+                        agentStatus.style.borderColor = '#00ff88';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Active';
+                        agentTitle.style.color = 'var(--primary)';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Autonomous with Manual Override';
+                    }
+                    
+                    // Restart defense automation and activity feed
+                    defenseAutoExecution = true;
+                    startTimelineGeneration();
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.startAutoGeneration(defenseFeedId, 6000);
+                        activityFeedManager.addMessage(defenseFeedId, '🤖 Main Agent resumed: Multi-agent defense coordination enabled', '', 'Main Agent');
+                    }
+                } else {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
+                        agentStatus.style.borderColor = '#ffaa00';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Paused';
+                        agentTitle.style.color = '#ffaa00';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Manual Control Only';
+                    }
+                    
+                    // Stop defense automation and activity feed
+                    defenseAutoExecution = false;
+                    if (autoTimelineInterval) clearInterval(autoTimelineInterval);
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.stopAutoGeneration(defenseFeedId);
+                        activityFeedManager.addMessage(defenseFeedId, '⚠️ Main Agent paused: Manual defense control only, multi-agent coordination suspended', 'warning', 'Main Agent');
+                    }
+                }
+                
+                closeModal();
+                
+                if (SentinelState.chatOpen && window.sentinelChat) {
+                    const status = SentinelState.agentActive ? 'resumed autonomous operation with multi-agent defense coordination' : 'switched to manual control mode';
+                    window.sentinelChat.addMessage(`⚠️ Main Agent has ${status}. DefenseOrchestrator coordination with ThreatScanner and NetworkMapper ${SentinelState.agentActive ? 'active' : 'paused'}.`, false, 'system');
+                }
+            }
+        };
+        
+        window.handleLogout = () => {
+            if (confirm('Are you sure you want to logout? The AI agent will continue autonomous cyber defense coordination across all sub-agents.')) {
+                localStorage.removeItem('sentinel_auth');
+                localStorage.removeItem('sentinel_scale');
+                window.location.href = 'index.html';
+            }
+        };
+
+        // Make navigation function global
+        window.navigateToDefenseSection = navigateToDefenseSection;
+    </script>
+</body>
+</html>
