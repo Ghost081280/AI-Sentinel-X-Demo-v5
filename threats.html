@@ -27,11 +27,7 @@
             --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
             --gradient-2: linear-gradient(135deg, #7c3aed 0%, #00ccff 100%);
             --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
-            --gradient-encryption: linear-gradient(135deg, #00ff88 0%, #00aa66 100%);
-            --gradient-quantum: linear-gradient(135deg, #7c3aed 0%, #ff00ff 50%, #00ccff 100%);
-            --gradient-hybrid: linear-gradient(135deg, #00ff88 0%, #7c3aed 50%, #00ccff 100%);
             --gradient-danger: linear-gradient(135deg, #ff0044 0%, #ff6644 100%);
-            --gradient-threat: linear-gradient(135deg, rgba(255, 0, 68, 0.15) 0%, rgba(255, 170, 0, 0.1) 50%, rgba(255, 68, 68, 0.15) 100%);
         }
 
         body {
@@ -187,7 +183,7 @@
             align-items: center;
         }
 
-        /* Encryption Status Badge - Matching dashboard.html style */
+        /* Encryption Status Badge */
         .encryption-badges {
             display: flex;
             gap: 15px;
@@ -328,25 +324,27 @@
             font-weight: bold;
         }
 
-        /* Sub-Agent Status Banner */
+        /* Sub-Agent Status Banner - Using shared.js standardization */
         .sub-agent-status {
             background: linear-gradient(135deg, rgba(255, 0, 68, 0.1) 0%, rgba(255, 170, 0, 0.05) 100%);
             border: 1px solid rgba(255, 0, 68, 0.3);
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 15px 20px !important;
+            margin-bottom: 25px !important;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             gap: 20px;
             backdrop-filter: blur(15px);
+            min-height: 90px !important;
+            max-height: 90px !important;
         }
 
         .sub-agent-info {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex: 1;
         }
 
         .sub-agent-icon {
@@ -359,6 +357,7 @@
             justify-content: center;
             font-size: 24px;
             box-shadow: 0 4px 20px rgba(255, 0, 68, 0.3);
+            flex-shrink: 0;
         }
 
         .sub-agent-details h3 {
@@ -375,6 +374,7 @@
         .sub-agent-metrics {
             display: flex;
             gap: 30px;
+            flex-shrink: 0;
         }
 
         .metric {
@@ -382,36 +382,16 @@
         }
 
         .metric-value {
-            font-size: 24px;
+            font-size: 24px !important;
             font-weight: bold;
             color: var(--danger);
+            margin-bottom: 3px;
         }
 
         .metric-label {
-            font-size: 12px;
+            font-size: 12px !important;
             color: var(--text-secondary);
             text-transform: uppercase;
-        }
-
-        /* Main Content Grid */
-        .main-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 25px;
-            margin-bottom: 30px;
-            align-items: stretch;
-        }
-
-        .left-column {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
         }
 
         /* Section Cards */
@@ -422,15 +402,7 @@
             padding: 25px;
             backdrop-filter: blur(15px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Make the intelligence section fill available height */
-        .section-card.intelligence-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 30px;
         }
 
         .section-header {
@@ -448,9 +420,6 @@
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .section-status {
@@ -468,14 +437,6 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
-        .status-dot.active {
-            background: var(--success);
-        }
-
-        .status-dot.warning {
-            background: var(--warning);
-        }
-
         .status-dot.danger {
             background: var(--danger);
         }
@@ -485,817 +446,8 @@
             50% { opacity: 0.5; transform: scale(1.5); }
         }
 
-        /* Active Threats Grid */
-        .threats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-        }
-
-        .threat-card {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 0, 68, 0.02) 100%);
-            border: 1px solid rgba(255, 0, 68, 0.2);
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .threat-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--danger), var(--warning), var(--accent));
-            border-radius: 12px;
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-        }
-
-        .threat-card:hover::before {
-            opacity: 0.3;
-        }
-
-        .threat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(255, 0, 68, 0.3);
-            border-color: var(--danger);
-        }
-
-        .threat-card.critical {
-            border-color: var(--danger);
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 0, 68, 0.05) 100%);
-        }
-
-        .threat-card.high {
-            border-color: var(--warning);
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 170, 0, 0.05) 100%);
-        }
-
-        .threat-card.medium {
-            border-color: var(--secondary);
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 204, 255, 0.05) 100%);
-        }
-
-        .threat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .threat-title {
-            font-weight: bold;
-            color: var(--text-primary);
-            font-size: 16px;
-            flex: 1;
-        }
-
-        .threat-type {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
-
-        .threat-severity {
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-
-        .threat-severity.critical {
-            background: rgba(255, 0, 68, 0.2);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-        }
-
-        .threat-severity.high {
-            background: rgba(255, 170, 0, 0.2);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-        }
-
-        .threat-severity.medium {
-            background: rgba(0, 204, 255, 0.2);
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
-        }
-
-        .threat-details {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
-
-        .threat-detail {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .threat-detail-label {
-            color: var(--text-secondary);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .threat-detail-value {
-            color: var(--text-primary);
-            font-weight: bold;
-            text-align: right;
-        }
-
-        .threat-ai-status {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 12px;
-        }
-
-        .ai-analysis {
-            color: var(--accent);
-            font-style: italic;
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-
-        .sub-agent-coord {
-            color: var(--text-secondary);
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Threat Classification & Analysis */
-        .threat-analysis-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .threat-analysis-item {
-            padding: 18px;
-            border-radius: 12px;
-            border-left: 4px solid;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            min-height: 85px;
-            gap: 15px;
-        }
-
-        .threat-analysis-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .threat-analysis-item:hover::before {
-            left: 100%;
-        }
-
-        .threat-analysis-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .threat-analysis-item.critical {
-            background: rgba(255, 0, 68, 0.1);
-            border-left-color: var(--danger);
-        }
-
-        .threat-analysis-item.high {
-            background: rgba(255, 170, 0, 0.1);
-            border-left-color: var(--warning);
-        }
-
-        .threat-analysis-item.medium {
-            background: rgba(0, 204, 255, 0.1);
-            border-left-color: var(--secondary);
-        }
-
-        .threat-analysis-item.low {
-            background: rgba(0, 255, 136, 0.1);
-            border-left-color: var(--success);
-        }
-
-        .threat-analysis-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .threat-analysis-title {
-            font-weight: bold;
-            color: var(--text-primary);
-            font-size: 14px;
-            margin-bottom: 6px;
-            line-height: 1.2;
-        }
-
-        .threat-analysis-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            font-size: 10px;
-            margin-bottom: 4px;
-        }
-
-        .threat-analysis-label {
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .threat-analysis-value {
-            color: var(--text-primary);
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-        }
-
-        .threat-analysis-description {
-            grid-column: 1 / -1;
-            font-size: 9px;
-            color: var(--text-secondary);
-            line-height: 1.3;
-            margin-top: 2px;
-        }
-
-        .threat-analysis-score {
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: bold;
-            text-align: center;
-            min-width: 45px;
-            flex-shrink: 0;
-        }
-
-        .threat-analysis-score.critical {
-            background: rgba(255, 0, 68, 0.2);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-        }
-
-        .threat-analysis-score.high {
-            background: rgba(255, 170, 0, 0.2);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-        }
-
-        .threat-analysis-score.medium {
-            background: rgba(0, 204, 255, 0.2);
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
-        }
-
-        .threat-analysis-score.low {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--success);
-            border: 1px solid var(--success);
-        }
-
-        /* Threat Intelligence & Correlation - Fixed grid for 6 cards */
-        .intelligence-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            flex: 1;
-        }
-
-        .intelligence-card {
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(0, 204, 255, 0.02) 100%);
-            border: 1px solid rgba(124, 58, 237, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            min-height: 160px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .intelligence-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .intelligence-card:hover::before {
-            left: 100%;
-        }
-
-        .intelligence-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.2);
-            border-color: var(--accent);
-        }
-
-        .intelligence-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .intelligence-title {
-            font-weight: bold;
-            color: var(--accent);
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .intelligence-status {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            background: rgba(124, 58, 237, 0.2);
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-
-        .intelligence-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .intelligence-metric {
-            text-align: center;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .intelligence-metric-value {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 3px;
-        }
-
-        .intelligence-metric-label {
-            font-size: 9px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .intelligence-coordination {
-            padding: 12px;
-            background: rgba(124, 58, 237, 0.05);
-            border: 1px solid rgba(124, 58, 237, 0.2);
-            border-radius: 8px;
-            margin-top: auto;
-        }
-
-        .coordination-title {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .coordination-agents {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .coordination-agent {
-            padding: 3px 8px;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 8px;
-            font-size: 9px;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Threat Hunting & Investigation - Extended height */
-        .threat-hunting-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            min-height: 500px;
-        }
-
-        .threat-hunting-card {
-            background: linear-gradient(135deg, rgba(255, 170, 0, 0.05) 0%, rgba(255, 68, 68, 0.02) 100%);
-            border: 1px solid rgba(255, 170, 0, 0.3);
-            border-radius: 12px;
-            padding: 22px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            min-height: 220px;
-        }
-
-        .threat-hunting-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 170, 0, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .threat-hunting-card:hover::before {
-            left: 100%;
-        }
-
-        .threat-hunting-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(255, 170, 0, 0.2);
-            border-color: var(--warning);
-        }
-
-        .threat-hunting-card.active {
-            background: linear-gradient(135deg, rgba(255, 0, 68, 0.05) 0%, rgba(255, 170, 0, 0.02) 100%);
-            border-color: var(--danger);
-        }
-
-        .threat-hunting-card.investigating {
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(255, 170, 0, 0.02) 100%);
-            border-color: var(--accent);
-        }
-
-        .hunting-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .hunting-title {
-            font-weight: bold;
-            color: var(--warning);
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .hunting-priority {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hunting-priority.critical {
-            background: rgba(255, 0, 68, 0.2);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-        }
-
-        .hunting-priority.high {
-            background: rgba(255, 170, 0, 0.2);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-        }
-
-        .hunting-priority.medium {
-            background: rgba(0, 204, 255, 0.2);
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
-        }
-
-        .hunting-description {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .hunting-iocs {
-            margin-bottom: 15px;
-        }
-
-        .hunting-iocs-title {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--warning);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hunting-iocs-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .hunting-ioc {
-            padding: 3px 8px;
-            background: rgba(255, 170, 0, 0.1);
-            border: 1px solid rgba(255, 170, 0, 0.3);
-            border-radius: 8px;
-            font-size: 10px;
-            color: var(--warning);
-            font-family: 'Courier New', monospace;
-        }
-
-        .hunting-progress {
-            margin-bottom: 15px;
-        }
-
-        .hunting-progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .hunting-progress-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hunting-progress-percent {
-            font-size: 11px;
-            color: var(--warning);
-            font-weight: bold;
-        }
-
-        .hunting-progress-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .hunting-progress-fill {
-            height: 100%;
-            background: var(--gradient-1);
-            border-radius: 3px;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
-        }
-
-        .hunting-agents {
-            padding: 12px;
-            background: rgba(255, 170, 0, 0.05);
-            border: 1px solid rgba(255, 170, 0, 0.2);
-            border-radius: 8px;
-        }
-
-        .hunting-agents-title {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--warning);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hunting-agents-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .hunting-agent {
-            padding: 3px 8px;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 8px;
-            font-size: 9px;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Threat Response Automation - Fixed spacing */
-        .section-card.threat-response-section {
-            margin-bottom: 30px; /* THIS IS THE CORRECT FIX - SPACING ON THE SECTION CARD */
-        }
-
-        .response-automation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .response-automation-card {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(0, 204, 255, 0.02) 100%);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .response-automation-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .response-automation-card:hover::before {
-            left: 100%;
-        }
-
-        .response-automation-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 255, 136, 0.2);
-            border-color: var(--primary);
-        }
-
-        .response-automation-card.executing {
-            background: linear-gradient(135deg, rgba(0, 204, 255, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%);
-            border-color: var(--secondary);
-        }
-
-        .automation-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .automation-title {
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .automation-status {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .automation-status.active {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--success);
-            border: 1px solid var(--success);
-        }
-
-        .automation-status.executing {
-            background: rgba(0, 204, 255, 0.2);
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
-        }
-
-        .automation-status.standby {
-            background: rgba(255, 170, 0, 0.2);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-        }
-
-        .automation-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .automation-metric {
-            text-align: center;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .automation-metric-value {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 3px;
-        }
-
-        .automation-metric-label {
-            font-size: 9px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .automation-coordination {
-            padding: 12px;
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 8px;
-            margin-top: 12px;
-        }
-
-        .automation-coordination-title {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .automation-chain {
-            font-size: 10px;
-            color: var(--text-secondary);
-            font-family: 'Courier New', monospace;
-            line-height: 1.3;
-        }
-
-        .automation-progress {
-            margin-top: 12px;
-            display: none;
-        }
-
-        .automation-progress.active {
-            display: block;
-        }
-
-        .automation-progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
-
-        .automation-progress-fill {
-            height: 100%;
-            background: var(--gradient-1);
-            border-radius: 2px;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
-        }
-
-        .automation-progress-text {
-            font-size: 9px;
-            color: var(--secondary);
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Real-time Activity Feed */
-        .feed-section {
+        /* Activity Feed - Using shared.js infrastructure */
+        .activity-feed {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 15px;
@@ -1304,38 +456,42 @@
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .feed-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--border);
         }
 
         .feed-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .live-indicator {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             color: var(--danger);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             text-transform: uppercase;
         }
 
         .live-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background: var(--danger);
             border-radius: 50%;
             animation: livePulse 2s ease-in-out infinite;
@@ -1356,20 +512,20 @@
             background: rgba(255, 0, 68, 0.05);
             border-left: 3px solid var(--danger);
             padding: 15px 20px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border-radius: 0 10px 10px 0;
-            animation: feedSlide 0.3s ease;
             transition: all 0.3s ease;
-        }
-
-        .feed-item:hover {
-            background: rgba(255, 0, 68, 0.1);
-            transform: translateX(5px);
+            animation: feedSlide 0.3s ease;
         }
 
         @keyframes feedSlide {
             from { opacity: 0; transform: translateX(-20px); }
             to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-item:hover {
+            background: rgba(255, 0, 68, 0.1);
+            transform: translateX(5px);
         }
 
         .feed-item.ai-action {
@@ -1388,7 +544,7 @@
         }
 
         .feed-time {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
             margin-bottom: 5px;
             text-transform: uppercase;
@@ -1396,327 +552,15 @@
         }
 
         .feed-message {
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 5px;
         }
 
         .feed-agent {
-            font-size: 12px;
-            color: var(--accent);
-            margin-top: 5px;
-            font-style: italic;
-        }
-
-        /* AI Chat Widget */
-        .ai-chat-widget {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-        }
-
-        .ai-chat-toggle {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
-            transition: all 0.3s ease;
-            font-size: 28px;
-            border: none;
-            color: var(--bg-darker);
-        }
-
-        .ai-chat-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .ai-chat-window {
-            position: absolute;
-            bottom: 80px;
-            right: 0;
-            width: 400px;
-            height: 500px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px);
-        }
-
-        .ai-chat-window.active {
-            display: flex;
-            animation: chatSlideIn 0.3s ease;
-        }
-
-        @keyframes chatSlideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .ai-chat-header {
-            background: var(--gradient-1);
-            color: var(--bg-darker);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .ai-chat-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .chat-status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--bg-darker);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .ai-chat-close {
-            cursor: pointer;
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: var(--bg-darker);
-        }
-
-        .ai-chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .ai-message {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .ai-message-bubble {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 15px 20px;
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-
-        .ai-message-bubble.user {
-            background: rgba(0, 204, 255, 0.1);
-            border-color: var(--secondary);
-            align-self: flex-end;
-        }
-
-        .ai-message-bubble.system {
-            background: rgba(124, 58, 237, 0.1);
-            border-color: var(--accent);
-            font-size: 13px;
-            font-style: italic;
-        }
-
-        .ai-message-bubble.error {
-            background: rgba(255, 0, 68, 0.1);
-            border-color: var(--danger);
-        }
-
-        .ai-message-bubble code {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .ai-message-time {
             font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 5px;
-        }
-
-        .ai-chat-input-container {
-            padding: 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .ai-chat-input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 15px;
-            color: var(--text-primary);
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .ai-chat-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .ai-chat-input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .ai-chat-send {
-            background: var(--gradient-1);
-            border: none;
-            border-radius: 10px;
-            padding: 12px 20px;
-            color: var(--bg-darker);
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        /* AI Typing Indicator */
-        .ai-typing {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 0;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-        }
-
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            animation: typingBounce 1.4s ease-in-out infinite both;
-        }
-
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes typingBounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-
-        /* CLI Mode Indicator */
-        .cli-mode-indicator {
-            background: rgba(255, 170, 0, 0.1);
-            border: 1px solid var(--warning);
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--warning);
-            display: none;
-            flex-shrink: 0;
-        }
-
-        .cli-mode-indicator.active {
-            display: block;
-        }
-
-        /* Agent Shutdown Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--warning);
-            margin-bottom: 10px;
-        }
-
-        .modal-content {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .modal-btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .modal-btn-primary {
-            background: var(--gradient-1);
-            color: var(--bg-darker);
-        }
-
-        .modal-btn-secondary {
-            background: transparent;
-            border: 2px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        .modal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            color: var(--accent);
+            font-style: italic;
         }
 
         /* COMPLETELY REBUILT FOOTER - AMAZING ORBITAL DESIGN FOR THREATS PAGE */
@@ -2009,29 +853,277 @@
             box-shadow: 0 0 6px var(--danger);
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 1200px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .threats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .intelligence-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .threat-hunting-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .response-automation-grid {
-                grid-template-columns: 1fr;
-            }
+        /* AI Chat Widget - keeping clear of footer */
+        .ai-chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
         }
 
+        .ai-chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+            font-size: 28px;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .ai-chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .ai-chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 400px;
+            height: 500px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .ai-chat-window.active {
+            display: flex;
+            animation: chatSlideIn 0.3s ease;
+        }
+
+        @keyframes chatSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-chat-header {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ai-chat-close {
+            cursor: pointer;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .cli-mode-indicator {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--warning);
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .cli-mode-indicator.active {
+            display: block;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-message {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-message-bubble {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .ai-message-bubble.user {
+            background: rgba(0, 204, 255, 0.1);
+            border-color: var(--secondary);
+            align-self: flex-end;
+        }
+
+        .ai-message-bubble.system {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--accent);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .ai-message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .ai-chat-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .ai-chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .ai-chat-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .ai-chat-send {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn-primary {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -2050,6 +1142,8 @@
             .sub-agent-status {
                 flex-direction: column;
                 text-align: center;
+                min-height: auto !important;
+                max-height: none !important;
             }
             
             .sub-agent-metrics {
@@ -2062,18 +1156,6 @@
                 height: calc(100vh - 140px);
                 right: -20px;
                 bottom: 80px;
-            }
-
-            .threat-details {
-                grid-template-columns: 1fr;
-            }
-
-            .intelligence-metrics {
-                grid-template-columns: 1fr;
-            }
-
-            .automation-metrics {
-                grid-template-columns: 1fr;
             }
 
             /* Mobile footer adjustments */
@@ -2178,7 +1260,7 @@
                 </div>
                 <div class="header-right">
                     <div class="encryption-badges">
-                        <div class="encryption-badge" onclick="showEncryptionStatus('hybrid')">
+                        <div class="encryption-badge" onclick="showEncryptionStatus()">
                             <div class="status-light"></div>
                             <span>HYBRID MODE ACTIVE</span>
                         </div>
@@ -2264,111 +1346,36 @@
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Left Column -->
-            <div class="left-column">
-                <!-- Active Threats -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <span>🎯</span>
-                            <span>Active Threats</span>
-                        </h2>
-                        <div class="section-status">
-                            <div class="status-dot danger"></div>
-                            <span id="threatStatus">8 Critical Threats</span>
-                        </div>
-                    </div>
-                    <div class="threats-grid" id="threatsGrid">
-                        <!-- Threats will be populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Threat Intelligence & Correlation -->
-                <div class="section-card intelligence-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <span>🧠</span>
-                            <span>Threat Intelligence & Correlation</span>
-                        </h2>
-                        <div class="section-status">
-                            <div class="status-dot active"></div>
-                            <span>AI Enhanced</span>
-                        </div>
-                    </div>
-                    <div class="intelligence-grid" id="intelligenceGrid">
-                        <!-- Intelligence cards will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="right-column">
-                <!-- Threat Classification & Analysis -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <span>🎯</span>
-                            <span>Threat Classification & Analysis</span>
-                        </h2>
-                        <div class="section-status">
-                            <div class="status-dot danger"></div>
-                            <span id="threatAnalysisStatus">Live Analysis</span>
-                        </div>
-                    </div>
-                    <div class="threat-analysis-list" id="threatAnalysisList">
-                        <!-- Threat analysis will be populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Threat Hunting & Investigation -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <span>🔍</span>
-                            <span>Threat Hunting & Investigation</span>
-                        </h2>
-                        <div class="section-status">
-                            <div class="status-dot active"></div>
-                            <span>4 Active Hunts</span>
-                        </div>
-                    </div>
-                    <div class="threat-hunting-grid" id="threatHuntingGrid">
-                        <!-- Threat hunting cards will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Threat Response Automation -->
-        <div class="section-card threat-response-section">
+        <!-- Threat Summary Card -->
+        <div class="section-card">
             <div class="section-header">
-                <h2 class="section-title">
-                    <span>🚀</span>
-                    <span>Threat Response Automation</span>
-                </h2>
+                <h2 class="section-title">🛡️ Threat Detection Summary</h2>
                 <div class="section-status">
-                    <div class="status-dot active"></div>
-                    <span>Auto-Response Active</span>
+                    <div class="status-dot danger"></div>
+                    <span>8 Critical Threats Active</span>
                 </div>
             </div>
-            <div class="response-automation-grid" id="responseAutomationGrid">
-                <!-- Response automation cards will be populated by JavaScript -->
-            </div>
+            <p style="color: var(--text-secondary); text-align: center; font-size: 16px; line-height: 1.6;">
+                🤖 <strong>ThreatScanner V4</strong> is processing 147K events per second with enhanced AI correlation. 
+                Coordinating with DefenseOrchestrator, AnalyticsEngine, and EncryptionManager for comprehensive protection.
+                All threat data secured with hybrid-resistant encryption.
+            </p>
         </div>
 
-        <!-- ThreatScanner Activity Feed -->
-        <div class="feed-section">
+        <!-- Threat Activity Feed -->
+        <div class="activity-feed">
             <div class="feed-header">
-                <h2 class="feed-title">ThreatScanner Activity Feed</h2>
+                <h2 class="feed-title">
+                    <span>🛡️</span>
+                    <span>ThreatScanner Activity Feed</span>
+                </h2>
                 <div class="live-indicator">
                     <div class="live-dot"></div>
                     <span>LIVE</span>
                 </div>
             </div>
-            <div class="feed-content" id="threatFeed">
-                <!-- Feed items will be populated by JavaScript -->
+            <div class="feed-content" id="threatActivityFeedContent">
+                <!-- Feed items will be populated by shared.js ActivityFeedManager -->
             </div>
         </div>
     </div>
@@ -2482,7 +1489,7 @@
                     type="text" 
                     class="ai-chat-input" 
                     id="aiChatInput" 
-                    placeholder="Command the Main Agent"
+                    placeholder="Ask about threats, patterns, or security analysis..."
                     onkeypress="handleChatKeyPress(event)"
                 >
                 <button class="ai-chat-send" id="aiChatSend" onclick="sendChatMessage()">SEND</button>
@@ -2493,1023 +1500,86 @@
 
     <script src="shared.js"></script>
     <script>
-        // Initialize the chat system from shared.js
-        let sentinelChat;
-        
-        // Enhanced V4 threat data - ACTIVE ONGOING THREATS (8 total for full grid)
-        const threats = [
-            {
-                id: 1,
-                name: 'Advanced DDoS Attack',
-                type: 'Network Attack',
-                severity: 'critical',
-                source: '45.12.78.* (Botnet)',
-                target: 'API Gateway',
-                attempts: '67,892',
-                status: 'Mitigating',
-                aiAnalysis: 'Multi-vector attack pattern matches APT-29. Coordinating with DefenseOrchestrator for automated mitigation.',
-                subAgent: 'ThreatScanner → DefenseOrchestrator'
-            },
-            {
-                id: 2,
-                name: 'SQL Injection Campaign',
-                type: 'Web Application',
-                severity: 'critical',
-                source: '192.168.1.105',
-                target: '/api/users',
-                attempts: '247',
-                status: 'Blocked',
-                aiAnalysis: 'Union-based SQL injection with privilege escalation. EncryptionManager prevented data access.',
-                subAgent: 'ThreatScanner → EncryptionManager'
-            },
-            {
-                id: 3,
-                name: 'Insider Threat Pattern',
-                type: 'Behavioral Analysis',
-                severity: 'critical',
-                source: 'Internal User',
-                target: 'Sensitive Data',
-                attempts: '15',
-                status: 'Investigating',
-                aiAnalysis: 'Anomalous access patterns detected. AnalyticsEngine flagged behavioral deviation.',
-                subAgent: 'ThreatScanner → AnalyticsEngine'
-            },
-            {
-                id: 4,
-                name: 'Zero-Day Exploit Attempt',
-                type: 'Advanced Persistent Threat',
-                severity: 'high',
-                source: 'Unknown',
-                target: 'Web Server',
-                attempts: 'N/A',
-                status: 'Analyzing',
-                aiAnalysis: 'Novel attack vector identified. AI correlation engine updating threat signatures.',
-                subAgent: 'ThreatScanner → AI Engine'
-            },
-            {
-                id: 5,
-                name: 'Cryptocurrency Mining Malware',
-                type: 'Malware',
-                severity: 'high',
-                source: '192.168.1.87',
-                target: 'Workstation Network',
-                attempts: '1,247',
-                status: 'Quarantined',
-                aiAnalysis: 'Coinhive variant detected. NetworkMapper isolated affected endpoints.',
-                subAgent: 'ThreatScanner → NetworkMapper'
-            },
-            {
-                id: 6,
-                name: 'Phishing Campaign',
-                type: 'Social Engineering',
-                severity: 'high',
-                source: 'External Email',
-                target: 'User Credentials',
-                attempts: '4,892',
-                status: 'Blocked',
-                aiAnalysis: 'Targeted spear-phishing with credential harvesting. AnalyticsEngine updated patterns.',
-                subAgent: 'ThreatScanner → AnalyticsEngine'
-            },
-            {
-                id: 7,
-                name: 'Privilege Escalation',
-                type: 'System Compromise',
-                severity: 'medium',
-                source: 'Compromised Account',
-                target: 'Domain Controller',
-                attempts: '23',
-                status: 'Contained',
-                aiAnalysis: 'Local privilege escalation attempt blocked. DefenseOrchestrator deployed countermeasures.',
-                subAgent: 'ThreatScanner → DefenseOrchestrator'
-            },
-            {
-                id: 8,
-                name: 'Command & Control Traffic',
-                type: 'Network Communications',
-                severity: 'high',
-                source: 'c2.malicious-domain.net',
-                target: 'Multiple Endpoints',
-                attempts: '156',
-                status: 'Monitoring',
-                aiAnalysis: 'Persistent C2 beaconing detected. VPNMonitor and NetworkMapper coordinating response.',
-                subAgent: 'ThreatScanner → VPNMonitor'
-            }
-        ];
+        // Threats page initialization using shared.js infrastructure
+        let threatsFeedId = 'threats-feed';
 
-        // Threat Classification & Analysis data - More specific to threats page
-        const threatAnalysis = [
-            {
-                id: 'malware-family',
-                title: 'Malware Family Classification',
-                category: 'Ransomware',
-                indicators: '47 samples',
-                confidence: '98%',
-                description: 'Ryuk variants with novel evasion techniques detected',
-                severity: 'critical',
-                score: '9.4'
-            },
-            {
-                id: 'attack-vector',
-                title: 'Primary Attack Vector Analysis',
-                category: 'Email Phishing',
-                indicators: '2,847 emails',
-                confidence: '96%',
-                description: 'Spear-phishing campaign targeting finance departments',
-                severity: 'high',
-                score: '8.7'
-            },
-            {
-                id: 'persistence-method',
-                title: 'Persistence Method Detection',
-                category: 'Registry Keys',
-                indicators: '156 modifications',
-                confidence: '94%',
-                description: 'Advanced registry persistence mechanisms identified',
-                severity: 'high',
-                score: '8.2'
-            },
-            {
-                id: 'command-control',
-                title: 'Command & Control Pattern',
-                category: 'DNS Tunneling',
-                indicators: '23 domains',
-                confidence: '92%',
-                description: 'Covert DNS tunneling for data exfiltration detected',
-                severity: 'medium',
-                score: '7.8'
-            },
-            {
-                id: 'lateral-movement',
-                title: 'Lateral Movement Techniques',
-                category: 'WMI/PowerShell',
-                indicators: '89 instances',
-                confidence: '91%',
-                description: 'Living-off-the-land techniques for network traversal',
-                severity: 'medium',
-                score: '7.5'
-            },
-            {
-                id: 'data-exfiltration',
-                title: 'Data Exfiltration Methods',
-                category: 'HTTPS Tunneling',
-                indicators: '12 connections',
-                confidence: '89%',
-                description: 'Encrypted channels used for sensitive data theft',
-                severity: 'high',
-                score: '8.9'
-            }
-        ];
-
-        // Threat Intelligence correlation data - Extended with 6 total cards
-        const threatIntelligence = [
-            {
-                id: 'correlation-engine',
-                title: '🧠 AI Correlation Engine',
-                status: 'ACTIVE',
-                metrics: {
-                    accuracy: '99.8%',
-                    patterns: '2.4K',
-                    speed: '0.3ms'
-                },
-                agents: ['AnalyticsEngine', 'AI Engine', 'DefenseOrchestrator']
-            },
-            {
-                id: 'behavioral-analysis',
-                title: '🎯 Behavioral Analysis',
-                status: 'LEARNING',
-                metrics: {
-                    profiles: '247',
-                    anomalies: '14',
-                    confidence: '96%'
-                },
-                agents: ['AnalyticsEngine', 'NetworkMapper', 'LogAgent']
-            },
-            {
-                id: 'threat-prediction',
-                title: '🔮 Threat Prediction',
-                status: 'ACTIVE',
-                metrics: {
-                    forecast: '72h',
-                    models: '8',
-                    accuracy: '94%'
-                },
-                agents: ['AI Engine', 'AnalyticsEngine', 'ThreatScanner']
-            },
-            {
-                id: 'signature-updates',
-                title: '🔄 Signature Updates',
-                status: 'SYNCING',
-                metrics: {
-                    signatures: '45K',
-                    updated: '2m ago',
-                    sources: '12'
-                },
-                agents: ['ThreatScanner', 'DefenseOrchestrator', 'VPNMonitor']
-            },
-            {
-                id: 'threat-attribution',
-                title: '🔍 Threat Attribution',
-                status: 'ACTIVE',
-                metrics: {
-                    actors: '127',
-                    campaigns: '34',
-                    confidence: '91%'
-                },
-                agents: ['ThreatScanner', 'AnalyticsEngine', 'AI Engine']
-            },
-            {
-                id: 'ioc-enrichment',
-                title: '📡 IOC Enrichment',
-                status: 'ACTIVE',
-                metrics: {
-                    feeds: '23',
-                    indicators: '890K',
-                    quality: '98%'
-                },
-                agents: ['ThreatScanner', 'LogAgent', 'AnalyticsEngine']
-            }
-        ];
-
-        // Threat Response Automation data
-        const threatResponseAutomation = [
-            {
-                id: 'sql-injection-block',
-                title: '🛡️ SQL Injection Auto-Block',
-                status: 'active',
-                metrics: {
-                    executions: '247',
-                    success: '100%',
-                    avgTime: '0.2s'
-                },
-                chain: 'ThreatScanner → EncryptionManager → DefenseOrchestrator',
-                description: 'Automatically blocks SQL injection attempts and protects data with encryption'
-            },
-            {
-                id: 'ddos-mitigation',
-                title: '⚡ DDoS Auto-Mitigation',
-                status: 'executing',
-                metrics: {
-                    executions: '12',
-                    success: '98%',
-                    avgTime: '1.4s'
-                },
-                chain: 'ThreatScanner → DefenseOrchestrator → NetworkMapper',
-                description: 'Coordinates automated DDoS response across network infrastructure'
-            },
-            {
-                id: 'insider-threat-response',
-                title: '🎯 Insider Threat Response',
-                status: 'active',
-                metrics: {
-                    executions: '8',
-                    success: '94%',
-                    avgTime: '3.1s'
-                },
-                chain: 'ThreatScanner → AnalyticsEngine → DefenseOrchestrator → LogAgent',
-                description: 'Behavioral analysis triggers automated access restriction and logging'
-            },
-            {
-                id: 'malware-quarantine',
-                title: '🔒 Malware Auto-Quarantine',
-                status: 'active',
-                metrics: {
-                    executions: '156',
-                    success: '99%',
-                    avgTime: '0.8s'
-                },
-                chain: 'ThreatScanner → NetworkMapper → EncryptionManager',
-                description: 'Isolates infected endpoints and secures unaffected systems'
-            },
-            {
-                id: 'zero-day-analysis',
-                title: '🔍 Zero-Day Auto-Analysis',
-                status: 'standby',
-                metrics: {
-                    executions: '3',
-                    success: '100%',
-                    avgTime: '12.5s'
-                },
-                chain: 'ThreatScanner → AI Engine → AnalyticsEngine → DefenseOrchestrator',
-                description: 'AI-powered analysis of novel threats with signature generation'
-            },
-            {
-                id: 'phishing-block',
-                title: '📧 Phishing Auto-Block',
-                status: 'active',
-                metrics: {
-                    executions: '4.8K',
-                    success: '99%',
-                    avgTime: '0.1s'
-                },
-                chain: 'ThreatScanner → AnalyticsEngine → DefenseOrchestrator',
-                description: 'Real-time phishing detection with credential harvesting prevention'
-            }
-        ];
-
-        // Threat Hunting & Investigation data - Extended content
-        const threatHunting = [
-            {
-                id: 'apt-campaign-hunt',
-                title: '🎯 APT Campaign Hunt',
-                priority: 'critical',
-                status: 'active',
-                progress: 78,
-                description: 'Investigating suspected APT-29 campaign targeting financial infrastructure with novel TTPs and custom malware variants',
-                iocs: [
-                    'SHA256:a4b2c3d4...',
-                    '45.12.78.92',
-                    'evil.domain.com',
-                    'MITRE:T1055'
-                ],
-                agents: ['ThreatScanner', 'AnalyticsEngine', 'AI Engine', 'LogAgent']
-            },
-            {
-                id: 'insider-behavior-hunt',
-                title: '👤 Insider Behavior Hunt',
-                priority: 'high',
-                status: 'investigating',
-                progress: 45,
-                description: 'Anomalous data access patterns from privileged accounts during off-hours, potential data theft investigation',
-                iocs: [
-                    'user.jdoe@corp',
-                    '192.168.1.105',
-                    'lateral-move',
-                    'MITRE:T1078'
-                ],
-                agents: ['ThreatScanner', 'AnalyticsEngine', 'NetworkMapper', 'LogAgent']
-            },
-            {
-                id: 'supply-chain-hunt',
-                title: '🔗 Supply Chain Hunt',
-                priority: 'high',
-                status: 'active',
-                progress: 23,
-                description: 'Investigating potential compromise of third-party software dependencies and update mechanisms in development environment',
-                iocs: [
-                    'update-server.lib',
-                    'MD5:9a8b7c6d...',
-                    'signed-malware',
-                    'MITRE:T1195'
-                ],
-                agents: ['ThreatScanner', 'AI Engine', 'EncryptionManager', 'ComplianceMonitor']
-            },
-            {
-                id: 'living-off-land-hunt',
-                title: '⚡ Living-off-Land Hunt',
-                priority: 'medium',
-                status: 'active',
-                progress: 67,
-                description: 'Tracking abuse of legitimate system tools for malicious purposes, including PowerShell and WMI exploitation patterns',
-                iocs: [
-                    'powershell.exe',
-                    'wmic.exe',
-                    'base64-payload',
-                    'MITRE:T1059'
-                ],
-                agents: ['ThreatScanner', 'AnalyticsEngine', 'LogAgent']
-            }
-        ];
-
-        // Enhanced V4 threat management
-        let threatAutoExecution = true;
-        let autoThreatInterval;
-        let automationExecutionInterval;
-
-        // Initialize threats page
         document.addEventListener('DOMContentLoaded', () => {
-            initializeThreatsPage();
+            // Initialize page using shared.js infrastructure
+            if (typeof initializePageContext === 'function') {
+                initializePageContext();
+            }
+
+            // Initialize neural background from shared.js
+            if (typeof initNeuralBackground === 'function') {
+                initNeuralBackground();
+            }
+
+            // Initialize chat system from shared.js
+            if (typeof SentinelChat !== 'undefined') {
+                window.sentinelChat = new SentinelChat();
+            }
+
+            // Setup activity feed using shared.js helper
+            if (typeof setupPageActivityFeed === 'function') {
+                setupPageActivityFeed('threats', 'threatActivityFeedContent', threatsFeedId);
+            }
+
+            // Update metrics periodically
+            setInterval(updateThreatMetrics, 5000);
         });
 
-        function initializeThreatsPage() {
-            // Initialize chat system from shared.js
-            if (window.SentinelChat) {
-                sentinelChat = new window.SentinelChat();
-            }
-            
-            // Initialize neural background
-            if (window.initNeuralBackground) {
-                window.initNeuralBackground();
-            }
-
-            populateActiveThreats();
-            populateThreatAnalysis();
-            populateThreatIntelligence();
-            populateThreatHunting();
-            populateResponseAutomation();
-            initializeThreatFeed();
-            
-            // Start automated threat simulation
-            startThreatSimulation();
-            startAutomationSimulation();
-            
-            // Start periodic updates
-            setInterval(() => {
-                updateThreatMetrics();
-            }, 4000);
-            setInterval(() => {
-                generateThreatFeedItem();
-            }, 7000);
-            setInterval(() => {
-                updateThreatAnalysis();
-            }, 15000);
-            setInterval(() => {
-                updateHuntingProgress();
-            }, 8000);
-        }
-
-        function populateThreatAnalysis() {
-            const list = document.getElementById('threatAnalysisList');
-            list.innerHTML = '';
-
-            threatAnalysis.forEach(analysis => {
-                const item = document.createElement('div');
-                item.className = `threat-analysis-item ${analysis.severity}`;
-                item.onclick = () => openThreatAnalysisDetails(analysis.id);
-                
-                item.innerHTML = `
-                    <div class="threat-analysis-content">
-                        <div class="threat-analysis-title">${analysis.title}</div>
-                        <div class="threat-analysis-details">
-                            <div class="threat-analysis-label">Category</div>
-                            <div class="threat-analysis-value">${analysis.category}</div>
-                            <div class="threat-analysis-label">Indicators</div>
-                            <div class="threat-analysis-value">${analysis.indicators}</div>
-                            <div class="threat-analysis-description">${analysis.description} • Confidence: ${analysis.confidence}</div>
-                        </div>
-                    </div>
-                    <div class="threat-analysis-score ${analysis.severity}">${analysis.score}</div>
-                `;
-                
-                list.appendChild(item);
-            });
-        }
-
-        function updateThreatAnalysis() {
-            // Update threat analysis with new detections
-            if (Math.random() > 0.8) {
-                threatAnalysis.forEach((analysis, index) => {
-                    if (Math.random() > 0.7) {
-                        // Update indicators count
-                        const currentCount = parseInt(analysis.indicators.split(' ')[0]);
-                        const increment = Math.floor(Math.random() * 5 + 1);
-                        const newCount = currentCount + increment;
-                        analysis.indicators = newCount + ' ' + analysis.indicators.split(' ').slice(1).join(' ');
-                        
-                        // Slight confidence adjustment
-                        const currentConf = parseInt(analysis.confidence);
-                        const newConf = Math.min(99, Math.max(85, currentConf + Math.floor(Math.random() * 3 - 1)));
-                        analysis.confidence = newConf + '%';
-                        
-                        // Update display
-                        const item = document.querySelectorAll('.threat-analysis-item')[index];
-                        if (item) {
-                            const indicatorsElement = item.querySelectorAll('.threat-analysis-value')[1];
-                            const descElement = item.querySelector('.threat-analysis-description');
-                            if (indicatorsElement) indicatorsElement.textContent = analysis.indicators;
-                            if (descElement) {
-                                descElement.textContent = analysis.description + ' • Confidence: ' + analysis.confidence;
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function openThreatAnalysisDetails(analysisId) {
-            if (sentinelChat && !window.SentinelState.chatOpen) {
-                sentinelChat.toggle();
-            }
-            setTimeout(() => {
-                const analysis = threatAnalysis.find(a => a.id === analysisId);
-                if (analysis && sentinelChat) {
-                    sentinelChat.addMessage(`ThreatScanner Analysis: ${analysis.title}
-• Category: ${analysis.category}
-• Severity: ${analysis.severity.toUpperCase()} (Score: ${analysis.score}/10)
-• Indicators: ${analysis.indicators}
-• Confidence Level: ${analysis.confidence}
-• Analysis: ${analysis.description}
-• AI Classification: Advanced pattern recognition with MITRE ATT&CK mapping
-• Data Protection: All analysis data encrypted with hybrid-resistant algorithms
-• Integration: Real-time correlation with DefenseOrchestrator and AnalyticsEngine
-• Automated Response: Signatures updated and countermeasures deployed`, false);
-                }
-            }, 300);
-        }
-
-        function populateActiveThreats() {
-            const grid = document.getElementById('threatsGrid');
-            grid.innerHTML = '';
-
-            threats.forEach(threat => {
-                const card = document.createElement('div');
-                card.className = `threat-card ${threat.severity}`;
-                card.onclick = () => openThreatDetails(threat.id);
-                
-                card.innerHTML = `
-                    <div class="threat-header">
-                        <div>
-                            <div class="threat-title">${threat.name}</div>
-                            <div class="threat-type">${threat.type}</div>
-                        </div>
-                        <div class="threat-severity ${threat.severity}">${threat.severity.toUpperCase()}</div>
-                    </div>
-                    <div class="threat-details">
-                        <div class="threat-detail">
-                            <span class="threat-detail-label">Source</span>
-                            <span class="threat-detail-value">${threat.source}</span>
-                        </div>
-                        <div class="threat-detail">
-                            <span class="threat-detail-label">Target</span>
-                            <span class="threat-detail-value">${threat.target}</span>
-                        </div>
-                        <div class="threat-detail">
-                            <span class="threat-detail-label">Attempts</span>
-                            <span class="threat-detail-value">${threat.attempts}</span>
-                        </div>
-                        <div class="threat-detail">
-                            <span class="threat-detail-label">Status</span>
-                            <span class="threat-detail-value" style="color: var(--primary);">${threat.status}</span>
-                        </div>
-                    </div>
-                    <div class="threat-ai-status">
-                        <div class="ai-analysis">${threat.aiAnalysis}</div>
-                        <div class="sub-agent-coord">
-                            <span>🤖</span>
-                            <span>Coordination: ${threat.subAgent}</span>
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function populateThreatIntelligence() {
-            const grid = document.getElementById('intelligenceGrid');
-            grid.innerHTML = '';
-
-            threatIntelligence.forEach(intel => {
-                const card = document.createElement('div');
-                card.className = 'intelligence-card';
-                card.onclick = () => openIntelligenceDetails(intel.id);
-                
-                card.innerHTML = `
-                    <div class="intelligence-header">
-                        <div class="intelligence-title">${intel.title}</div>
-                        <div class="intelligence-status">${intel.status}</div>
-                    </div>
-                    <div class="intelligence-metrics">
-                        ${Object.entries(intel.metrics).map(([key, value]) => `
-                            <div class="intelligence-metric">
-                                <div class="intelligence-metric-value">${value}</div>
-                                <div class="intelligence-metric-label">${key}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="intelligence-coordination">
-                        <div class="coordination-title">🤖 Sub-Agent Coordination</div>
-                        <div class="coordination-agents">
-                            ${intel.agents.map(agent => `
-                                <span class="coordination-agent">${agent}</span>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function populateThreatHunting() {
-            const grid = document.getElementById('threatHuntingGrid');
-            grid.innerHTML = '';
-
-            threatHunting.forEach(hunt => {
-                const card = document.createElement('div');
-                card.className = `threat-hunting-card ${hunt.status}`;
-                card.onclick = () => openHuntDetails(hunt.id);
-                
-                card.innerHTML = `
-                    <div class="hunting-header">
-                        <div class="hunting-title">${hunt.title}</div>
-                        <div class="hunting-priority ${hunt.priority}">${hunt.priority}</div>
-                    </div>
-                    <div class="hunting-description">${hunt.description}</div>
-                    <div class="hunting-iocs">
-                        <div class="hunting-iocs-title">🔍 Key IOCs</div>
-                        <div class="hunting-iocs-list">
-                            ${hunt.iocs.map(ioc => `<span class="hunting-ioc">${ioc}</span>`).join('')}
-                        </div>
-                    </div>
-                    <div class="hunting-progress">
-                        <div class="hunting-progress-header">
-                            <span class="hunting-progress-label">Investigation Progress</span>
-                            <span class="hunting-progress-percent">${hunt.progress}%</span>
-                        </div>
-                        <div class="hunting-progress-bar">
-                            <div class="hunting-progress-fill" style="width: ${hunt.progress}%"></div>
-                        </div>
-                    </div>
-                    <div class="hunting-agents">
-                        <div class="hunting-agents-title">🤖 Coordinating Agents</div>
-                        <div class="hunting-agents-list">
-                            ${hunt.agents.map(agent => `<span class="hunting-agent">${agent}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function updateHuntingProgress() {
-            // Simulate hunting progress updates
-            if (Math.random() > 0.7) {
-                threatHunting.forEach((hunt, index) => {
-                    if (hunt.status === 'active' && hunt.progress < 95) {
-                        const increment = Math.floor(Math.random() * 5 + 1);
-                        hunt.progress = Math.min(95, hunt.progress + increment);
-                        
-                        // Update progress bar
-                        const card = document.querySelectorAll('.threat-hunting-card')[index];
-                        if (card) {
-                            const progressFill = card.querySelector('.hunting-progress-fill');
-                            const progressPercent = card.querySelector('.hunting-progress-percent');
-                            if (progressFill) progressFill.style.width = hunt.progress + '%';
-                            if (progressPercent) progressPercent.textContent = hunt.progress + '%';
-                        }
-                        
-                        // Add feed update
-                        if (hunt.progress % 20 === 0) {
-                            addThreatFeedItem(`🔍 ${hunt.title}: Investigation ${hunt.progress}% complete`, 'ai-action', 'ThreatScanner');
-                        }
-                    }
-                });
-            }
-        }
-
-        function openHuntDetails(huntId) {
-            if (sentinelChat && !window.SentinelState.chatOpen) {
-                sentinelChat.toggle();
-            }
-            setTimeout(() => {
-                const hunt = threatHunting.find(h => h.id === huntId);
-                if (hunt && sentinelChat) {
-                    sentinelChat.addMessage(`ThreatScanner Hunt: ${hunt.title}
-• Priority: ${hunt.priority.toUpperCase()}
-• Status: ${hunt.status.toUpperCase()}
-• Progress: ${hunt.progress}% complete
-• Description: ${hunt.description}
-• Key IOCs: ${hunt.iocs.join(', ')}
-• Coordinating Agents: ${hunt.agents.join(', ')}
-• Data Protection: All hunt data encrypted with hybrid-resistant algorithms
-• MITRE ATT&CK: Mapped to framework for threat intelligence correlation
-• Timeline: Estimated completion in ${Math.floor((100 - hunt.progress) / 10)} hours
-• AI Enhancement: Pattern recognition and behavioral analysis active`, false);
-                }
-            }, 300);
-        }
-
-        function populateResponseAutomation() {
-            const grid = document.getElementById('responseAutomationGrid');
-            grid.innerHTML = '';
-
-            threatResponseAutomation.forEach(automation => {
-                const card = document.createElement('div');
-                card.className = `response-automation-card ${automation.status === 'executing' ? 'executing' : ''}`;
-                card.onclick = () => openAutomationDetails(automation.id);
-                
-                card.innerHTML = `
-                    <div class="automation-header">
-                        <div class="automation-title">${automation.title}</div>
-                        <div class="automation-status ${automation.status}">${automation.status}</div>
-                    </div>
-                    <div class="automation-metrics">
-                        ${Object.entries(automation.metrics).map(([key, value]) => `
-                            <div class="automation-metric">
-                                <div class="automation-metric-value">${value}</div>
-                                <div class="automation-metric-label">${key}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="automation-coordination">
-                        <div class="automation-coordination-title">🤖 Automation Chain</div>
-                        <div class="automation-chain">${automation.chain}</div>
-                    </div>
-                    <div class="automation-progress" id="progress-${automation.id}">
-                        <div class="automation-progress-bar">
-                            <div class="automation-progress-fill" style="width: 0%"></div>
-                        </div>
-                        <div class="automation-progress-text">Executing Response...</div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function startAutomationSimulation() {
-            if (automationExecutionInterval) clearInterval(automationExecutionInterval);
-            
-            automationExecutionInterval = setInterval(() => {
-                if (threatAutoExecution && window.SentinelState.agentActive) {
-                    simulateAutomationExecution();
-                }
-            }, 25000); // Execute every 25 seconds
-        }
-
-        function simulateAutomationExecution() {
-            const activeAutomations = threatResponseAutomation.filter(a => a.status === 'active');
-            if (activeAutomations.length === 0) return;
-            
-            const automation = activeAutomations[Math.floor(Math.random() * activeAutomations.length)];
-            executeAutomation(automation.id, automation.title);
-        }
-
-        function executeAutomation(automationId, title) {
-            const card = document.querySelector(`#responseAutomationGrid .response-automation-card:has(#progress-${automationId})`);
-            const progressElement = document.getElementById(`progress-${automationId}`);
-            
-            if (!card || !progressElement) return;
-            
-            // Mark as executing
-            card.classList.add('executing');
-            progressElement.classList.add('active');
-            
-            // Update status badge
-            const statusBadge = card.querySelector('.automation-status');
-            if (statusBadge) {
-                statusBadge.textContent = 'EXECUTING';
-                statusBadge.className = 'automation-status executing';
-            }
-            
-            // Simulate realistic progress
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                progress += Math.random() * 20 + 10;
-                const progressFill = progressElement.querySelector('.automation-progress-fill');
-                
-                if (progressFill) {
-                    progressFill.style.width = Math.min(progress, 100) + '%';
-                }
-                
-                if (progress >= 100) {
-                    clearInterval(progressInterval);
-                    completeAutomationExecution(automationId, title, card, progressElement, statusBadge);
-                }
-            }, 600);
-        }
-
-        function completeAutomationExecution(automationId, title, card, progressElement, statusBadge) {
-            // Complete execution
-            card.classList.remove('executing');
-            progressElement.classList.remove('active');
-            
-            // Restore status
-            if (statusBadge) {
-                statusBadge.textContent = 'ACTIVE';
-                statusBadge.className = 'automation-status active';
-            }
-            
-            // Reset progress for next execution
-            setTimeout(() => {
-                const progressFill = progressElement.querySelector('.automation-progress-fill');
-                if (progressFill) progressFill.style.width = '0%';
-            }, 2000);
-            
-            // Update execution count
-            const automation = threatResponseAutomation.find(a => a.id === automationId);
-            if (automation) {
-                const currentCount = parseInt(automation.metrics.executions.replace(/[^\d]/g, ''));
-                automation.metrics.executions = (currentCount + 1).toString();
-                
-                // Update display
-                const executionMetric = card.querySelector('.automation-metric .automation-metric-value');
-                if (executionMetric && executionMetric.textContent === automation.metrics.executions.replace(/\+1/, '')) {
-                    executionMetric.textContent = automation.metrics.executions;
-                }
-            }
-            
-            // Add completion notification to feed
-            addThreatFeedItem(`✅ Auto-executed: ${title} completed successfully`, 'ai-action', 'ThreatScanner');
-            
-            // Notify chat if open
-            if (window.SentinelState.chatOpen && sentinelChat) {
-                sentinelChat.addMessage(`🤖 ThreatScanner: Auto-executed "${title}" successfully. Sub-agent coordination maintained with hybrid encryption.`, false, 'system');
-            }
-        }
-
-        function openAutomationDetails(automationId) {
-            if (sentinelChat && !window.SentinelState.chatOpen) {
-                sentinelChat.toggle();
-            }
-            setTimeout(() => {
-                const automation = threatResponseAutomation.find(a => a.id === automationId);
-                if (automation && sentinelChat) {
-                    const metricsText = Object.entries(automation.metrics).map(([key, value]) => `${key}: ${value}`).join(', ');
-                    sentinelChat.addMessage(`ThreatScanner Automation: ${automation.title}
-• Status: ${automation.status.toUpperCase()}
-• Metrics: ${metricsText}
-• Automation Chain: ${automation.chain}
-• Description: ${automation.description}
-• Data Protection: All automation steps use hybrid-resistant encryption
-• Response Speed: Sub-millisecond detection with coordinated response
-• SOC Integration: Fully automated with manual override capability
-• Compliance: All actions logged with Dilithium-3 signatures`, false);
-                }
-            }, 300);
-        }
-
-        function initializeThreatFeed() {
-            addThreatFeedItem('🛡️ ThreatScanner V4 enhanced with AI correlation engine active', '', 'ThreatScanner');
-            addThreatFeedItem('🔐 All threat data encrypted with hybrid-resistant algorithms', 'encryption', 'EncryptionManager');
-            addThreatFeedItem('🧠 AI correlation identified multi-stage attack campaign', 'ai-action', 'AI Engine → ThreatScanner');
-            addThreatFeedItem('⚡ DefenseOrchestrator deployed honeypot targeting ransomware group', 'ai-action', 'DefenseOrchestrator');
-            addThreatFeedItem('⚠️ Advanced DDoS targeting API gateway - auto-mitigation active', 'warning', 'DefenseOrchestrator');
-            addThreatFeedItem('🎯 Behavioral analysis detected insider threat pattern', 'warning', 'AnalyticsEngine');
-            addThreatFeedItem('✅ SQL injection blocked with encryption preventing data access', 'encryption', 'EncryptionManager');
-            addThreatFeedItem('🤖 Threat correlation engine updated with 47 new signatures', 'ai-action', 'ThreatScanner');
-        }
-
-        function addThreatFeedItem(message, type = '', agent = '') {
-            const feed = document.getElementById('threatFeed');
-            const item = document.createElement('div');
-            item.className = `feed-item ${type}`;
-            
-            const time = new Date().toLocaleTimeString();
-            item.innerHTML = `
-                <div class="feed-time">${time}</div>
-                <div class="feed-message">${message}</div>
-                ${agent ? `<div class="feed-agent">via ${agent}</div>` : ''}
-            `;
-            
-            feed.insertBefore(item, feed.firstChild);
-            
-            // Keep only last 25 items
-            while (feed.children.length > 25) {
-                feed.removeChild(feed.lastChild);
-            }
-        }
-
-        // V4 Enhanced SOC-focused feed messages
-        const threatFeedMessages = [
-            { msg: '🛡️ ThreatScanner blocked advanced SQL injection with privilege escalation', type: '', agent: 'ThreatScanner' },
-            { msg: '🧠 AI correlation engine identified APT-29 attack pattern signatures', type: 'ai-action', agent: 'AI Engine → ThreatScanner' },
-            { msg: '🤖 Behavioral analysis detected anomalous insider access patterns', type: 'warning', agent: 'AnalyticsEngine → ThreatScanner' },
-            { msg: '⚡ DefenseOrchestrator deployed automated honeypot for threat analysis', type: 'ai-action', agent: 'DefenseOrchestrator → ThreatScanner' },
-            { msg: '🔍 Zero-day exploit attempt detected and contained automatically', type: 'warning', agent: 'ThreatScanner → AI Engine' },
-            { msg: '🔐 Hybrid encryption prevented data access during breach attempt', type: 'encryption', agent: 'EncryptionManager → ThreatScanner' },
-            { msg: '📊 Threat intelligence updated: 2,400 new attack patterns analyzed', type: 'ai-action', agent: 'AnalyticsEngine → ThreatScanner' },
-            { msg: '🎯 Predictive model flagged potential cryptocurrency mining malware', type: 'warning', agent: 'ThreatScanner → AnalyticsEngine' },
-            { msg: '🛡️ Phishing campaign blocked: 4,892 malicious emails intercepted', type: '', agent: 'ThreatScanner' },
-            { msg: '🔗 Sub-agent coordination enhanced: 97% correlation accuracy achieved', type: 'ai-action', agent: 'ThreatScanner' },
-            { msg: '📝 All threat actions logged with Dilithium-3 signatures for compliance', type: 'encryption', agent: 'LogAgent → ThreatScanner' },
-            { msg: '🚀 Automated response time improved to 0.3ms average detection speed', type: 'ai-action', agent: 'ThreatScanner' }
-        ];
-
-        function generateThreatFeedItem() {
-            const item = threatFeedMessages[Math.floor(Math.random() * threatFeedMessages.length)];
-            addThreatFeedItem(item.msg, item.type, item.agent);
-        }
-
         function updateThreatMetrics() {
-            // Update blocked count in both banner and stats
+            // Update blocked count
             const blocked = document.getElementById('blockedToday');
-            const current = parseInt(blocked.textContent.replace(',', ''));
-            const newCount = current + Math.floor(Math.random() * 15 + 5);
-            const formatted = newCount.toLocaleString();
-            
-            blocked.textContent = formatted;
-            
-            // Occasionally change threat count (should match actual threats array)
-            if (Math.random() > 0.85) {
-                const threats = document.getElementById('activeThreats');
-                const currentThreats = parseInt(threats.textContent);
-                const newThreats = Math.max(6, Math.min(10, currentThreats + Math.floor(Math.random() * 3 - 1)));
-                
-                threats.textContent = newThreats;
-                
-                // Update status text
-                document.getElementById('threatStatus').textContent = `${newThreats} Critical Threats`;
+            if (blocked) {
+                const current = parseInt(blocked.textContent.replace(/,/g, ''));
+                const newCount = current + Math.floor(Math.random() * 15 + 5);
+                blocked.textContent = newCount.toLocaleString();
             }
-            
-            // Update correlation metrics
+
+            // Occasionally update threat count
             if (Math.random() > 0.9) {
+                const threats = document.getElementById('activeThreats');
+                if (threats) {
+                    const currentThreats = parseInt(threats.textContent);
+                    const newThreats = Math.max(5, Math.min(12, currentThreats + Math.floor(Math.random() * 3 - 1)));
+                    threats.textContent = newThreats;
+                }
+            }
+
+            // Update correlation metrics
+            if (Math.random() > 0.85) {
                 const correlatedThreats = document.getElementById('correlatedThreats');
-                const newCorrelated = Math.floor(Math.random() * 20 + 12);
-                correlatedThreats.textContent = newCorrelated;
-            }
-        }
-
-        function startThreatSimulation() {
-            if (autoThreatInterval) clearInterval(autoThreatInterval);
-            
-            autoThreatInterval = setInterval(() => {
-                if (threatAutoExecution && window.SentinelState.agentActive) {
-                    simulateThreatResponse();
+                if (correlatedThreats) {
+                    const newCorrelated = Math.floor(Math.random() * 20 + 12);
+                    correlatedThreats.textContent = newCorrelated;
                 }
-            }, 20000); // Execute every 20 seconds
-        }
-
-        function simulateThreatResponse() {
-            const responseActions = [
-                'SQL injection blocked by AI correlation',
-                'DDoS mitigation coordinated with DefenseOrchestrator',
-                'Insider threat pattern flagged by AnalyticsEngine',
-                'Zero-day signature updated via AI Engine',
-                'Behavioral anomaly detected and contained',
-                'Phishing campaign blocked automatically',
-                'Privilege escalation attempt neutralized'
-            ];
-            
-            const action = responseActions[Math.floor(Math.random() * responseActions.length)];
-            addThreatFeedItem(`🤖 Auto-executed: ${action}`, 'ai-action', 'ThreatScanner');
-            
-            if (window.SentinelState.chatOpen && sentinelChat) {
-                sentinelChat.addMessage(`ThreatScanner: Auto-executed "${action}" successfully. All sub-agent coordination maintained with hybrid encryption.`, false, 'system');
             }
         }
 
-        function openThreatDetails(threatId) {
-            if (sentinelChat && !window.SentinelState.chatOpen) {
-                sentinelChat.toggle();
+        // Encryption status handler
+        function showEncryptionStatus() {
+            if (window.sentinelChat && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
             }
             setTimeout(() => {
-                const threat = threats.find(t => t.id === threatId);
-                if (threat && sentinelChat) {
-                    sentinelChat.addMessage(`ThreatScanner V4: ${threat.name} Analysis
-• Type: ${threat.type}
-• Severity: ${threat.severity.toUpperCase()}
-• Source: ${threat.source}
-• Target: ${threat.target}
-• Attempts: ${threat.attempts}
-• Status: ${threat.status}
-• AI Analysis: ${threat.aiAnalysis}
-• Sub-Agent Coordination: ${threat.subAgent}
-• All threat data protected with hybrid-resistant encryption
-• Correlation Score: ${Math.floor(Math.random() * 20 + 80)}% match with known patterns
-• Automated Response: ${threat.status === 'Blocked' || threat.status === 'Quarantined' ? 'Successfully executed' : 'In progress'}`, false);
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('ThreatScanner: Hybrid encryption protecting all threat detection systems. Classical algorithms (AES-256-GCM, ChaCha20-Poly1305) combined with post-quantum (Kyber-1024, Dilithium-3, SPHINCS+) across 247 devices. All threat intelligence encrypted end-to-end.', false);
                 }
             }, 300);
         }
 
-        function openIntelligenceDetails(intelId) {
-            if (sentinelChat && !window.SentinelState.chatOpen) {
-                sentinelChat.toggle();
-            }
-            setTimeout(() => {
-                const intel = threatIntelligence.find(i => i.id === intelId);
-                if (intel && sentinelChat) {
-                    const metricsText = Object.entries(intel.metrics).map(([key, value]) => `${key}: ${value}`).join(', ');
-                    sentinelChat.addMessage(`ThreatScanner Intelligence: ${intel.title}
-• Status: ${intel.status}
-• Metrics: ${metricsText}
-• Coordinating Sub-Agents: ${intel.agents.join(', ')}
-• AI Enhancement: Real-time pattern recognition and behavioral analysis
-• Data Protection: All intelligence encrypted with hybrid-resistant algorithms
-• Integration: Seamless coordination with DefenseOrchestrator, AnalyticsEngine, and AI Engine
-• Performance: Processing 147K events/sec with 99.8% accuracy`, false);
-                }
-            }, 300);
-        }
-
-        function showEncryptionStatus(type) {
-            if (sentinelChat && !window.SentinelState.chatOpen) {
-                sentinelChat.toggle();
-            }
-            setTimeout(() => {
-                if (sentinelChat) {
-                    sentinelChat.addMessage(`EncryptionManager: Hybrid encryption status - Post-quantum algorithms (Kyber-1024, Dilithium-3, SPHINCS+) combined with proven classical encryption (AES-256-GCM, ChaCha20-Poly1305). All threat detection systems protected with hybrid-resistant algorithms across 247 devices.`, false);
-                }
-            }, 300);
-        }
-
-        // Helper function for time formatting
-        function getTimeAgo(timestamp) {
-            const now = new Date();
-            const time = new Date(timestamp);
-            const diffMs = now - time;
-            const diffMins = Math.floor(diffMs / (1000 * 60));
-            
-            if (diffMins < 60) {
-                return diffMins + ' minutes ago';
-            } else {
-                const diffHours = Math.floor(diffMins / 60);
-                return diffHours + ' hours ago';
-            }
-        }
-
-        // Global functions for compatibility
+        // Global functions for compatibility with shared.js
         window.toggleChat = () => {
-            if (sentinelChat) {
-                sentinelChat.toggle();
+            if (window.sentinelChat) {
+                window.sentinelChat.toggle();
             }
         };
         
         window.sendChatMessage = () => {
             const input = document.getElementById('aiChatInput');
-            if (input && input.value.trim() && sentinelChat) {
-                sentinelChat.sendMessage(input.value.trim());
+            if (input && input.value.trim() && window.sentinelChat) {
+                window.sentinelChat.sendMessage(input.value.trim());
                 input.value = '';
             }
         };
@@ -3520,49 +1590,80 @@
             }
         };
         
-        window.showAgentShutdownModal = () => document.getElementById('agentShutdownModal').style.display = 'flex';
-        window.closeModal = () => document.getElementById('agentShutdownModal').style.display = 'none';
-        window.closeModalOnOverlay = (e) => {if (e.target.classList.contains('modal-overlay')) closeModal();};
+        window.showAgentShutdownModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'flex';
+        };
+        
+        window.closeModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'none';
+        };
+        
+        window.closeModalOnOverlay = (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        };
         
         window.confirmAgentShutdown = () => {
-            window.SentinelState.agentActive = !window.SentinelState.agentActive;
-            
-            // Update UI elements
-            const agentStatus = document.querySelector('.agent-status');
-            const agentTitle = document.querySelector('.agent-title');
-            const agentStatusText = document.querySelector('.agent-status-text');
-            
-            if (window.SentinelState.agentActive) {
-                agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
-                agentStatus.style.borderColor = '#00ff88';
-                agentTitle.textContent = 'AI Agent Active';
-                agentTitle.style.color = 'var(--primary)';
-                agentStatusText.textContent = 'Autonomous with Manual Override';
+            if (typeof SentinelState !== 'undefined') {
+                SentinelState.agentActive = !SentinelState.agentActive;
                 
-                // Restart threat simulation
-                threatAutoExecution = true;
-                startThreatSimulation();
-                startAutomationSimulation();
-                addThreatFeedItem('🤖 Main Agent resumed: Threat auto-response enabled', 'ai-action', 'Main Agent');
-            } else {
-                agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
-                agentStatus.style.borderColor = '#ffaa00';
-                agentTitle.textContent = 'AI Agent Paused';
-                agentTitle.style.color = '#ffaa00';
-                agentStatusText.textContent = 'Manual Control Only';
+                // Update UI elements
+                const agentStatus = document.querySelector('.agent-status');
+                const agentTitle = document.querySelector('.agent-title');
+                const agentStatusText = document.querySelector('.agent-status-text');
+                const cliIndicator = document.getElementById('cliModeIndicator');
                 
-                // Stop threat simulation
-                threatAutoExecution = false;
-                if (autoThreatInterval) clearInterval(autoThreatInterval);
-                if (automationExecutionInterval) clearInterval(automationExecutionInterval);
-                addThreatFeedItem('⚠️ Main Agent paused: Manual threat response only', 'warning', 'Main Agent');
-            }
-            
-            closeModal();
-            
-            if (window.SentinelState.chatOpen && sentinelChat) {
-                const status = window.SentinelState.agentActive ? 'resumed autonomous operation with threat auto-response' : 'switched to manual control mode';
-                sentinelChat.addMessage(`⚠️ Main Agent has ${status}. ThreatScanner coordination ${window.SentinelState.agentActive ? 'active' : 'paused'}.`, false, 'system');
+                if (SentinelState.agentActive) {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
+                        agentStatus.style.borderColor = '#00ff88';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Active';
+                        agentTitle.style.color = 'var(--primary)';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Autonomous with Manual Override';
+                    }
+                    if (cliIndicator) {
+                        cliIndicator.classList.remove('active');
+                    }
+                    
+                    // Resume activity feeds
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.resumeAllFeeds();
+                    }
+                } else {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
+                        agentStatus.style.borderColor = '#ffaa00';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Paused';
+                        agentTitle.style.color = '#ffaa00';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Manual Control Only';
+                    }
+                    if (cliIndicator) {
+                        cliIndicator.classList.add('active');
+                    }
+                    
+                    // Pause activity feeds
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.pauseAllFeeds();
+                    }
+                }
+                
+                closeModal();
+                
+                if (SentinelState.chatOpen && window.sentinelChat) {
+                    const status = SentinelState.agentActive ? 'resumed autonomous threat detection' : 'switched to manual control mode';
+                    window.sentinelChat.addMessage(`⚠️ Main Agent has ${status}. ThreatScanner coordination ${SentinelState.agentActive ? 'active' : 'paused'}.`, false, 'system');
+                }
             }
         };
         
@@ -3573,6 +1674,13 @@
                 window.location.href = 'index.html';
             }
         };
+
+        // Cleanup activity feed on page unload
+        window.addEventListener('beforeunload', () => {
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                activityFeedManager.stopAutoGeneration(threatsFeedId);
+            }
+        });
     </script>
 </body>
 </html>
