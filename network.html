@@ -1789,6 +1789,7 @@
             gap: 25px;
             align-items: center;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .footer-link {
@@ -2052,7 +2053,7 @@
             text-transform: uppercase;
         }
 
-        /* Mobile Responsive */
+        /* FIXED: Mobile Responsive with properly centered footer links */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -2116,27 +2117,31 @@
                 text-align: center;
             }
 
+            /* FIXED: Footer properly centered on mobile */
             .footer-streamlined-content {
-                display: flex;
                 flex-direction: column;
+                align-items: center;
                 text-align: center;
                 gap: 20px;
             }
 
             .footer-brand {
-                position: static;
-                order: 1;
                 justify-content: center;
+                width: 100%;
             }
 
+            /* THIS IS THE FIX: Ensures footer links are properly centered */
             .footer-links {
+                width: 100%;
+                display: flex;
                 justify-content: center;
+                align-items: center;
                 gap: 15px;
-                order: 2;
+                flex-wrap: wrap;
             }
 
-            .footer-status {
-                align-items: center;
+            .footer-link {
+                flex: 0 0 auto;
             }
 
             .footer-copyright-streamlined {
@@ -2323,773 +2328,773 @@
                 <button class="auto-scan-btn" onclick="startAutoScan()" id="autoScanBtn">
                     <span class="scan-icon">🔍</span>
                     <span class="scan-text">Start Internal Discovery</span>
-                   <span class="scan-subtitle">Map Internal Infrastructure First</span>
-               </button>
-               <div class="scan-progress" id="scanProgress" style="display: none;">
-                   <div class="progress-bar">
-                       <div class="progress-fill" id="progressFill"></div>
-                   </div>
-                   <div class="progress-text" id="progressText">Initializing internal scan...</div>
-               </div>
-           </div>
-       </div>
+                    <span class="scan-subtitle">Map Internal Infrastructure First</span>
+                </button>
+                <div class="scan-progress" id="scanProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Initializing internal scan...</div>
+                </div>
+            </div>
+        </div>
 
-       <!-- IP Range Manager (Hidden until configured) -->
-       <div class="ip-range-manager" id="ipRangeManager" style="display: none;">
-           <div class="ip-range-header">
-               <h2 class="ip-range-title" id="ipRangeTitle">Network Range Management</h2>
-               <div class="ip-range-controls">
-                   <button class="add-range-btn" onclick="showAddRangeModal()" id="addRangeBtn">Add IP Range</button>
-                   <button class="reset-config-btn" onclick="showRescanModal()" title="Reset network discovery and reconfigure environment">
-                       <span class="icon">🔄</span>
-                       <span>Reset Configuration</span>
-                   </button>
-               </div>
-           </div>
-           
-           <div class="ip-ranges-grid" id="ipRangesGrid">
-               <!-- IP ranges will be populated here -->
-           </div>
-       </div>
+        <!-- IP Range Manager (Hidden until configured) -->
+        <div class="ip-range-manager" id="ipRangeManager" style="display: none;">
+            <div class="ip-range-header">
+                <h2 class="ip-range-title" id="ipRangeTitle">Network Range Management</h2>
+                <div class="ip-range-controls">
+                    <button class="add-range-btn" onclick="showAddRangeModal()" id="addRangeBtn">Add IP Range</button>
+                    <button class="reset-config-btn" onclick="showRescanModal()" title="Reset network discovery and reconfigure environment">
+                        <span class="icon">🔄</span>
+                        <span>Reset Configuration</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="ip-ranges-grid" id="ipRangesGrid">
+                <!-- IP ranges will be populated here -->
+            </div>
+        </div>
 
-       <!-- Interactive Dashboard Section -->
-       <div class="dashboard-interactive" id="dashboardInteractive" style="display: none;">
-           <div class="interactive-header">
-               <h2 class="interactive-title" id="interactiveTitle">Network Discovery Dashboard</h2>
-               <div class="auto-scan-controls">
-                   <span style="color: var(--text-secondary); font-size: 14px;" id="scanDetails">Continuous Monitoring Active</span>
-                   <button class="reset-config-btn" onclick="showRescanModal()" title="Reset network discovery and reconfigure environment">
-                       <span class="icon">🔄</span>
-                       <span>Reset Configuration</span>
-                   </button>
-               </div>
-           </div>
-           <p style="color: var(--text-secondary); text-align: center; font-size: 14px; line-height: 1.6;" id="dashboardDescription">
-               🤖 <strong>Autonomous scanning active</strong> • Hybrid-resistant encryption • No manual intervention required
-           </p>
-       </div>
+        <!-- Interactive Dashboard Section -->
+        <div class="dashboard-interactive" id="dashboardInteractive" style="display: none;">
+            <div class="interactive-header">
+                <h2 class="interactive-title" id="interactiveTitle">Network Discovery Dashboard</h2>
+                <div class="auto-scan-controls">
+                    <span style="color: var(--text-secondary); font-size: 14px;" id="scanDetails">Continuous Monitoring Active</span>
+                    <button class="reset-config-btn" onclick="showRescanModal()" title="Reset network discovery and reconfigure environment">
+                        <span class="icon">🔄</span>
+                        <span>Reset Configuration</span>
+                    </button>
+                </div>
+            </div>
+            <p style="color: var(--text-secondary); text-align: center; font-size: 14px; line-height: 1.6;" id="dashboardDescription">
+                🤖 <strong>Autonomous scanning active</strong> • Hybrid-resistant encryption • No manual intervention required
+            </p>
+        </div>
 
-       <!-- Dual Layer Scanning Sections -->
-       <div class="scanning-sections" id="scanningSections" style="display: none;">
-           <!-- External Scan Panel -->
-           <div class="scan-panel external">
-               <div class="panel-header">
-                   <h2 class="panel-title external">External Scan (Shodan)</h2>
-                   <div class="scan-status needs-setup" id="externalScanStatus">
-                       <div class="status-dot"></div>
-                       <span>SETUP REQUIRED</span>
-                   </div>
-               </div>
-               
-               <!-- Shodan API Setup Overlay -->
-               <div class="shodan-api-overlay active" id="shodanApiOverlay">
-                   <div class="shodan-setup-content">
-                       <div class="shodan-logo">🔍</div>
-                       <div class="shodan-title">Shodan API Setup</div>
-                       <div class="shodan-description">
-                           Add your Shodan API key to enable external reconnaissance and public exposure analysis of your infrastructure.
-                       </div>
-                       
-                       <div class="shodan-input-group">
-                           <input 
-                               type="text" 
-                               class="shodan-input" 
-                               id="shodanApiKey" 
-                               placeholder="Enter Shodan API Key"
-                           >
-                       </div>
-                       
-                       <div class="shodan-actions">
-                           <button class="shodan-btn shodan-btn-primary" onclick="setupShodanApi()">Connect</button>
-                           <button class="shodan-btn shodan-btn-secondary" onclick="skipShodanSetup()">Skip</button>
-                       </div>
-                       
-                       <a href="https://www.shodan.io/" target="_blank" class="shodan-link">
-                           Get Shodan API Key →
-                       </a>
-                   </div>
-               </div>
-               
-               <div class="scan-results">
-                   <div class="result-item">
-                       <span class="result-label">Organization</span>
-                       <span class="result-value" id="orgName">Pending API Setup</span>
-                   </div>
-                   <div class="result-item">
-                       <span class="result-label">ISP</span>
-                       <span class="result-value" id="ispName">-</span>
-                   </div>
-                   <div class="result-item">
-                       <span class="result-label">Location</span>
-                       <span class="result-value" id="location">-</span>
-                   </div>
-                   <div class="result-item">
-                       <span class="result-label">Open Ports</span>
-                       <span class="result-value" id="openPorts" style="color: var(--warning);">-</span>
-                   </div>
-                   <div class="result-item">
-                       <span class="result-label">Vulnerabilities</span>
-                       <span class="result-value" id="vulnCount" style="color: var(--danger);">-</span>
-                   </div>
-               </div>
+        <!-- Dual Layer Scanning Sections -->
+        <div class="scanning-sections" id="scanningSections" style="display: none;">
+            <!-- External Scan Panel -->
+            <div class="scan-panel external">
+                <div class="panel-header">
+                    <h2 class="panel-title external">External Scan (Shodan)</h2>
+                    <div class="scan-status needs-setup" id="externalScanStatus">
+                        <div class="status-dot"></div>
+                        <span>SETUP REQUIRED</span>
+                    </div>
+                </div>
+                
+                <!-- Shodan API Setup Overlay -->
+                <div class="shodan-api-overlay active" id="shodanApiOverlay">
+                    <div class="shodan-setup-content">
+                        <div class="shodan-logo">🔍</div>
+                        <div class="shodan-title">Shodan API Setup</div>
+                        <div class="shodan-description">
+                            Add your Shodan API key to enable external reconnaissance and public exposure analysis of your infrastructure.
+                        </div>
+                        
+                        <div class="shodan-input-group">
+                            <input 
+                                type="text" 
+                                class="shodan-input" 
+                                id="shodanApiKey" 
+                                placeholder="Enter Shodan API Key"
+                            >
+                        </div>
+                        
+                        <div class="shodan-actions">
+                            <button class="shodan-btn shodan-btn-primary" onclick="setupShodanApi()">Connect</button>
+                            <button class="shodan-btn shodan-btn-secondary" onclick="skipShodanSetup()">Skip</button>
+                        </div>
+                        
+                        <a href="https://www.shodan.io/" target="_blank" class="shodan-link">
+                            Get Shodan API Key →
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="scan-results">
+                    <div class="result-item">
+                        <span class="result-label">Organization</span>
+                        <span class="result-value" id="orgName">Pending API Setup</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">ISP</span>
+                        <span class="result-value" id="ispName">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Location</span>
+                        <span class="result-value" id="location">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Open Ports</span>
+                        <span class="result-value" id="openPorts" style="color: var(--warning);">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Vulnerabilities</span>
+                        <span class="result-value" id="vulnCount" style="color: var(--danger);">-</span>
+                    </div>
+                </div>
 
-               <div class="service-list" id="externalServicesList">
-                   <!-- External services will be populated here after API setup -->
-               </div>
-           </div>
+                <div class="service-list" id="externalServicesList">
+                    <!-- External services will be populated here after API setup -->
+                </div>
+            </div>
 
-           <!-- Internal Scan Panel -->
-           <div class="scan-panel internal">
-               <div class="panel-header">
-                   <h2 class="panel-title internal">Internal Scan (Agent)</h2>
-                   <div class="scan-status active">
-                       <div class="status-dot"></div>
-                       <span>AUTO-DISCOVERING</span>
-                   </div>
-               </div>
-               
-               <div class="scan-results">
-                   <div class="result-item">
-                       <span class="result-label">Network Range</span>
-                       <span class="result-value" id="networkRange">192.168.1.0/24</span>
-                   </div>
-                   <div class="result-item">
-                       <span class="result-label">Active Hosts</span>
-                       <span class="result-value" id="activeHosts" style="color: var(--success);">246</span>
-                   </div>
-                   <div class="result-item">
-                       <span class="result-label">New Devices (24h)</span>
-                       <span class="result-value" id="newDevicesInternal" style="color: var(--secondary);">14</span>
-                   </div>
-                   <div class="result-item">
-                       <span class="result-label">Unpatched Systems</span>
-                       <span class="result-value" id="unpatchedSystems" style="color: var(--warning);">18</span>
-                   </div>
-                   <div class="result-item">
-                       <span class="result-label">AI Monitoring</span>
-                       <span class="result-value" style="color: var(--accent);">REAL-TIME</span>
-                   </div>
-               </div>
+            <!-- Internal Scan Panel -->
+            <div class="scan-panel internal">
+                <div class="panel-header">
+                    <h2 class="panel-title internal">Internal Scan (Agent)</h2>
+                    <div class="scan-status active">
+                        <div class="status-dot"></div>
+                        <span>AUTO-DISCOVERING</span>
+                    </div>
+                </div>
+                
+                <div class="scan-results">
+                    <div class="result-item">
+                        <span class="result-label">Network Range</span>
+                        <span class="result-value" id="networkRange">192.168.1.0/24</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Active Hosts</span>
+                        <span class="result-value" id="activeHosts" style="color: var(--success);">246</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">New Devices (24h)</span>
+                        <span class="result-value" id="newDevicesInternal" style="color: var(--secondary);">14</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Unpatched Systems</span>
+                        <span class="result-value" id="unpatchedSystems" style="color: var(--warning);">18</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">AI Monitoring</span>
+                        <span class="result-value" style="color: var(--accent);">REAL-TIME</span>
+                    </div>
+                </div>
 
-               <div class="service-list" id="internalServicesList">
-                   <!-- Internal services will be populated here -->
-               </div>
-           </div>
-       </div>
+                <div class="service-list" id="internalServicesList">
+                    <!-- Internal services will be populated here -->
+                </div>
+            </div>
+        </div>
 
-       <!-- Network Overview -->
-       <div class="network-overview" id="networkOverview" style="display: none;">
-           <div class="overview-header">
-               <h2 class="overview-title" id="overviewTitle">Network Overview</h2>
-           </div>
-           <div class="overview-grid" id="overviewGrid">
-               <!-- Overview cards will be populated here -->
-           </div>
-       </div>
+        <!-- Network Overview -->
+        <div class="network-overview" id="networkOverview" style="display: none;">
+            <div class="overview-header">
+                <h2 class="overview-title" id="overviewTitle">Network Overview</h2>
+            </div>
+            <div class="overview-grid" id="overviewGrid">
+                <!-- Overview cards will be populated here -->
+            </div>
+        </div>
 
-       <!-- Device Discovery -->
-       <div class="device-discovery" id="deviceDiscovery" style="display: none;">
-           <div class="discovery-header">
-               <h2 class="discovery-title" id="discoveryTitle">Device Discovery</h2>
-           </div>
-           <div class="device-grid" id="deviceGrid">
-               <!-- Device cards will be populated here -->
-           </div>
-       </div>
+        <!-- Device Discovery -->
+        <div class="device-discovery" id="deviceDiscovery" style="display: none;">
+            <div class="discovery-header">
+                <h2 class="discovery-title" id="discoveryTitle">Device Discovery</h2>
+            </div>
+            <div class="device-grid" id="deviceGrid">
+                <!-- Device cards will be populated here -->
+            </div>
+        </div>
 
-       <!-- Network Activity Feed -->
-       <div class="activity-feed" id="networkActivityFeed" style="display: none;">
-           <div class="feed-header">
-               <h2 class="feed-title">
-                   <span>🌐</span>
-                   <span>Network Activity Feed</span>
-               </h2>
-               <div class="live-indicator">
-                   <div class="live-dot"></div>
-                   <span>LIVE</span>
-               </div>
-           </div>
-           <div class="feed-content" id="networkActivityFeedContent">
-               <!-- Feed items will be populated by ActivityFeedManager -->
-           </div>
-       </div>
+        <!-- Network Activity Feed -->
+        <div class="activity-feed" id="networkActivityFeed" style="display: none;">
+            <div class="feed-header">
+                <h2 class="feed-title">
+                    <span>🌐</span>
+                    <span>Network Activity Feed</span>
+                </h2>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>LIVE</span>
+                </div>
+            </div>
+            <div class="feed-content" id="networkActivityFeedContent">
+                <!-- Feed items will be populated by ActivityFeedManager -->
+            </div>
+        </div>
 
-       <!-- Checkout Section -->
-       <div class="checkout-section" id="checkoutSection" style="display: none;">
-           <div class="checkout-header">
-               <h2 class="checkout-title">Complete Your Security Setup</h2>
-               <p class="checkout-subtitle">Your network scan is complete. Subscribe to activate AI Sentinel-X protection.</p>
-           </div>
+        <!-- Checkout Section -->
+        <div class="checkout-section" id="checkoutSection" style="display: none;">
+            <div class="checkout-header">
+                <h2 class="checkout-title">Complete Your Security Setup</h2>
+                <p class="checkout-subtitle">Your network scan is complete. Subscribe to activate AI Sentinel-X protection.</p>
+            </div>
 
-           <div class="pricing-summary" id="pricingSummary">
-               <!-- Pricing will be populated based on selected package -->
-           </div>
+            <div class="pricing-summary" id="pricingSummary">
+                <!-- Pricing will be populated based on selected package -->
+            </div>
 
-           <div class="checkout-form">
-               <button class="checkout-btn" onclick="processCheckout()">
-                   <span>🔒</span>
-                   <span>Secure Checkout with Stripe</span>
-               </button>
-               <div class="security-note">
-                   <span>🛡️</span>
-                   <span>256-bit SSL encryption • PCI compliant • Instant activation</span>
-               </div>
-           </div>
-       </div>
+            <div class="checkout-form">
+                <button class="checkout-btn" onclick="processCheckout()">
+                    <span>🔒</span>
+                    <span>Secure Checkout with Stripe</span>
+                </button>
+                <div class="security-note">
+                    <span>🛡️</span>
+                    <span>256-bit SSL encryption • PCI compliant • Instant activation</span>
+                </div>
+            </div>
+        </div>
 
-   </div>
+    </div>
 
-   <!-- Streamlined Footer for Secondary Pages -->
-   <footer class="footer-streamlined">
-       <div class="footer-streamlined-content">
-           <div class="footer-brand">
-               <div class="footer-logo">
-                   <div class="footer-rotating-dots">
-                       <span class="footer-dot"></span>
-                       <span class="footer-dot"></span>
-                       <span class="footer-dot"></span>
-                   </div>
-                   <div class="footer-shield">
-                       <div class="footer-eye">
-                           <div class="footer-iris"></div>
-                       </div>
-                   </div>
-               </div>
-               <div class="footer-brand-info">
-                   <h3 class="footer-brand-name">AI Sentinel-X</h3>
-                   <p class="footer-brand-tagline">Autonomous Cyber Defense</p>
-               </div>
-           </div>
-           
-           <div class="footer-links">
-               <a href="dashboard.html" class="footer-link">
-                   <span>🏠</span>
-                   <span>Dashboard</span>
-               </a>
-               <a href="mailto:support@ai-sentinel-x.com" class="footer-link">
-                   <span>📧</span>
-                   <span>Support</span>
-               </a>
-               <a href="https://docs.ai-sentinel-x.com" target="_blank" class="footer-link">
-                   <span>📚</span>
-                   <span>Documentation</span>
-               </a>
-               <a href="settings.html" class="footer-link">
-                   <span>⚙️</span>
-                   <span>Settings</span>
-               </a>
-           </div>
-       </div>
-       
-       <div class="footer-bottom-streamlined">
-           <div class="footer-copyright-streamlined">
-               <span>© 2025 AI Sentinel-X</span>
-               <span>•</span>
-               <span>NetworkMapper</span>
-           </div>
-       </div>
-   </footer>
+    <!-- Streamlined Footer for Secondary Pages -->
+    <footer class="footer-streamlined">
+        <div class="footer-streamlined-content">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <div class="footer-rotating-dots">
+                        <span class="footer-dot"></span>
+                        <span class="footer-dot"></span>
+                        <span class="footer-dot"></span>
+                    </div>
+                    <div class="footer-shield">
+                        <div class="footer-eye">
+                            <div class="footer-iris"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-brand-info">
+                    <h3 class="footer-brand-name">AI Sentinel-X</h3>
+                    <p class="footer-brand-tagline">Autonomous Cyber Defense</p>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <a href="dashboard.html" class="footer-link">
+                    <span>🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="mailto:support@ai-sentinel-x.com" class="footer-link">
+                    <span>📧</span>
+                    <span>Support</span>
+                </a>
+                <a href="https://docs.ai-sentinel-x.com" target="_blank" class="footer-link">
+                    <span>📚</span>
+                    <span>Documentation</span>
+                </a>
+                <a href="settings.html" class="footer-link">
+                    <span>⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom-streamlined">
+            <div class="footer-copyright-streamlined">
+                <span>© 2025 AI Sentinel-X</span>
+                <span>•</span>
+                <span>NetworkMapper</span>
+            </div>
+        </div>
+    </footer>
 
-   <!-- Add Range Modal -->
-   <div class="modal-overlay" id="addRangeModal" onclick="closeModalOnOverlay(event)">
-       <div class="modal">
-           <div class="modal-header">
-               <h2 class="modal-title" id="addRangeModalTitle">🌐 Add IP Range</h2>
-           </div>
-           <div class="modal-content">
-               <div class="input-group">
-                   <label for="rangeName">Range Name:</label>
-                   <input type="text" id="rangeName" placeholder="e.g., Main Office" class="modal-input">
-               </div>
-               <div class="input-group">
-                   <label for="ipRange">IP Range (CIDR):</label>
-                   <input type="text" id="ipRange" placeholder="e.g., 192.168.1.0/24" class="modal-input">
-               </div>
-               <div class="input-group">
-                   <label for="location">Location:</label>
-                   <input type="text" id="location" placeholder="e.g., New York, US" class="modal-input">
-               </div>
-               <div class="input-group">
-                   <label for="organization">Organization:</label>
-                   <input type="text" id="organization" placeholder="e.g., Company ISP" class="modal-input">
-               </div>
-           </div>
-           <div class="modal-actions">
-               <button class="modal-btn modal-btn-primary" onclick="addIPRange()">Add Range</button>
-               <button class="modal-btn modal-btn-secondary" onclick="closeAddRangeModal()">Cancel</button>
-           </div>
-       </div>
-   </div>
+    <!-- Add Range Modal -->
+    <div class="modal-overlay" id="addRangeModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="addRangeModalTitle">🌐 Add IP Range</h2>
+            </div>
+            <div class="modal-content">
+                <div class="input-group">
+                    <label for="rangeName">Range Name:</label>
+                    <input type="text" id="rangeName" placeholder="e.g., Main Office" class="modal-input">
+                </div>
+                <div class="input-group">
+                    <label for="ipRange">IP Range (CIDR):</label>
+                    <input type="text" id="ipRange" placeholder="e.g., 192.168.1.0/24" class="modal-input">
+                </div>
+                <div class="input-group">
+                    <label for="rangeLocation">Location:</label>
+                    <input type="text" id="rangeLocation" placeholder="e.g., New York, US" class="modal-input">
+                </div>
+                <div class="input-group">
+                    <label for="organization">Organization:</label>
+                    <input type="text" id="organization" placeholder="e.g., Company ISP" class="modal-input">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" onclick="addIPRange()">Add Range</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeAddRangeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 
-   <!-- Rescan Modal -->
-   <div class="modal-overlay" id="rescanModal" onclick="closeModalOnOverlay(event)">
-       <div class="modal">
-           <div class="modal-header">
-               <h2 class="modal-title">🔄 Reset Network Discovery</h2>
-           </div>
-           <div class="modal-content">
-               <p>This will reset the network discovery configuration and return you to the environment detection screen. All current network data will be cleared.</p>
-               <p><strong>Warning:</strong> This action cannot be undone. The AI agent will need to reconfigure your environment from scratch.</p>
-           </div>
-           <div class="modal-actions">
-               <button class="modal-btn modal-btn-primary" onclick="confirmRescan()">Reset Configuration</button>
-               <button class="modal-btn modal-btn-secondary" onclick="closeRescanModal()">Cancel</button>
-           </div>
-       </div>
-   </div>
+    <!-- Rescan Modal -->
+    <div class="modal-overlay" id="rescanModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">🔄 Reset Network Discovery</h2>
+            </div>
+            <div class="modal-content">
+                <p>This will reset the network discovery configuration and return you to the environment detection screen. All current network data will be cleared.</p>
+                <p><strong>Warning:</strong> This action cannot be undone. The AI agent will need to reconfigure your environment from scratch.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" onclick="confirmRescan()">Reset Configuration</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeRescanModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 
-   <!-- Agent Shutdown Modal -->
-   <div class="modal-overlay" id="agentShutdownModal" onclick="closeModalOnOverlay(event)">
-       <div class="modal">
-           <div class="modal-header">
-               <h2 class="modal-title">⚠️ Agent Control Toggle</h2>
-           </div>
-           <div class="modal-content">
-               Toggle autonomous mode? When paused, manual control remains available through the AI chat bot CLI. System will fallback to local control mode if external APIs are offline.
-           </div>
-           <div class="modal-actions">
-               <button class="modal-btn modal-btn-primary" onclick="confirmAgentShutdown()">Toggle Agent Mode</button>
-               <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
-           </div>
-       </div>
-   </div>
+    <!-- Agent Shutdown Modal -->
+    <div class="modal-overlay" id="agentShutdownModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">⚠️ Agent Control Toggle</h2>
+            </div>
+            <div class="modal-content">
+                Toggle autonomous mode? When paused, manual control remains available through the AI chat bot CLI. System will fallback to local control mode if external APIs are offline.
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" onclick="confirmAgentShutdown()">Toggle Agent Mode</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 
-   <!-- AI Chat Widget -->
-   <div class="ai-chat-widget">
-       <div class="ai-chat-window" id="aiChatWindow">
-           <div class="ai-chat-header">
-               <div class="ai-chat-status">
-                   <span class="chat-status-dot"></span>
-                   <span>NETWORKMAPPER ONLINE</span>
-               </div>
-               <button class="ai-chat-close" onclick="toggleChat()">×</button>
-           </div>
-           <div class="cli-mode-indicator" id="cliModeIndicator">
-               ⚠️ CLI MODE - NetworkMapper Offline
-           </div>
-           <div class="ai-chat-messages" id="aiChatMessages">
-               <div class="ai-message">
-                   <div class="ai-message-bubble">
-                       Welcome to AI Sentinel-X V4 Network Discovery. I'm NetworkMapper, coordinating with ThreatScanner, EncryptionDeployer, and other sub-agents. I perform internal discovery first to map your infrastructure, then you can add external reconnaissance via Shodan API for complete visibility.
-                   </div>
-                   <div class="ai-message-time">Just now</div>
-               </div>
-           </div>
-           <div class="ai-chat-input-container">
-               <input 
-                   type="text" 
-                   class="ai-chat-input" 
-                   id="aiChatInput" 
-                   placeholder="Ask about network discovery, encryption gaps, or security configuration..."
-                   onkeypress="handleChatKeyPress(event)"
-               >
-               <button class="ai-chat-send" id="aiChatSend" onclick="sendChatMessage()">SEND</button>
-           </div>
-       </div>
-       <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
-   </div>
+    <!-- AI Chat Widget -->
+    <div class="ai-chat-widget">
+        <div class="ai-chat-window" id="aiChatWindow">
+            <div class="ai-chat-header">
+                <div class="ai-chat-status">
+                    <span class="chat-status-dot"></span>
+                    <span>NETWORKMAPPER ONLINE</span>
+                </div>
+                <button class="ai-chat-close" onclick="toggleChat()">×</button>
+            </div>
+            <div class="cli-mode-indicator" id="cliModeIndicator">
+                ⚠️ CLI MODE - NetworkMapper Offline
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-message">
+                    <div class="ai-message-bubble">
+                        Welcome to AI Sentinel-X V4 Network Discovery. I'm NetworkMapper, coordinating with ThreatScanner, EncryptionDeployer, and other sub-agents. I perform internal discovery first to map your infrastructure, then you can add external reconnaissance via Shodan API for complete visibility.
+                    </div>
+                    <div class="ai-message-time">Just now</div>
+                </div>
+            </div>
+            <div class="ai-chat-input-container">
+                <input 
+                    type="text" 
+                    class="ai-chat-input" 
+                    id="aiChatInput" 
+                    placeholder="Ask about network discovery, encryption gaps, or security configuration..."
+                    onkeypress="handleChatKeyPress(event)"
+                >
+                <button class="ai-chat-send" id="aiChatSend" onclick="sendChatMessage()">SEND</button>
+            </div>
+        </div>
+        <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
+    </div>
 
-   <script src="shared.js"></script>
-   <script src="network-core.js"></script>
-   <script>
-       // Network page-specific configurations using shared.js infrastructure
-       let networkFeedId = 'network-feed';
+    <script src="shared.js"></script>
+    <script src="network-core.js"></script>
+    <script>
+        // Network page-specific configurations using shared.js infrastructure
+        let networkFeedId = 'network-feed';
 
-       // Enhanced initialization for V4
-       document.addEventListener('DOMContentLoaded', () => {
-           console.log('Network V4 module loaded');
-           setTimeout(() => {
-               initializeNetworkPage();
-           }, 100);
-       });
+        // Enhanced initialization for V4
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Network V4 module loaded');
+            setTimeout(() => {
+                initializeNetworkPage();
+            }, 100);
+        });
 
-       function initializeNetworkPage() {
-           // Initialize neural background from shared.js
-           if (typeof initNeuralBackground === 'function') {
-               initNeuralBackground();
-           }
+        function initializeNetworkPage() {
+            // Initialize neural background from shared.js
+            if (typeof initNeuralBackground === 'function') {
+                initNeuralBackground();
+            }
 
-           // Initialize page context from shared.js
-           if (typeof initializePageContext === 'function') {
-               initializePageContext();
-           }
+            // Initialize page context from shared.js
+            if (typeof initializePageContext === 'function') {
+                initializePageContext();
+            }
 
-           // Initialize chat system from shared.js
-           if (typeof SentinelChat !== 'undefined') {
-               window.sentinelChat = new SentinelChat();
-           }
+            // Initialize chat system from shared.js
+            if (typeof SentinelChat !== 'undefined') {
+                window.sentinelChat = new SentinelChat();
+            }
 
-           // Initialize encryption status click handler
-           window.showEncryptionStatus = function() {
-               if (window.sentinelChat && !SentinelState.chatOpen) {
-                   window.sentinelChat.toggle();
-               }
-               setTimeout(() => {
-                   if (window.sentinelChat) {
-                       window.sentinelChat.addMessage('NetworkMapper: Hybrid encryption active across all discovered devices. Classical algorithms (AES-256-GCM, ChaCha20-Poly1305) combined with post-quantum (Kyber-1024, Dilithium-3, SPHINCS+). Coordinating with EncryptionManager for comprehensive protection.', false);
-                   }
-               }, 300);
-           };
+            // Initialize encryption status click handler
+            window.showEncryptionStatus = function() {
+                if (window.sentinelChat && !SentinelState.chatOpen) {
+                    window.sentinelChat.toggle();
+                }
+                setTimeout(() => {
+                    if (window.sentinelChat) {
+                        window.sentinelChat.addMessage('NetworkMapper: Hybrid encryption active across all discovered devices. Classical algorithms (AES-256-GCM, ChaCha20-Poly1305) combined with post-quantum (Kyber-1024, Dilithium-3, SPHINCS+). Coordinating with EncryptionManager for comprehensive protection.', false);
+                    }
+                }, 300);
+            };
 
-           // Initialize V4 features
-           initializeV4Features();
-           
-           // Initialize environment detection if needed
-           if (typeof initializeEnvironmentDetection === 'function') {
-               initializeEnvironmentDetection();
-           }
-           
-           // Auto-update metrics periodically
-           setInterval(() => {
-               if (window.currentScale) {
-                   updateMetrics();
-                   checkEncryptionGaps();
-               }
-           }, 8000);
-       }
+            // Initialize V4 features
+            initializeV4Features();
+            
+            // Initialize environment detection if needed
+            if (typeof initializeEnvironmentDetection === 'function') {
+                initializeEnvironmentDetection();
+            }
+            
+            // Auto-update metrics periodically
+            setInterval(() => {
+                if (window.currentScale) {
+                    updateMetrics();
+                    checkEncryptionGaps();
+                }
+            }, 8000);
+        }
 
-       function initializeV4Features() {
-           // Enhanced dual-layer scanning data
-           window.externalServices = [
-               {
-                   name: 'HTTPS (443/tcp)',
-                   details: 'nginx/1.18.0 • TLS 1.3',
-                   encryption: '🔐 AES-256-GCM + CRYSTALS-Kyber',
-                   status: 'Secure',
-                   statusClass: 'status-secure'
-               },
-               {
-                   name: 'SSH (22/tcp)',
-                   details: 'OpenSSH_7.4 • Key Auth Only',
-                   encryption: '🔐 Hybrid: Classical + PQ Keys',
-                   status: 'Secure',
-                   statusClass: 'status-secure'
-               },
-               {
-                   name: 'RDP (3389/tcp)',
-                   details: 'Windows Server 2019 • NLA + TLS 1.2',
-                   encryption: '⚠️ Classical only - upgrade needed',
-                   status: 'Monitor',
-                   statusClass: 'status-update'
-               },
-               {
-                   name: 'SMB (445/tcp)',
-                   details: 'SMBv2 • Outdated',
-                   encryption: '❌ Weak encryption',
-                   status: 'Vulnerable',
-                   statusClass: 'status-vulnerable'
-               }
-           ];
+        function initializeV4Features() {
+            // Enhanced dual-layer scanning data
+            window.externalServices = [
+                {
+                    name: 'HTTPS (443/tcp)',
+                    details: 'nginx/1.18.0 • TLS 1.3',
+                    encryption: '🔐 AES-256-GCM + CRYSTALS-Kyber',
+                    status: 'Secure',
+                    statusClass: 'status-secure'
+                },
+                {
+                    name: 'SSH (22/tcp)',
+                    details: 'OpenSSH_7.4 • Key Auth Only',
+                    encryption: '🔐 Hybrid: Classical + PQ Keys',
+                    status: 'Secure',
+                    statusClass: 'status-secure'
+                },
+                {
+                    name: 'RDP (3389/tcp)',
+                    details: 'Windows Server 2019 • NLA + TLS 1.2',
+                    encryption: '⚠️ Classical only - upgrade needed',
+                    status: 'Monitor',
+                    statusClass: 'status-update'
+                },
+                {
+                    name: 'SMB (445/tcp)',
+                    details: 'SMBv2 • Outdated',
+                    encryption: '❌ Weak encryption',
+                    status: 'Vulnerable',
+                    statusClass: 'status-vulnerable'
+                }
+            ];
 
-           window.internalServices = [
-               {
-                   name: 'Domain Controllers',
-                   details: '2 servers • AD DS • Kerberos',
-                   encryption: '🔐 Full hybrid encryption',
-                   status: 'Secure',
-                   statusClass: 'status-secure'
-               },
-               {
-                   name: 'Database Servers',
-                   details: '5 instances • TDE enabled',
-                   encryption: '🔐 AES-256 + Kyber-1024',
-                   status: 'Secure',
-                   statusClass: 'status-secure'
-               },
-               {
-                   name: 'IoT Devices',
-                   details: '47 devices • Mixed security',
-                   encryption: '⚠️ Partial encryption support',
-                   status: 'Monitor',
-                   statusClass: 'status-update'
-               },
-               {
-                   name: 'Workstations',
-                   details: '189 systems • BitLocker enabled',
-                   encryption: '🔐 Hybrid disk encryption',
-                   status: 'Update',
-                   statusClass: 'status-update'
-               }
-           ];
-       }
+            window.internalServices = [
+                {
+                    name: 'Domain Controllers',
+                    details: '2 servers • AD DS • Kerberos',
+                    encryption: '🔐 Full hybrid encryption',
+                    status: 'Secure',
+                    statusClass: 'status-secure'
+                },
+                {
+                    name: 'Database Servers',
+                    details: '5 instances • TDE enabled',
+                    encryption: '🔐 AES-256 + Kyber-1024',
+                    status: 'Secure',
+                    statusClass: 'status-secure'
+                },
+                {
+                    name: 'IoT Devices',
+                    details: '47 devices • Mixed security',
+                    encryption: '⚠️ Partial encryption support',
+                    status: 'Monitor',
+                    statusClass: 'status-update'
+                },
+                {
+                    name: 'Workstations',
+                    details: '189 systems • BitLocker enabled',
+                    encryption: '🔐 Hybrid disk encryption',
+                    status: 'Update',
+                    statusClass: 'status-update'
+                }
+            ];
+        }
 
-       // NEW: Shodan API Setup Functions
-       window.setupShodanApi = function() {
-           const apiKey = document.getElementById('shodanApiKey').value.trim();
-           
-           if (!apiKey) {
-               alert('Please enter a Shodan API key');
-               return;
-           }
-           
-           // Store API key (in demo mode)
-           localStorage.setItem('shodan_api_key', apiKey);
-           
-           // Hide overlay and update external panel
-           const overlay = document.getElementById('shodanApiOverlay');
-           const status = document.getElementById('externalScanStatus');
-           
-           if (overlay) overlay.classList.remove('active');
-           if (status) {
-               status.innerHTML = '<div class="status-dot"></div><span>SCANNING</span>';
-               status.className = 'scan-status active';
-           }
-           
-           // Populate external scan results
-           populateExternalScanResults();
-           
-           // Add chat message
-           if (window.sentinelChat && SentinelState.chatOpen) {
-               sentinelChat.addMessage('🔍 NetworkMapper: Shodan API connected successfully! External reconnaissance now active. Scanning public infrastructure...', false, 'system');
-           }
-       };
+        // NEW: Shodan API Setup Functions
+        window.setupShodanApi = function() {
+            const apiKey = document.getElementById('shodanApiKey').value.trim();
+            
+            if (!apiKey) {
+                alert('Please enter a Shodan API key');
+                return;
+            }
+            
+            // Store API key (in demo mode)
+            localStorage.setItem('shodan_api_key', apiKey);
+            
+            // Hide overlay and update external panel
+            const overlay = document.getElementById('shodanApiOverlay');
+            const status = document.getElementById('externalScanStatus');
+            
+            if (overlay) overlay.classList.remove('active');
+            if (status) {
+                status.innerHTML = '<div class="status-dot"></div><span>SCANNING</span>';
+                status.className = 'scan-status active';
+            }
+            
+            // Populate external scan results
+            populateExternalScanResults();
+            
+            // Add chat message
+            if (window.sentinelChat && SentinelState.chatOpen) {
+                sentinelChat.addMessage('🔍 NetworkMapper: Shodan API connected successfully! External reconnaissance now active. Scanning public infrastructure...', false, 'system');
+            }
+        };
 
-       window.useDemoShodan = function() {
-           // Set demo API key
-           localStorage.setItem('shodan_api_key', 'demo-key-' + Math.random().toString(36).substr(2, 8));
-           
-           // Hide overlay and update external panel
-           const overlay = document.getElementById('shodanApiOverlay');
-           const status = document.getElementById('externalScanStatus');
-           
-           if (overlay) overlay.classList.remove('active');
-           if (status) {
-               status.innerHTML = '<div class="status-dot"></div><span>DEMO MODE</span>';
-               status.className = 'scan-status active';
-           }
-           
-           // Populate demo external scan results
-           populateExternalScanResults();
-           
-           // Add chat message
-           if (window.sentinelChat && SentinelState.chatOpen) {
-               sentinelChat.addMessage('🔍 NetworkMapper: Demo Shodan mode activated! Simulating external reconnaissance with sample data.', false, 'system');
-           }
-       };
+        window.useDemoShodan = function() {
+            // Set demo API key
+            localStorage.setItem('shodan_api_key', 'demo-key-' + Math.random().toString(36).substr(2, 8));
+            
+            // Hide overlay and update external panel
+            const overlay = document.getElementById('shodanApiOverlay');
+            const status = document.getElementById('externalScanStatus');
+            
+            if (overlay) overlay.classList.remove('active');
+            if (status) {
+                status.innerHTML = '<div class="status-dot"></div><span>DEMO MODE</span>';
+                status.className = 'scan-status active';
+            }
+            
+            // Populate demo external scan results
+            populateExternalScanResults();
+            
+            // Add chat message
+            if (window.sentinelChat && SentinelState.chatOpen) {
+                sentinelChat.addMessage('🔍 NetworkMapper: Demo Shodan mode activated! Simulating external reconnaissance with sample data.', false, 'system');
+            }
+        };
 
-       window.skipShodanSetup = function() {
-           // Hide overlay but keep status as setup required
-           const overlay = document.getElementById('shodanApiOverlay');
-           if (overlay) overlay.classList.remove('active');
-           
-           // Add chat message
-           if (window.sentinelChat && SentinelState.chatOpen) {
-               sentinelChat.addMessage('NetworkMapper: Shodan setup skipped. External reconnaissance disabled. You can add your API key later in Settings.', false, 'system');
-           }
-       };
+        window.skipShodanSetup = function() {
+            // Hide overlay but keep status as setup required
+            const overlay = document.getElementById('shodanApiOverlay');
+            if (overlay) overlay.classList.remove('active');
+            
+            // Add chat message
+            if (window.sentinelChat && SentinelState.chatOpen) {
+                sentinelChat.addMessage('NetworkMapper: Shodan setup skipped. External reconnaissance disabled. You can add your API key later in Settings.', false, 'system');
+            }
+        };
 
-       function populateExternalScanResults() {
-           // Update result values
-           document.getElementById('orgName').textContent = 'Acme Corporation';
-           document.getElementById('ispName').textContent = 'Business Fiber Network';
-           document.getElementById('location').textContent = 'Columbia, SC, US';
-           document.getElementById('openPorts').textContent = '7';
-           document.getElementById('vulnCount').textContent = '2';
-           
-           // Populate external services list
-           populateExternalServices();
-       }
+        function populateExternalScanResults() {
+            // Update result values
+            document.getElementById('orgName').textContent = 'Acme Corporation';
+            document.getElementById('ispName').textContent = 'Business Fiber Network';
+            document.getElementById('location').textContent = 'Columbia, SC, US';
+            document.getElementById('openPorts').textContent = '7';
+            document.getElementById('vulnCount').textContent = '2';
+            
+            // Populate external services list
+            populateExternalServices();
+        }
 
-       function populateExternalServices() {
-           const externalList = document.getElementById('externalServicesList');
-           if (externalList && window.externalServices) {
-               externalList.innerHTML = '';
-               window.externalServices.forEach(service => {
-                   const item = createServiceItem(service);
-                   externalList.appendChild(item);
-               });
-           }
-       }
+        function populateExternalServices() {
+            const externalList = document.getElementById('externalServicesList');
+            if (externalList && window.externalServices) {
+                externalList.innerHTML = '';
+                window.externalServices.forEach(service => {
+                    const item = createServiceItem(service);
+                    externalList.appendChild(item);
+                });
+            }
+        }
 
-       // Setup activity feed when scale is selected
-       function setupNetworkActivityFeed() {
-           const feedContainer = document.getElementById('networkActivityFeed');
-           if (feedContainer && window.currentScale) {
-               feedContainer.style.display = 'flex';
-               
-               // Initialize network activity feed using shared.js ActivityFeedManager
-               if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
-                   activityFeedManager.initializeFeed(networkFeedId, 'network');
-                   activityFeedManager.setFeedContainer(networkFeedId, 'networkActivityFeedContent');
-                   
-                   // Add initial messages based on scale
-                   if (window.currentScale === 'individual') {
-                       activityFeedManager.addMessage(networkFeedId, '🔍 NetworkMapper: Internal scan complete - 1 server discovered', '', 'NetworkMapper');
-                       activityFeedManager.addMessage(networkFeedId, '✅ ThreatScanner: No critical vulnerabilities on internal network', '', 'NetworkMapper → ThreatScanner');
-                       activityFeedManager.addMessage(networkFeedId, '🔐 EncryptionDeployer: Hybrid encryption verified on primary server', 'encryption', 'NetworkMapper → EncryptionDeployer');
-                   } else if (window.currentScale === 'business') {
-                       activityFeedManager.addMessage(networkFeedId, '🏢 NetworkMapper: Multi-site internal scan complete - 3 locations', '', 'NetworkMapper');
-                       activityFeedManager.addMessage(networkFeedId, '🔍 Internal discovery: 127 devices mapped across all sites', '', 'NetworkMapper');
-                       activityFeedManager.addMessage(networkFeedId, '⚠️ ThreatScanner: 2 medium-risk vulnerabilities detected', 'warning', 'NetworkMapper → ThreatScanner');
-                   } else if (window.currentScale === 'enterprise') {
-                       activityFeedManager.addMessage(networkFeedId, '🏭 NetworkMapper: Enterprise internal scan across 3 data centers', '', 'NetworkMapper');
-                       activityFeedManager.addMessage(networkFeedId, '🔍 Internal discovery: 1,926 devices across global infrastructure', '', 'NetworkMapper');
-                       activityFeedManager.addMessage(networkFeedId, '🛡️ ThreatScanner: Advanced persistent threat indicators analyzed', '', 'NetworkMapper → ThreatScanner');
-                   }
-                   
-                   // Start auto-generation for network feed
-                   activityFeedManager.startAutoGeneration(networkFeedId, 5000);
-               }
-           }
-       }
+        // Setup activity feed when scale is selected
+        function setupNetworkActivityFeed() {
+            const feedContainer = document.getElementById('networkActivityFeed');
+            if (feedContainer && window.currentScale) {
+                feedContainer.style.display = 'flex';
+                
+                // Initialize network activity feed using shared.js ActivityFeedManager
+                if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                    activityFeedManager.initializeFeed(networkFeedId, 'network');
+                    activityFeedManager.setFeedContainer(networkFeedId, 'networkActivityFeedContent');
+                    
+                    // Add initial messages based on scale
+                    if (window.currentScale === 'individual') {
+                        activityFeedManager.addMessage(networkFeedId, '🔍 NetworkMapper: Internal scan complete - 1 server discovered', '', 'NetworkMapper');
+                        activityFeedManager.addMessage(networkFeedId, '✅ ThreatScanner: No critical vulnerabilities on internal network', '', 'NetworkMapper → ThreatScanner');
+                        activityFeedManager.addMessage(networkFeedId, '🔐 EncryptionDeployer: Hybrid encryption verified on primary server', 'encryption', 'NetworkMapper → EncryptionDeployer');
+                    } else if (window.currentScale === 'business') {
+                        activityFeedManager.addMessage(networkFeedId, '🏢 NetworkMapper: Multi-site internal scan complete - 3 locations', '', 'NetworkMapper');
+                        activityFeedManager.addMessage(networkFeedId, '🔍 Internal discovery: 127 devices mapped across all sites', '', 'NetworkMapper');
+                        activityFeedManager.addMessage(networkFeedId, '⚠️ ThreatScanner: 2 medium-risk vulnerabilities detected', 'warning', 'NetworkMapper → ThreatScanner');
+                    } else if (window.currentScale === 'enterprise') {
+                        activityFeedManager.addMessage(networkFeedId, '🏭 NetworkMapper: Enterprise internal scan across 3 data centers', '', 'NetworkMapper');
+                        activityFeedManager.addMessage(networkFeedId, '🔍 Internal discovery: 1,926 devices across global infrastructure', '', 'NetworkMapper');
+                        activityFeedManager.addMessage(networkFeedId, '🛡️ ThreatScanner: Advanced persistent threat indicators analyzed', '', 'NetworkMapper → ThreatScanner');
+                    }
+                    
+                    // Start auto-generation for network feed
+                    activityFeedManager.startAutoGeneration(networkFeedId, 5000);
+                }
+            }
+        }
 
-       // Override remediateEncryptionGaps to open chat
-       window.remediateEncryptionGaps = function() {
-           if (!window.sentinelChat) {
-               console.error('Chat system not available');
-               return;
-           }
+        // Override remediateEncryptionGaps to open chat
+        window.remediateEncryptionGaps = function() {
+            if (!window.sentinelChat) {
+                console.error('Chat system not available');
+                return;
+            }
 
-           // Open chat if not already open
-           if (!SentinelState.chatOpen) {
-               sentinelChat.toggle();
-           }
+            // Open chat if not already open
+            if (!SentinelState.chatOpen) {
+                sentinelChat.toggle();
+            }
 
-           setTimeout(() => {
-               sentinelChat.addMessage('remediate encryption gaps', true);
-               
-               setTimeout(() => {
-                   sentinelChat.addMessage('NetworkMapper: Initiating encryption gap remediation. Coordinating with EncryptionDeployer and CertificateManager...', false, 'system');
-               }, 500);
-               
-               setTimeout(() => {
-                   sentinelChat.addMessage(`EncryptionDeployer: Analyzing unencrypted devices. Deploying hybrid-resistant encryption modules. Working with CertificateManager for key distribution.`, false);
-               }, 1200);
-               
-               setTimeout(() => {
-                   sentinelChat.addMessage('EncryptionDeployer: Deployment in progress. Using TLS 1.3 + Kyber-1024 for network traffic, AES-256-GCM + Dilithium-3 for data at rest.', false);
-               }, 2500);
-               
-               // Simulate completion
-               setTimeout(() => {
-                   sentinelChat.addMessage(`✅ EncryptionDeployer: Remediation complete! All devices now protected with hybrid-resistant encryption. NetworkMapper verified. No gaps detected.`, false);
-                   
-                   // Hide the alert
-                   hideEncryptionGapAlert();
-               }, 4000);
-               
-           }, 300);
-       };
+            setTimeout(() => {
+                sentinelChat.addMessage('remediate encryption gaps', true);
+                
+                setTimeout(() => {
+                    sentinelChat.addMessage('NetworkMapper: Initiating encryption gap remediation. Coordinating with EncryptionDeployer and CertificateManager...', false, 'system');
+                }, 500);
+                
+                setTimeout(() => {
+                    sentinelChat.addMessage(`EncryptionDeployer: Analyzing unencrypted devices. Deploying hybrid-resistant encryption modules. Working with CertificateManager for key distribution.`, false);
+                }, 1200);
+                
+                setTimeout(() => {
+                    sentinelChat.addMessage('EncryptionDeployer: Deployment in progress. Using TLS 1.3 + Kyber-1024 for network traffic, AES-256-GCM + Dilithium-3 for data at rest.', false);
+                }, 2500);
+                
+                // Simulate completion
+                setTimeout(() => {
+                    sentinelChat.addMessage(`✅ EncryptionDeployer: Remediation complete! All devices now protected with hybrid-resistant encryption. NetworkMapper verified. No gaps detected.`, false);
+                    
+                    // Hide the alert
+                    hideEncryptionGapAlert();
+                }, 4000);
+                
+            }, 300);
+        };
 
-       // Cleanup activity feed on page unload
-       window.addEventListener('beforeunload', () => {
-           if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
-               activityFeedManager.stopAutoGeneration(networkFeedId);
-           }
-       });
+        // Cleanup activity feed on page unload
+        window.addEventListener('beforeunload', () => {
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                activityFeedManager.stopAutoGeneration(networkFeedId);
+            }
+        });
 
-       // Global functions for compatibility - leveraging shared chat system
-       window.toggleChat = () => {
-           if (window.sentinelChat) {
-               window.sentinelChat.toggle();
-           }
-       };
-       
-       window.sendChatMessage = () => {
-           const input = document.getElementById('aiChatInput');
-           if (input && input.value.trim() && window.sentinelChat) {
-               window.sentinelChat.sendMessage(input.value.trim());
-               input.value = '';
-           }
-       };
-       
-       window.handleChatKeyPress = (e) => {
-           if (e.key === 'Enter') {
-               sendChatMessage();
-           }
-       };
-       
-       window.showAgentShutdownModal = () => {
-           const modal = document.getElementById('agentShutdownModal');
-           if (modal) modal.style.display = 'flex';
-       };
-       
-       window.closeModal = () => {
-           const modal = document.getElementById('agentShutdownModal');
-           if (modal) modal.style.display = 'none';
-       };
-       
-       window.closeModalOnOverlay = (e) => {
-           if (e.target.classList.contains('modal-overlay')) {
-               const modalId = e.target.id;
-               if (modalId === 'addRangeModal') {
-                   closeAddRangeModal();
-               } else if (modalId === 'rescanModal') {
-                   closeRescanModal();
-               } else if (modalId === 'agentShutdownModal') {
-                   closeModal();
-               }
-           }
-       };
-       
-       window.confirmAgentShutdown = () => {
-           if (typeof SentinelState !== 'undefined') {
-               SentinelState.agentActive = !SentinelState.agentActive;
-               
-               // Update UI elements
-               const agentStatus = document.querySelector('.agent-status');
-               const agentTitle = document.querySelector('.agent-title');
-               const agentStatusText = document.querySelector('.agent-status-text');
-               const cliIndicator = document.getElementById('cliModeIndicator');
-               
-               if (SentinelState.agentActive) {
-                   if (agentStatus) {
-                       agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
-                       agentStatus.style.borderColor = '#00ff88';
-                   }
-                   if (agentTitle) {
-                       agentTitle.textContent = 'AI Agent Active';
-                       agentTitle.style.color = 'var(--primary)';
-                   }
-                   if (agentStatusText) {
-                       agentStatusText.textContent = 'Adaptive Configuration';
-                   }
-                   if (cliIndicator) {
-                       cliIndicator.classList.remove('active');
-                   }
-                   
-                   // Resume activity feeds
-                   if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
-                       activityFeedManager.resumeAllFeeds();
-                   }
-               } else {
-                   if (agentStatus) {
-                       agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
-                       agentStatus.style.borderColor = '#ffaa00';
-                   }
-                   if (agentTitle) {
-                       agentTitle.textContent = 'AI Agent Paused';
-                       agentTitle.style.color = '#ffaa00';
-                   }
-                   if (agentStatusText) {
-                       agentStatusText.textContent = 'Manual Control Only';
-                   }
-                   if (cliIndicator) {
-                       cliIndicator.classList.add('active');
-                   }
-                   
-                   // Pause activity feeds
-                   if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
-                       activityFeedManager.pauseAllFeeds();
-                   }
-               }
-               
-               closeModal();
-               
-               if (SentinelState.chatOpen && window.sentinelChat) {
-                   const status = SentinelState.agentActive ? 'resumed autonomous operation' : 'switched to manual control mode';
-                   window.sentinelChat.addMessage(`⚠️ Main Agent has ${status}. Network discovery ${SentinelState.agentActive ? 'continuing' : 'paused'}.`, false, 'system');
-               }
-           }
-       };
-       
-       window.handleLogout = () => {
-           if (confirm('Are you sure you want to logout? The AI agent will continue protecting your network autonomously.')) {
-               localStorage.removeItem('sentinel_auth');
-               localStorage.removeItem('sentinel_scale');
-               window.location.href = 'index.html';
-           }
-       };
-   </script>
+        // Global functions for compatibility - leveraging shared chat system
+        window.toggleChat = () => {
+            if (window.sentinelChat) {
+                window.sentinelChat.toggle();
+            }
+        };
+        
+        window.sendChatMessage = () => {
+            const input = document.getElementById('aiChatInput');
+            if (input && input.value.trim() && window.sentinelChat) {
+                window.sentinelChat.sendMessage(input.value.trim());
+                input.value = '';
+            }
+        };
+        
+        window.handleChatKeyPress = (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        };
+        
+        window.showAgentShutdownModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'flex';
+        };
+        
+        window.closeModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'none';
+        };
+        
+        window.closeModalOnOverlay = (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                const modalId = e.target.id;
+                if (modalId === 'addRangeModal') {
+                    closeAddRangeModal();
+                } else if (modalId === 'rescanModal') {
+                    closeRescanModal();
+                } else if (modalId === 'agentShutdownModal') {
+                    closeModal();
+                }
+            }
+        };
+        
+        window.confirmAgentShutdown = () => {
+            if (typeof SentinelState !== 'undefined') {
+                SentinelState.agentActive = !SentinelState.agentActive;
+                
+                // Update UI elements
+                const agentStatus = document.querySelector('.agent-status');
+                const agentTitle = document.querySelector('.agent-title');
+                const agentStatusText = document.querySelector('.agent-status-text');
+                const cliIndicator = document.getElementById('cliModeIndicator');
+                
+                if (SentinelState.agentActive) {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
+                        agentStatus.style.borderColor = '#00ff88';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Active';
+                        agentTitle.style.color = 'var(--primary)';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Adaptive Configuration';
+                    }
+                    if (cliIndicator) {
+                        cliIndicator.classList.remove('active');
+                    }
+                    
+                    // Resume activity feeds
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.resumeAllFeeds();
+                    }
+                } else {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
+                        agentStatus.style.borderColor = '#ffaa00';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Paused';
+                        agentTitle.style.color = '#ffaa00';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Manual Control Only';
+                    }
+                    if (cliIndicator) {
+                        cliIndicator.classList.add('active');
+                    }
+                    
+                    // Pause activity feeds
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.pauseAllFeeds();
+                    }
+                }
+                
+                closeModal();
+                
+                if (SentinelState.chatOpen && window.sentinelChat) {
+                    const status = SentinelState.agentActive ? 'resumed autonomous operation' : 'switched to manual control mode';
+                    window.sentinelChat.addMessage(`⚠️ Main Agent has ${status}. Network discovery ${SentinelState.agentActive ? 'continuing' : 'paused'}.`, false, 'system');
+                }
+            }
+        };
+        
+        window.handleLogout = () => {
+            if (confirm('Are you sure you want to logout? The AI agent will continue protecting your network autonomously.')) {
+                localStorage.removeItem('sentinel_auth');
+                localStorage.removeItem('sentinel_scale');
+                window.location.href = 'index.html';
+            }
+        };
+    </script>
 </body>
 </html>
