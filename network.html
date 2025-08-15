@@ -1813,8 +1813,7 @@
 
         .footer-status {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
             gap: 8px;
         }
 
@@ -1827,14 +1826,26 @@
             font-weight: 500;
         }
 
-        .footer-version {
-            color: var(--accent);
-            font-size: 11px;
-            padding: 4px 8px;
-            background: rgba(124, 58, 237, 0.1);
-            border: 1px solid var(--accent);
-            border-radius: 6px;
+        /* Rotating dots for footer logo */
+        .footer-rotating-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate 12s linear infinite;
         }
+
+        .footer-dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 4px var(--primary);
+        }
+
+        .footer-dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+        .footer-dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
+        .footer-dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
 
         .footer-bottom-streamlined {
             position: relative;
@@ -2525,6 +2536,11 @@
        <div class="footer-streamlined-content">
            <div class="footer-brand">
                <div class="footer-logo">
+                   <div class="footer-rotating-dots">
+                       <span class="footer-dot"></span>
+                       <span class="footer-dot"></span>
+                       <span class="footer-dot"></span>
+                   </div>
                    <div class="footer-shield">
                        <div class="footer-eye">
                            <div class="footer-iris"></div>
@@ -2561,7 +2577,6 @@
                    <div class="status-dot"></div>
                    <span>All Systems Operational</span>
                </div>
-               <div class="footer-version">v4.2.0</div>
            </div>
        </div>
        
@@ -2569,7 +2584,7 @@
            <div class="footer-copyright-streamlined">
                <span>© 2025 AI Sentinel-X</span>
                <span>•</span>
-               <span>Network Discovery Active</span>
+               <span>NetworkMapper Active</span>
            </div>
        </div>
    </footer>
