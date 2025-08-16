@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1451,6 +1452,26 @@
             .nav-tabs {
                 overflow-x: scroll;
                 -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+                scrollbar-color: var(--primary) rgba(255, 255, 255, 0.1);
+            }
+            
+            .nav-tabs::-webkit-scrollbar {
+                height: 6px;
+            }
+            
+            .nav-tabs::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 3px;
+            }
+            
+            .nav-tabs::-webkit-scrollbar-thumb {
+                background: var(--primary);
+                border-radius: 3px;
+            }
+            
+            .nav-tabs::-webkit-scrollbar-thumb:hover {
+                background: var(--secondary);
             }
             
             .sub-agent-status {
