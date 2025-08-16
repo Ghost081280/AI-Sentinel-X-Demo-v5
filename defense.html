@@ -284,7 +284,7 @@
             transform: translateY(-2px);
         }
 
-        /* Navigation Tabs */
+        /* Navigation Tabs with RESTORED SCROLLBAR STYLING */
         .nav-tabs {
             display: flex;
             gap: 15px;
@@ -1565,6 +1565,25 @@
                 margin: 30px 15px 15px 15px;
             }
         }
+
+        /* Custom Scrollbar for general use */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
     </style>
 </head>
 <body>
@@ -1902,6 +1921,22 @@
                 {
                     id: 'ssh',
                     name: 'SSH Honeypot',
+                    icon: '🔐',
+                    details: 'Port 22 • 12 intrusions trapped',
+                    status: 'ACTIVE',
+                    aiStatus: 'DefenseOrchestrator + ThreatScanner: Monitoring brute force attempts'
+                },
+                {
+                    id: 'web',
+                    name: 'Web Application Decoy',
+                    icon: '🌐',
+                    details: 'Port 8080 • WordPress simulation',
+                    status: 'ACTIVE',
+                    aiStatus: 'DefenseOrchestrator + NetworkMapper: Collecting attack patterns'
+                },
+                {
+                    id: 'database',
+                    name: 'Database Honeypot',
                     icon: '🗄️',
                     details: 'Port 3306 • MySQL with fake data',
                     status: 'ACTIVE',
