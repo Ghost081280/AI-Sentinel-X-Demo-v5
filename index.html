@@ -737,6 +737,22 @@
             transform: none;
         }
 
+        /* Hide any unwanted browser tooltips or labels */
+        .twofa-container::after,
+        .twofa-btn::after,
+        .twofa-input::after {
+            display: none !important;
+        }
+
+        /* Ensure no form validation tooltips appear */
+        .twofa-input:invalid {
+            box-shadow: none;
+        }
+
+        .twofa-btn:invalid {
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
         /* TABLET AND MOBILE - VERTICAL LAYOUT */
         @media (max-width: 768px) {
             body {
