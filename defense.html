@@ -1147,7 +1147,7 @@
             padding: 0 20px;
         }
 
-        .footer-main {
+        .footer-grid {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 40px;
@@ -1237,33 +1237,6 @@
             transform: translateX(5px);
         }
 
-        .footer-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .footer-stat {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .footer-stat-label {
-            color: var(--text-secondary);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-stat-value {
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 14px;
-        }
-
         .footer-bottom {
             display: flex;
             justify-content: space-between;
@@ -1307,7 +1280,7 @@
                 grid-template-columns: 1fr;
             }
 
-            .footer-main {
+            .footer-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 30px;
             }
@@ -1349,7 +1322,7 @@
                 bottom: 80px;
             }
 
-            .footer-main {
+            .footer-grid {
                 grid-template-columns: 1fr;
                 gap: 25px;
             }
@@ -1587,7 +1560,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-main">
+            <div class="footer-grid">
                 <!-- Brand Column -->
                 <div class="footer-brand">
                     <div class="footer-logo">
@@ -1595,77 +1568,63 @@
                         <div class="footer-logo-text">AI Sentinel-X</div>
                     </div>
                     <div class="footer-description">
-                        DefenseOrchestrator coordinates autonomous cyber defense across multiple sub-agents. Advanced honeypot management, automated response orchestration, and multi-agent playbook execution provide comprehensive protection with real-time threat mitigation capabilities.
+                        Advanced AI-powered cyber defense platform with autonomous threat detection, real-time response automation, and multi-agent coordination. DefenseOrchestrator manages comprehensive security operations with hybrid-resistant encryption and predictive analytics.
                     </div>
                     <div class="footer-status">
                         <div class="footer-status-dot"></div>
-                        <span>DefenseOrchestrator Online</span>
+                        <span>DefenseOrchestrator Active</span>
                     </div>
                 </div>
 
-                <!-- Defense Tools -->
+                <!-- Defense Operations -->
                 <div class="footer-section">
-                    <h4>Defense Systems</h4>
+                    <h4>Defense Operations</h4>
                     <div class="footer-links">
-                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('honeypots')">🍯 Honeypot Management</a>
-                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('response')">⚡ Response Automation</a>
-                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('coordination')">🤝 Agent Coordination</a>
-                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('playbooks')">📋 Security Playbooks</a>
-                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('mitigation')">🛡️ Threat Mitigation</a>
-                        <a href="#" class="footer-link" onclick="navigateToDefenseSection('quarantine')">🔒 Auto-Quarantine</a>
+                        <a href="dashboard.html" class="footer-link">🏠 Command Dashboard</a>
+                        <a href="threats.html" class="footer-link">🛡️ Threat Detection</a>
+                        <a href="network.html" class="footer-link">🌐 Network Security</a>
+                        <a href="ai-engine.html" class="footer-link">🧠 AI Coordination</a>
+                        <a href="encryption.html" class="footer-link">🔐 Encryption Systems</a>
+                        <a href="analytics.html" class="footer-link">📊 Security Analytics</a>
                     </div>
                 </div>
 
-                <!-- Sub-Agent Integration -->
+                <!-- Security Systems -->
                 <div class="footer-section">
-                    <h4>Sub-Agent Network</h4>
+                    <h4>Security Systems</h4>
                     <div class="footer-links">
-                        <a href="threats.html" class="footer-link">🛡️ ThreatScanner Integration</a>
-                        <a href="network.html" class="footer-link">🌐 NetworkMapper Coordination</a>
-                        <a href="analytics.html" class="footer-link">📊 AnalyticsEngine Support</a>
-                        <a href="encryption.html" class="footer-link">🔐 EncryptionManager Sync</a>
-                        <a href="ai-engine.html" class="footer-link">🧠 AI Engine Collaboration</a>
-                        <a href="vpn.html" class="footer-link">🔒 VPNMonitor Coordination</a>
+                        <a href="#" class="footer-link">🍯 Honeypot Management</a>
+                        <a href="#" class="footer-link">⚡ Response Automation</a>
+                        <a href="#" class="footer-link">🤝 Agent Coordination</a>
+                        <a href="#" class="footer-link">📋 Security Playbooks</a>
+                        <a href="#" class="footer-link">🔒 Access Control</a>
+                        <a href="#" class="footer-link">📈 Performance Metrics</a>
                     </div>
                 </div>
 
-                <!-- Live Defense Stats -->
+                <!-- Global Network -->
                 <div class="footer-section">
-                    <h4>Live Defense Metrics</h4>
-                    <div class="footer-stats">
-                        <div class="footer-stat">
-                            <span class="footer-stat-label">Active Honeypots</span>
-                            <span class="footer-stat-value" id="footerHoneypots">8</span>
-                        </div>
-                        <div class="footer-stat">
-                            <span class="footer-stat-label">Attacks Trapped</span>
-                            <span class="footer-stat-value" id="footerTrapped">47</span>
-                        </div>
-                        <div class="footer-stat">
-                            <span class="footer-stat-label">Auto-Responses</span>
-                            <span class="footer-stat-value" id="footerResponses">124</span>
-                        </div>
-                        <div class="footer-stat">
-                            <span class="footer-stat-label">Playbook Executions</span>
-                            <span class="footer-stat-value" id="footerPlaybooks">67</span>
-                        </div>
-                        <div class="footer-stat">
-                            <span class="footer-stat-label">Coordination Score</span>
-                            <span class="footer-stat-value">98.7%</span>
-                        </div>
+                    <h4>Global Network</h4>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">🌍 Worldwide Coverage</a>
+                        <a href="#" class="footer-link">📡 Threat Intelligence</a>
+                        <a href="#" class="footer-link">🔄 Auto-Updates</a>
+                        <a href="#" class="footer-link">⚙️ System Settings</a>
+                        <a href="#" class="footer-link">📋 Compliance Reports</a>
+                        <a href="#" class="footer-link">🚀 Performance Optimization</a>
                     </div>
                 </div>
             </div>
 
             <div class="footer-bottom">
                 <div class="footer-copyright">
-                    © 2025 AI Sentinel-X Defense Platform. DefenseOrchestrator sub-agent with autonomous threat response and multi-agent coordination.
+                    © 2025 AI Sentinel-X. Autonomous cyber defense platform with DefenseOrchestrator sub-agent coordination.
                 </div>
                 <div class="footer-tech-stack">
                     <span class="tech-badge">Hybrid Encryption</span>
-                    <span class="tech-badge">Auto-Response</span>
-                    <span class="tech-badge">ML Coordination</span>
+                    <span class="tech-badge">Multi-Agent AI</span>
                     <span class="tech-badge">Real-time Defense</span>
+                    <span class="tech-badge">Auto-Response</span>
                 </div>
             </div>
         </div>
@@ -1923,11 +1882,6 @@
             setInterval(() => {
                 updateDefenseMetrics();
             }, 4000);
-
-            // Update footer stats periodically
-            setInterval(() => {
-                updateFooterStats();
-            }, 5000);
         }
 
         function populateHoneypots() {
@@ -2154,55 +2108,6 @@
             }
         }
 
-        function updateFooterStats() {
-            // Update footer stats to match main metrics
-            const mainHoneypots = document.getElementById('activeHoneypots')?.textContent;
-            const mainTrapped = document.getElementById('attacksTrapped')?.textContent;
-            const mainResponses = document.getElementById('responsesExecuted')?.textContent;
-            
-            if (mainHoneypots) {
-                const footerHoneypots = document.getElementById('footerHoneypots');
-                if (footerHoneypots) footerHoneypots.textContent = mainHoneypots;
-            }
-            
-            if (mainTrapped) {
-                const footerTrapped = document.getElementById('footerTrapped');
-                if (footerTrapped) footerTrapped.textContent = mainTrapped;
-            }
-            
-            if (mainResponses) {
-                const footerResponses = document.getElementById('footerResponses');
-                if (footerResponses) footerResponses.textContent = mainResponses;
-            }
-            
-            // Update playbook executions
-            const footerPlaybooks = document.getElementById('footerPlaybooks');
-            if (footerPlaybooks && Math.random() > 0.9) {
-                const current = parseInt(footerPlaybooks.textContent);
-                footerPlaybooks.textContent = current + 1;
-            }
-        }
-
-        // Footer navigation function
-        function navigateToDefenseSection(section) {
-            if (window.sentinelChat && !SentinelState.chatOpen) {
-                window.sentinelChat.toggle();
-            }
-            setTimeout(() => {
-                if (window.sentinelChat) {
-                    const sectionDetails = {
-                        'honeypots': 'DefenseOrchestrator: Managing 8 active honeypots with multi-agent threat correlation. SSH, Web, Database, FTP, Email, and RDP deception systems active. ThreatScanner integration provides real-time attack pattern analysis.',
-                        'response': 'DefenseOrchestrator: Automated response timeline shows real-time threat mitigation. Multi-agent coordination with ThreatScanner and NetworkMapper ensures comprehensive protection across all attack vectors.',
-                        'coordination': 'DefenseOrchestrator: Multi-agent coordination active with ThreatScanner, NetworkMapper, and AnalyticsEngine. Real-time threat sharing and collaborative defense strategies provide enhanced security posture.',
-                        'playbooks': 'DefenseOrchestrator: 8 active security playbooks executing across sub-agents. DDoS mitigation, malware containment, phishing response, and zero-day defense automated with hybrid encryption protection.',
-                        'mitigation': 'DefenseOrchestrator: Advanced threat mitigation using ML-powered coordination. Predictive defense models and behavioral analysis provide proactive protection against emerging threats.',
-                        'quarantine': 'DefenseOrchestrator: Auto-quarantine systems isolate compromised endpoints instantly. Network segmentation and rapid containment prevent lateral movement with sub-agent coordination.'
-                    };
-                    window.sentinelChat.addMessage(sectionDetails[section] || 'DefenseOrchestrator section details not found.', false);
-                }
-            }, 300);
-        }
-
         // Detail view functions using shared chat system
         function showHoneypotDetails(honeypotId) {
             if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
@@ -2392,8 +2297,8 @@
             }
         };
 
-        // Make navigation function global
-        window.navigateToDefenseSection = navigateToDefenseSection;
+        // Make navigation function global (removed since we're using standard footer)
+        // window.navigateToDefenseSection = navigateToDefenseSection;
     </script>
 </body>
 </html>
