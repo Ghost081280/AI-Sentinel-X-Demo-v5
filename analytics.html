@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics | AI Sentinel-X</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --accent: #7c3aed;
+            --danger: #ff0044;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060912;
+            --bg-card: rgba(10, 20, 40, 0.8);
+            --border: rgba(0, 255, 136, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #00ccff 100%);
+            --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
+            --gradient-encryption: linear-gradient(135deg, #00ff88 0%, #00aa66 100%);
+            --gradient-quantum: linear-gradient(135deg, #7c3aed 0%, #ff00ff 50%, #00ccff 100%);
+            --gradient-hybrid: linear-gradient(135deg, #00ff88 0%, #7c3aed 50%, #00ccff 100%);
+            --gradient-compliance: linear-gradient(135deg, #00ccff 0%, #7c3aed 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Consolas', 'Monaco', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Neural Network Background Canvas */
+        #neuralCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* Logo */
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-shield {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            animation: shieldPulse 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-eye {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-iris {
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+        }
+
+        .rotating-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--primary);
+        }
+
+        .dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+        .dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
+        .dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Encryption Status Badge - Matching other pages */
+        .encryption-badges {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .encryption-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .encryption-badge:hover {
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .status-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: statusPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .agent-status {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .agent-status:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .agent-icon {
+            font-size: 20px;
+        }
+
+        .agent-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .agent-status-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 0, 68, 0.3);
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: var(--danger);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 68, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--border);
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            font-weight: bold;
+        }
+
+        /* Sub-Agent Status Banner - Standardized from shared.js */
+        .sub-agent-status {
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px 20px !important;
+            margin-bottom: 25px !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(15px);
+            min-height: 90px !important;
+            max-height: 90px !important;
+        }
+
+        .sub-agent-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .sub-agent-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(0, 204, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .sub-agent-details h3 {
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .sub-agent-details p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .sub-agent-metrics {
+            display: flex;
+            gap: 30px;
+            flex-shrink: 0;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px !important;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 3px;
+        }
+
+        .metric-label {
+            font-size: 12px !important;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Intelligence Hub Card */
+        .intelligence-hub {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .hub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hub-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hub-icon {
+            font-size: 48px;
+            filter: drop-shadow(0 0 20px var(--secondary));
+        }
+
+        .hub-details h2 {
+            font-size: 24px;
+            font-weight: bold;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .hub-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .hub-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .hub-btn {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .hub-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .hub-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--primary);
+        }
+
+        .hub-btn.secondary:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--primary);
+        }
+
+        /* Feature Overview Cards */
+        .feature-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border: 1px solid rgba(0, 204, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 204, 255, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .feature-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .feature-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Analytics Engine Section */
+        .analytics-engine {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+        }
+
+        .engine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .engine-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .engine-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 204, 255, 0.1);
+            border: 1px solid var(--secondary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        /* Metrics Dashboard */
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 204, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 204, 255, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-change {
+            font-size: 11px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .metric-change.positive {
+            color: var(--success);
+        }
+
+        .metric-change.negative {
+            color: var(--danger);
+        }
+
+        /* Log Agent Section - Enhanced with Proper Height Alignment */
+        .log-agent {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .log-agent .agent-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .agent-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .agent-btn {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .agent-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .agent-btn.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--primary);
+        }
+
+        /* Log Feed - Enhanced with Scrolling and Height Match */
+        .log-feed {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            max-height: 440px; /* Adjusted to match AnalyticsEngine bottom */
+        }
+
+        .log-entry {
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 0 6px 6px 0;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .log-entry:hover {
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .log-entry.warning {
+            background: rgba(255, 170, 0, 0.05);
+            border-left-color: var(--warning);
+        }
+
+        .log-entry.error {
+            background: rgba(255, 0, 68, 0.05);
+            border-left-color: var(--danger);
+        }
+
+        .log-timestamp {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 3px;
+        }
+
+        .log-message {
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .log-signature {
+            font-size: 10px;
+            color: var(--success);
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        /* Compliance Monitor Section */
+        .compliance-monitor {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            grid-column: 1 / -1;
+            margin-bottom: 30px;
+        }
+
+        .compliance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compliance-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .compliance-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .compliance-btn {
+            background: var(--gradient-compliance);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .compliance-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .compliance-btn.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--accent);
+        }
+
+        /* Compliance Framework Grid - No Overview Cards */
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .framework-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(124, 58, 237, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .framework-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.15);
+            border-color: var(--accent);
+        }
+
+        .framework-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .framework-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .framework-status {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .framework-status.compliant {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .framework-status.pending {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .framework-status.non-compliant {
+            background: rgba(255, 0, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .framework-details {
+            margin-bottom: 15px;
+        }
+
+        .framework-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+
+        .coverage-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .coverage-fill {
+            height: 100%;
+            background: var(--gradient-compliance);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .framework-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .framework-btn {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--accent);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .framework-btn:hover {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--accent);
+        }
+
+        .framework-btn.primary {
+            background: var(--gradient-compliance);
+            color: var(--bg-darker);
+            border-color: transparent;
+        }
+
+        /* Activity Feed using shared.js infrastructure */
+        .activity-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-top: 30px;
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feed-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .feed-item {
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s ease;
+            animation: feedSlide 0.3s ease;
+        }
+
+        @keyframes feedSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feed-item.warning {
+            background: rgba(255, 170, 0, 0.05);
+            border-left-color: var(--warning);
+        }
+
+        .feed-item.danger {
+            background: rgba(255, 0, 68, 0.05);
+            border-left-color: var(--danger);
+        }
+
+        .feed-item.encryption {
+            background: rgba(124, 58, 237, 0.05);
+            border-left-color: var(--accent);
+        }
+
+        .feed-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feed-message {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .feed-agent {
+            font-size: 11px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* COMPLETELY REBUILT FOOTER - AMAZING ORBITAL DESIGN */
+        .footer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            margin: 40px 20px 20px 20px;
+            padding: 25px 0 15px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background scanning effect */
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(0, 255, 136, 0.03) 30%, 
+                rgba(0, 204, 255, 0.05) 50%, 
+                rgba(124, 58, 237, 0.03) 70%, 
+                transparent 100%);
+            animation: footerScan 20s linear infinite;
+        }
+
+        @keyframes footerScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Central orbital logo system */
+        .footer-orbital-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            height: 70px;
+        }
+
+        .orbital-logo-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main logo shield */
+        .orbital-logo-shield {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: orbitalPulse 4s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        @keyframes orbitalPulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+            }
+        }
+
+        .orbital-logo-eye {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .orbital-logo-iris {
+            width: 14px;
+            height: 14px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+            animation: irisGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes irisGlow {
+            0%, 100% { box-shadow: 0 0 12px rgba(0, 255, 136, 0.8); }
+            50% { box-shadow: 0 0 18px rgba(0, 255, 136, 1); }
+        }
+
+        /* Three orbiting dots system */
+        .orbital-dots-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .orbital-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            animation: orbitRotate 12s linear infinite;
+        }
+
+        .orbital-ring:nth-child(2) {
+            animation-duration: 18s;
+            animation-direction: reverse;
+        }
+
+        .orbital-ring:nth-child(3) {
+            animation-duration: 24s;
+        }
+
+        @keyframes orbitRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .orbital-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .orbital-dot:nth-child(1) {
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--primary);
+        }
+
+        .orbital-dot:nth-child(2) {
+            top: 50%;
+            right: -3px;
+            transform: translateY(-50%);
+            background: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .orbital-dot:nth-child(3) {
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Brand title under logo */
+        .footer-brand-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-brand-name {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .footer-brand-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Horizontal navigation links */
+        .footer-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .footer-nav-link:hover::before {
+            left: 100%;
+        }
+
+        .footer-nav-link:hover {
+            background: rgba(0, 255, 136, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+        }
+
+        .footer-nav-icon {
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-nav-link:hover .footer-nav-icon {
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        /* Bottom section with copyright */
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+            text-align: center;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 11px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+
+        .footer-copyright-divider {
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--primary);
+        }
+
+        /* AI Chat Widget */
+        .ai-chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .ai-chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+            font-size: 28px;
+            border: none;
+        }
+
+        .ai-chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .ai-chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 400px;
+            height: 500px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .ai-chat-window.active {
+            display: flex;
+            animation: chatSlideIn 0.3s ease;
+        }
+
+        @keyframes chatSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-chat-header {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ai-chat-close {
+            cursor: pointer;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-message {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-message-bubble {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .ai-message-bubble.user {
+            background: rgba(0, 204, 255, 0.1);
+            border-color: var(--secondary);
+            align-self: flex-end;
+        }
+
+        .ai-message-bubble.system {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--accent);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .ai-message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .ai-chat-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .ai-chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .ai-chat-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .ai-chat-send {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* CLI Mode Indicator */
+        .cli-mode-indicator {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--warning);
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .cli-mode-indicator.active {
+            display: block;
+        }
+
+        /* Agent Shutdown Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn-primary {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-dashboard {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .framework-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-overview {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .encryption-badges {
+                order: -1;
+                justify-content: center;
+            }
+            
+            .nav-tabs {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .ai-chat-window {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 140px);
+                right: -20px;
+                bottom: 80px;
+            }
+
+            .sub-agent-metrics {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .sub-agent-status {
+                flex-direction: column;
+                text-align: center;
+                min-height: auto !important;
+                max-height: none !important;
+            }
+
+            .hub-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .hub-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .feature-overview {
+                grid-template-columns: 1fr;
+            }
+
+            /* Mobile footer adjustments */
+            .footer-navigation {
+                gap: 15px;
+            }
+
+            .footer-nav-link {
+                padding: 8px 15px;
+                font-size: 11px;
+            }
+
+            .orbital-logo-container {
+                width: 60px;
+                height: 60px;
+            }
+
+            .orbital-logo-shield {
+                width: 35px;
+                height: 35px;
+            }
+
+            .orbital-logo-eye {
+                width: 20px;
+                height: 20px;
+            }
+
+            .orbital-logo-iris {
+                width: 12px;
+                height: 12px;
+            }
+
+            .footer-brand-name {
+                font-size: 18px;
+            }
+
+            .footer {
+                margin: 30px 15px 15px 15px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Check authentication
+        const auth = localStorage.getItem('sentinel_auth');
+        if (!auth) {
+            window.location.href = 'index.html';
+        } else {
+            const authData = JSON.parse(auth);
+            if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
+                localStorage.removeItem('sentinel_auth');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+    <!-- Neural Network Background -->
+    <canvas id="neuralCanvas"></canvas>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="rotating-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="logo-shield">
+                            <div class="logo-eye">
+                                <div class="logo-iris"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="brand-name">AI SENTINEL-X</h1>
+                        <p class="brand-tagline">Autonomous Cyber Defense</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="encryption-badges">
+                        <div class="encryption-badge" onclick="showEncryptionStatus('hybrid')">
+                            <div class="status-light"></div>
+                            <span>HYBRID MODE ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="agent-status" onclick="showAgentShutdownModal()">
+                        <span class="agent-icon">🤖</span>
+                        <div class="agent-info">
+                            <span class="agent-title">AI Agent Active</span>
+                            <span class="agent-status-text" id="agentModeText">Autonomous with Manual Override</span>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <a href="dashboard.html" class="nav-tab">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="threats.html" class="nav-tab">
+                <span>🛡️</span>
+                <span>Threats</span>
+            </a>
+            <a href="network.html" class="nav-tab">
+                <span>🌐</span>
+                <span>Network</span>
+            </a>
+            <a href="defense.html" class="nav-tab">
+                <span>⚔️</span>
+                <span>Defense</span>
+            </a>
+            <a href="ai-engine.html" class="nav-tab">
+                <span>🧠</span>
+                <span>AI Engine</span>
+            </a>
+            <a href="encryption.html" class="nav-tab">
+                <span>🔐</span>
+                <span>Encryption</span>
+            </a>
+            <a href="#" class="nav-tab active">
+                <span>📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="vpn.html" class="nav-tab">
+                <span>🔒</span>
+                <span>VPNMonitor</span>
+            </a>
+            <a href="settings.html" class="nav-tab">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- Sub-Agent Status Banner -->
+        <div class="sub-agent-status">
+            <div class="sub-agent-info">
+                <div class="sub-agent-icon">📊</div>
+                <div class="sub-agent-details">
+                    <h3>AnalyticsEngine Sub-Agent</h3>
+                    <p>AI correlation engine • Predictive analytics • Sub-agent coordination • Reports to Main Agent</p>
+                </div>
+            </div>
+            <div class="sub-agent-metrics">
+                <div class="metric">
+                    <div class="metric-value" id="eventsProcessed">2.4M</div>
+                    <div class="metric-label">Events/Hour</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="predictions">847K</div>
+                    <div class="metric-label">ML Predictions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">99.8%</div>
+                    <div class="metric-label">Accuracy</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="complianceScore">98%</div>
+                    <div class="metric-label">Compliance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intelligence Hub Card -->
+        <div class="intelligence-hub">
+            <div class="hub-header">
+                <div class="hub-info">
+                    <div class="hub-icon">📊</div>
+                    <div class="hub-details">
+                        <h2>Analytics & Intelligence</h2>
+                        <p class="hub-subtitle">AI-Powered Insights • Predictive Analytics • Compliance Monitoring</p>
+                    </div>
+                </div>
+                <div class="hub-actions">
+                    <button class="hub-btn" onclick="generateFullReport()">Generate Report</button>
+                    <button class="hub-btn secondary" onclick="exportAnalytics()">Export Data</button>
+                </div>
+            </div>
+
+            <!-- Feature Overview -->
+            <div class="feature-overview">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title">Predictive Analytics</div>
+                    <div class="feature-description">ML models predicting threats 2.3s in advance with 99.8% accuracy</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-title">Compliance Monitoring</div>
+                    <div class="feature-description">Real-time compliance tracking across SOC2, ISO27001, PCI DSS, and HIPAA</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">Behavioral Analysis</div>
+                    <div class="feature-description">Advanced pattern recognition detecting anomalies and insider threats</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-title">Performance Metrics</div>
+                    <div class="feature-description">Real-time system metrics and security KPIs with automated reporting</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Analytics Engine Section -->
+            <div class="analytics-engine">
+                <div class="engine-header">
+                    <div class="engine-title">
+                        <span>🤖</span>
+                        <span>AnalyticsEngine</span>
+                    </div>
+                    <div class="engine-status">
+                        <div class="status-indicator"></div>
+                        <span>Processing Active</span>
+                    </div>
+                </div>
+
+                <!-- Metrics Dashboard -->
+                <div class="metrics-dashboard" id="metricsDashboard">
+                    <!-- Metrics will be populated by JavaScript -->
+                </div>
+
+                <!-- Additional Analytics Content - Trimmed for Balance -->
+                <div style="margin-top: 30px;">
+                    <h3 style="color: var(--secondary); margin-bottom: 15px;">Predictive Models</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <div style="background: rgba(0, 204, 255, 0.05); border: 1px solid var(--secondary); border-radius: 8px; padding: 15px;">
+                            <div style="font-weight: bold; color: var(--secondary); margin-bottom: 5px;">Threat Prediction</div>
+                            <div style="font-size: 24px; color: var(--primary);">99.8%</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Model Accuracy</div>
+                        </div>
+                        <div style="background: rgba(0, 204, 255, 0.05); border: 1px solid var(--secondary); border-radius: 8px; padding: 15px;">
+                            <div style="font-weight: bold; color: var(--secondary); margin-bottom: 5px;">Attack Timing</div>
+                            <div style="font-size: 24px; color: var(--primary);">2.3s</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Avg Prediction Lead</div>
+                        </div>
+                        <div style="background: rgba(0, 204, 255, 0.05); border: 1px solid var(--secondary); border-radius: 8px; padding: 15px;">
+                            <div style="font-weight: bold; color: var(--secondary); margin-bottom: 5px;">False Positives</div>
+                            <div style="font-size: 24px; color: var(--primary);">0.2%</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Detection Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log Agent Section -->
+            <div class="log-agent">
+                <div class="agent-header">
+                    <div class="agent-title">
+                        <span>📝</span>
+                        <span>LogAgent</span>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="agent-btn" onclick="exportLogs()">Export</button>
+                        <button class="agent-btn secondary" onclick="searchLogs()">Search</button>
+                    </div>
+                </div>
+                
+                <div class="log-feed" id="logFeed">
+                    <!-- Log entries will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Compliance Monitor Section -->
+        <div class="compliance-monitor">
+            <div class="compliance-header">
+                <div class="compliance-title">
+                    <span>✅</span>
+                    <span>ComplianceMonitor</span>
+                </div>
+                <div class="compliance-actions">
+                    <button class="compliance-btn" onclick="generateComplianceReport()">Generate Report</button>
+                    <button class="compliance-btn secondary" onclick="scheduleAudit()">Schedule Audit</button>
+                </div>
+            </div>
+
+            <!-- Framework Grid - No Redundant Overview -->
+            <div class="framework-grid" id="frameworkGrid">
+                <!-- Framework cards will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Analytics Activity Feed -->
+        <div class="activity-feed">
+            <div class="feed-header">
+                <h2 class="feed-title">
+                    <span>📊</span>
+                    <span>Analytics Activity Feed</span>
+                </h2>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>LIVE</span>
+                </div>
+            </div>
+            <div class="feed-content" id="analyticsActivityFeed">
+                <!-- Feed items will be populated by ActivityFeedManager -->
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPLETELY REBUILT FOOTER - AMAZING ORBITAL DESIGN -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Central orbital logo system -->
+            <div class="footer-orbital-center">
+                <div class="orbital-logo-container">
+                    <!-- Main shield logo -->
+                    <div class="orbital-logo-shield">
+                        <div class="orbital-logo-eye">
+                            <div class="orbital-logo-iris"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Three orbiting dot systems -->
+                    <div class="orbital-dots-system">
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand title under logo -->
+            <div class="footer-brand-title">
+                <div class="footer-brand-name">AI SENTINEL-X</div>
+                <div class="footer-brand-subtitle">AnalyticsEngine Module</div>
+            </div>
+
+            <!-- Horizontal navigation links -->
+            <nav class="footer-navigation">
+                <a href="dashboard.html" class="footer-nav-link">
+                    <span class="footer-nav-icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="mailto:support@ai-sentinel-x.com" class="footer-nav-link">
+                    <span class="footer-nav-icon">📧</span>
+                    <span>Support</span>
+                </a>
+                <a href="https://docs.ai-sentinel-x.com" class="footer-nav-link">
+                    <span class="footer-nav-icon">📚</span>
+                    <span>Documentation</span>
+                </a>
+                <a href="settings.html" class="footer-nav-link">
+                    <span class="footer-nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <!-- Bottom copyright section -->
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <span>© 2025 AI Sentinel-X</span>
+                    <div class="footer-copyright-divider"></div>
+                    <span>All rights reserved</span>
+                    <div class="footer-copyright-divider"></div>
+                    <span>AnalyticsEngine Module</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Agent Shutdown Modal -->
+    <div class="modal-overlay" id="agentShutdownModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">⚠️ Agent Control Toggle</h2>
+            </div>
+            <div class="modal-content">
+                Toggle autonomous mode? When paused, manual control remains available through the AI chat bot CLI. System will fallback to local control mode if external APIs are offline.
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" onclick="confirmAgentShutdown()">Toggle Agent Mode</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Widget -->
+    <div class="ai-chat-widget">
+        <div class="ai-chat-window" id="aiChatWindow">
+            <div class="ai-chat-header">
+                <div class="ai-chat-status">
+                    <span class="chat-status-dot"></span>
+                    <span>ANALYTICS AGENTS ONLINE</span>
+                </div>
+                <button class="ai-chat-close" onclick="toggleChat()">×</button>
+            </div>
+            <div class="cli-mode-indicator" id="cliModeIndicator">
+                ⚠️ CLI MODE - Analytics Agents Offline
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-message">
+                    <div class="ai-message-bubble">
+                        AnalyticsEngine: Processing 2.4M metrics with coordination from LogAgent and ComplianceMonitor sub-agents. All analytics secured with hybrid-resistant encryption and comprehensive cyber defense protocols.
+                    </div>
+                    <div class="ai-message-time">Just now</div>
+                </div>
+            </div>
+            <div class="ai-chat-input-container">
+                <input 
+                    type="text" 
+                    class="ai-chat-input" 
+                    id="aiChatInput" 
+                    placeholder="Enter analytics command..."
+                    onkeypress="handleChatKeyPress(event)"
+                >
+                <button class="ai-chat-send" id="aiChatSend" onclick="sendChatMessage()">SEND</button>
+            </div>
+        </div>
+        <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Analytics page-specific configurations using shared.js infrastructure
+        let analyticsFeedId = 'analytics-feed';
+
+        // Mock data for demonstration - uses shared.js ComplianceConfigs
+        const AnalyticsData = {
+            metrics: [
+                { label: 'Events Processed', value: '2.4M', change: '+12%', positive: true, unit: '/hour' },
+                { label: 'ML Predictions', value: '847K', change: '+8%', positive: true, unit: '/hour' },
+                { label: 'Accuracy Rate', value: '99.8', change: '+0.2%', positive: true, unit: '%' },
+                { label: 'False Positives', value: '0.2', change: '-0.1%', positive: true, unit: '%' },
+                { label: 'Response Time', value: '0.3', change: '-0.05s', positive: true, unit: 's' },
+                { label: 'Data Volume', value: '18.2', change: '+2.1TB', positive: true, unit: 'TB' }
+            ],
+            logs: [
+                { timestamp: new Date(), message: 'System audit log initialized with Dilithium-3 signature', type: '' },
+                { timestamp: new Date(Date.now() - 5000), message: 'AnalyticsEngine: Processing 2.4M events/hour with 99.8% accuracy', type: '' },
+                { timestamp: new Date(Date.now() - 15000), message: 'Real-time analytics processing: 847K ML predictions completed', type: '' },
+                { timestamp: new Date(Date.now() - 25000), message: 'Predictive model accuracy improved to 99.8% with new training data', type: '' },
+                { timestamp: new Date(Date.now() - 30000), message: 'SOC2 compliance verification completed successfully', type: '' },
+                { timestamp: new Date(Date.now() - 35000), message: 'Data retention policy scan: 15,000 records archived successfully', type: '' },
+                { timestamp: new Date(Date.now() - 45000), message: 'Analytics engine model updated with new threat patterns', type: '' },
+                { timestamp: new Date(Date.now() - 55000), message: 'Behavioral analytics detected 3 anomalous user patterns', type: 'warning' },
+                { timestamp: new Date(Date.now() - 60000), message: 'ComplianceMonitor: Automated HIPAA control scanning initiated', type: '' },
+                { timestamp: new Date(Date.now() - 65000), message: 'Machine learning model retraining: New security datasets integrated', type: '' },
+                { timestamp: new Date(Date.now() - 75000), message: 'Log integrity verification: 100% signature validation passed', type: '' },
+                { timestamp: new Date(Date.now() - 85000), message: 'Analytics correlation engine: Processing 2.4M events/hour successfully', type: '' },
+                { timestamp: new Date(Date.now() - 90000), message: 'Certificate expiration warning: API Gateway cert expires in 6 days', type: 'warning' },
+                { timestamp: new Date(Date.now() - 105000), message: 'Failed login attempt detected and logged from IP 185.*.*.* ', type: 'warning' },
+                { timestamp: new Date(Date.now() - 120000), message: 'Performance metrics optimization: Query response improved by 18%', type: '' },
+                { timestamp: new Date(Date.now() - 135000), message: 'Threat intelligence correlation: 247 new IOCs processed and indexed', type: '' },
+                { timestamp: new Date(Date.now() - 150000), message: 'Sub-agent coordination health check: All modules responding optimally', type: '' },
+                { timestamp: new Date(Date.now() - 165000), message: 'Encryption key rotation completed for all analytics systems', type: '' },
+                { timestamp: new Date(Date.now() - 180000), message: 'Database backup completed and encrypted with hybrid algorithms', type: '' },
+                { timestamp: new Date(Date.now() - 195000), message: 'Analytics pipeline processed 500GB of security telemetry data', type: '' },
+                { timestamp: new Date(Date.now() - 210000), message: 'Compliance framework synchronization: SOC2 controls updated', type: '' },
+                { timestamp: new Date(Date.now() - 225000), message: 'Performance metrics showing 15% improvement in response times', type: '' },
+                { timestamp: new Date(Date.now() - 240000), message: 'LogAgent: Automated log rotation and compression executed', type: '' },
+                { timestamp: new Date(Date.now() - 255000), message: 'Critical security event: Unauthorized access attempt blocked', type: 'error' },
+                { timestamp: new Date(Date.now() - 270000), message: 'Analytics dashboard: Real-time KPI visualization updated', type: '' },
+                { timestamp: new Date(Date.now() - 285000), message: 'Network traffic analysis flagged 5 suspicious connections', type: 'warning' },
+                { timestamp: new Date(Date.now() - 300000), message: 'LogAgent: Secure export package prepared for 100K log entries', type: '' },
+                { timestamp: new Date(Date.now() - 315000), message: 'Compliance framework synchronization completed successfully', type: '' },
+                { timestamp: new Date(Date.now() - 330000), message: 'Anomaly detection threshold recalibrated for optimal performance', type: '' },
+                { timestamp: new Date(Date.now() - 345000), message: 'LogAgent: Tamper-proof signatures applied to 15,000 new entries', type: '' },
+                { timestamp: new Date(Date.now() - 360000), message: 'Analytics API rate limiting: 50K requests/min threshold maintained', type: '' },
+                { timestamp: new Date(Date.now() - 375000), message: 'Real-time anomaly detection threshold adjusted for optimal performance', type: '' },
+                { timestamp: new Date(Date.now() - 390000), message: 'Predictive model ensemble: 8 algorithms coordinating threat detection', type: '' },
+                { timestamp: new Date(Date.now() - 405000), message: 'Security metrics dashboard updated with real-time KPIs', type: '' },
+                { timestamp: new Date(Date.now() - 420000), message: 'LogAgent: Cross-validation completed on 25K audit trail signatures', type: '' },
+                { timestamp: new Date(Date.now() - 435000), message: 'Automated report generation: Weekly security summary completed', type: '' },
+                { timestamp: new Date(Date.now() - 450000), message: 'ComplianceMonitor: Multi-framework gap analysis executed', type: '' },
+                { timestamp: new Date(Date.now() - 465000), message: 'Data retention policy enforcement executed successfully', type: '' },
+                { timestamp: new Date(Date.now() - 480000), message: 'Analytics correlation matrix: Cross-system event linking optimized', type: '' },
+                { timestamp: new Date(Date.now() - 495000), message: 'Behavioral baseline update: User activity patterns recalibrated', type: '' },
+                { timestamp: new Date(Date.now() - 510000), message: 'LogAgent: Distributed log collection from 247 endpoints completed', type: '' },
+                { timestamp: new Date(Date.now() - 525000), message: 'Compliance audit trail verification: 100% integrity maintained', type: '' },
+                { timestamp: new Date(Date.now() - 540000), message: 'Analytics stream processing: Zero data loss in 24h operational window', type: '' },
+                { timestamp: new Date(Date.now() - 555000), message: 'Threat intelligence fusion: Multi-source IOC correlation completed', type: '' },
+                { timestamp: new Date(Date.now() - 570000), message: 'LogAgent: Forensic-grade signature verification on critical events', type: '' },
+                { timestamp: new Date(Date.now() - 585000), message: 'Analytics pipeline health check: All modules performing optimally', type: '' },
+                { timestamp: new Date(Date.now() - 600000), message: 'Data lake ingestion: 2.1TB of security logs processed successfully', type: '' }
+            ]
+        };
+
+        // Analytics page initialization using shared.js infrastructure
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                initializeAnalyticsPage();
+            }, 100);
+        });
+
+        function initializeAnalyticsPage() {
+            // Initialize neural background from shared.js
+            if (typeof initNeuralBackground === 'function') {
+                initNeuralBackground();
+            }
+
+            // Initialize page context from shared.js
+            if (typeof initializePageContext === 'function') {
+                initializePageContext();
+            }
+
+            // Initialize analytics activity feed using shared.js ActivityFeedManager
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                // Initialize analytics feed with specific message types
+                activityFeedManager.initializeFeed(analyticsFeedId, 'analytics');
+                activityFeedManager.setFeedContainer(analyticsFeedId, 'analyticsActivityFeed');
+                
+                // Add initial analytics-specific messages reflecting system architecture
+                activityFeedManager.addMessage(analyticsFeedId, '📊 AnalyticsEngine: Processing 2.4M metrics with coordination from LogAgent and ComplianceMonitor sub-agents', '', 'AnalyticsEngine');
+                activityFeedManager.addMessage(analyticsFeedId, '📝 LogAgent: Securing audit trails with Dilithium-3 signatures for AnalyticsEngine correlation', 'encryption', 'LogAgent');
+                activityFeedManager.addMessage(analyticsFeedId, '✅ ComplianceMonitor: 3/4 frameworks compliant, coordinating with AnalyticsEngine for compliance metrics', '', 'ComplianceMonitor');
+                activityFeedManager.addMessage(analyticsFeedId, '🤖 Main Agent: Coordinating analytics sub-agents for comprehensive cyber defense intelligence', '', 'Main Agent');
+                
+                // Start auto-generation every 5 seconds for analytics feed
+                activityFeedManager.startAutoGeneration(analyticsFeedId, 5000);
+            } else {
+                console.log('ActivityFeedManager not available yet, retrying...');
+                setTimeout(initializeAnalyticsPage, 200);
+                return;
+            }
+
+            // Initialize chat system from shared.js
+            if (typeof SentinelChat !== 'undefined') {
+                window.sentinelChat = new SentinelChat();
+            }
+
+            // Populate analytics sections
+            populateMetricsDashboard();
+            populateFrameworkGrid();
+            populateLogFeed();
+            
+            // Start real-time updates
+            setInterval(() => {
+                updateMetrics();
+                generateLogEntry();
+            }, 5000);
+        }
+
+        function populateMetricsDashboard() {
+            const dashboard = document.getElementById('metricsDashboard');
+            if (!dashboard) return;
+            
+            dashboard.innerHTML = '';
+
+            AnalyticsData.metrics.forEach(metric => {
+                const card = document.createElement('div');
+                card.className = 'metric-card';
+                card.innerHTML = `
+                    <div class="metric-value">${metric.value}<small style="font-size: 16px;">${metric.unit}</small></div>
+                    <div class="metric-label">${metric.label}</div>
+                    <div class="metric-change ${metric.positive ? 'positive' : 'negative'}">
+                        <span>${metric.positive ? '↗' : '↘'}</span>
+                        <span>${metric.change}</span>
+                    </div>
+                `;
+                dashboard.appendChild(card);
+            });
+        }
+
+        function populateFrameworkGrid() {
+            const grid = document.getElementById('frameworkGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+
+            // Use shared ComplianceConfigs if available
+            const frameworks = (typeof ComplianceConfigs !== 'undefined' && ComplianceConfigs.frameworks) 
+                ? ComplianceConfigs.frameworks 
+                : [
+                    {
+                        id: 'soc2',
+                        name: 'SOC 2',
+                        status: 'compliant',
+                        coverage: '96%',
+                        lastAudit: '2024-09-15',
+                        nextAudit: '2025-03-15',
+                        issuesFound: 0
+                    },
+                    {
+                        id: 'iso27001',
+                        name: 'ISO 27001',
+                        status: 'compliant',
+                        coverage: '94%',
+                        lastAudit: '2024-08-20',
+                        nextAudit: '2025-08-20',
+                        issuesFound: 2
+                    },
+                    {
+                        id: 'pcidss',
+                        name: 'PCI DSS',
+                        status: 'pending',
+                        coverage: '85%',
+                        lastAudit: '2024-06-10',
+                        nextAudit: '2025-01-10',
+                        issuesFound: 5
+                    },
+                    {
+                        id: 'hipaa',
+                        name: 'HIPAA',
+                        status: 'compliant',
+                        coverage: '98%',
+                        lastAudit: '2024-10-01',
+                        nextAudit: '2025-04-01',
+                        issuesFound: 1
+                    }
+                ];
+
+            frameworks.forEach(framework => {
+                const card = document.createElement('div');
+                card.className = 'framework-card';
+                
+                const coverage = parseInt(framework.coverage.replace('%', ''));
+                const nextAuditDays = Math.ceil((new Date(framework.nextAudit) - new Date()) / (1000 * 60 * 60 * 24));
+
+                card.innerHTML = `
+                    <div class="framework-header">
+                        <div class="framework-name">${framework.name}</div>
+                        <div class="framework-status ${framework.status.replace(' ', '-')}">${framework.status.toUpperCase()}</div>
+                    </div>
+                    <div class="framework-details">
+                        <div class="framework-detail">
+                            <span class="detail-label">Last Audit:</span>
+                            <span class="detail-value">${formatDateFromISO(framework.lastAudit + 'T00:00:00Z')}</span>
+                        </div>
+                        <div class="framework-detail">
+                            <span class="detail-label">Next Audit:</span>
+                            <span class="detail-value">${nextAuditDays} days</span>
+                        </div>
+                        <div class="framework-detail">
+                            <span class="detail-label">Issues Found:</span>
+                            <span class="detail-value" style="color: ${framework.issuesFound > 0 ? 'var(--warning)' : 'var(--success)'}">${framework.issuesFound}</span>
+                        </div>
+                        <div class="coverage-bar">
+                            <div class="coverage-fill" style="width: ${coverage}%"></div>
+                        </div>
+                        <div class="framework-detail">
+                            <span class="detail-label">Coverage:</span>
+                            <span class="detail-value">${framework.coverage}</span>
+                        </div>
+                    </div>
+                    <div class="framework-actions">
+                        <button class="framework-btn primary" onclick="auditFramework('${framework.id}')">Audit</button>
+                        <button class="framework-btn" onclick="frameworkDetails('${framework.id}')">Details</button>
+                        <button class="framework-btn" onclick="remediate('${framework.id}')">Fix Issues</button>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function populateLogFeed() {
+            const feed = document.getElementById('logFeed');
+            if (!feed) return;
+            
+            feed.innerHTML = '';
+
+            // Show the most recent 40 logs to fill the space better
+            const recentLogs = AnalyticsData.logs.slice(0, 40);
+            recentLogs.forEach(log => {
+                addLogEntry(log.message, log.type, log.timestamp);
+            });
+        }
+
+        function addLogEntry(message, type = '', timestamp = new Date()) {
+            const feed = document.getElementById('logFeed');
+            if (!feed) return;
+            
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            
+            entry.innerHTML = `
+                <div class="log-timestamp">${timestamp.toLocaleString()}</div>
+                <div class="log-message">${message}</div>
+                <div class="log-signature">✓ Dilithium-3 signature verified</div>
+            `;
+            
+            feed.insertBefore(entry, feed.firstChild);
+            
+            // Keep only last 50 entries for performance
+            while (feed.children.length > 50) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+
+        function generateLogEntry() {
+            const logMessages = [
+                { msg: 'AnalyticsEngine: Predictive model updated with new threat patterns', type: '' },
+                { msg: 'ComplianceMonitor: Automated SOC2 controls verification completed', type: '' },
+                { msg: 'LogAgent: Real-time log correlation with 99.9% accuracy achieved', type: '' },
+                { msg: 'Performance metrics: Query response time improved by 12%', type: '' },
+                { msg: 'Data integrity verification: All 2.4M records validated successfully', type: '' },
+                { msg: 'Anomaly detected in user access pattern - flagged for review', type: 'warning' },
+                { msg: 'Analytics pipeline processed 500GB of security data without errors', type: '' },
+                { msg: 'Certificate renewal reminder: 2 certificates expire within 30 days', type: 'warning' },
+                { msg: 'Machine learning model retrained with latest threat intelligence', type: '' },
+                { msg: 'Failed authentication attempt logged and analyzed from IP 192.168.*.*', type: 'error' },
+                { msg: 'Behavioral analysis: User activity patterns updated for 15,000 accounts', type: '' },
+                { msg: 'Data retention policy enforcement: 25,000 old records archived', type: '' },
+                { msg: 'LogAgent: Tamper-proof signatures applied to 50,000 new entries', type: '' },
+                { msg: 'Compliance audit trail verification: 100% integrity maintained', type: '' },
+                { msg: 'Analytics correlation engine: Cross-system event linking optimized', type: '' },
+                { msg: 'Threat intelligence feed updated with 1,247 new indicators', type: '' },
+                { msg: 'Performance optimization: ML inference latency reduced by 18%', type: '' },
+                { msg: 'LogAgent: Distributed log collection synchronized across all endpoints', type: '' },
+                { msg: 'Data warehouse backup completed and encrypted with hybrid algorithms', type: '' },
+                { msg: 'Suspicious network traffic pattern detected - automated blocking initiated', type: 'warning' }
+            ];
+
+            if (Math.random() > 0.6) {
+                const log = logMessages[Math.floor(Math.random() * logMessages.length)];
+                addLogEntry(log.msg, log.type);
+            }
+        }
+
+        function updateMetrics() {
+            // Simulate real-time metric updates
+            const metricCards = document.querySelectorAll('.metric-card .metric-value');
+            metricCards.forEach((card, index) => {
+                if (Math.random() > 0.9) {
+                    const currentValue = parseFloat(card.textContent);
+                    const variation = (Math.random() - 0.5) * 0.1;
+                    const newValue = Math.max(0, currentValue + variation);
+                    
+                    if (index === 0) { // Events Processed
+                        card.innerHTML = `${(newValue).toFixed(1)}M<small style="font-size: 16px;">/hour</small>`;
+                    } else if (index === 2) { // Accuracy Rate
+                        card.innerHTML = `${Math.min(99.9, newValue).toFixed(1)}<small style="font-size: 16px;">%</small>`;
+                    }
+                }
+            });
+        }
+
+        // Compliance Actions using shared chat system
+        function auditFramework(frameworkId) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`audit ${frameworkId}`, true);
+                    setTimeout(() => {
+                        window.sentinelChat.addMessage(`ComplianceMonitor: Initiating ${frameworkId} audit with AnalyticsEngine correlation and LogAgent secure logging. Scanning controls and compliance requirements with comprehensive cyber defense verification. Estimated completion: 15-20 minutes.`, false);
+                    }, 800);
+                }
+            }, 300);
+        }
+
+        function frameworkDetails(frameworkId) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`ComplianceMonitor: Retrieving ${frameworkId} framework details with AnalyticsEngine metrics. Status, coverage, audit history, and remediation recommendations coordinated across comprehensive cyber defense infrastructure.`, false);
+                }
+            }, 300);
+        }
+
+        function remediate(frameworkId) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`ComplianceMonitor: Auto-remediation initiated for ${frameworkId} issues. Coordinating with EncryptionDeployer, NetworkMapper, and AnalyticsEngine for compliance gaps across comprehensive cyber defense.`, false);
+                }
+            }, 300);
+        }
+
+        function generateComplianceReport() {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('generate compliance report', true);
+                    setTimeout(() => {
+                        window.sentinelChat.addMessage(`ComplianceMonitor: Comprehensive compliance report generated with AnalyticsEngine metrics and LogAgent audit trails. Framework analysis, gap assessment, and remediation plans coordinated across all sub-agents. Report encrypted and Dilithium-signed for auditor review.`, false);
+                    }, 1500);
+                }
+            }, 300);
+        }
+
+        function scheduleAudit() {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('ComplianceMonitor: Audit scheduling interface ready with comprehensive cyber defense coordination. Next recommended audits: PCI DSS (85 days), ISO27001 (180 days). All audits include EncryptionManager compliance verification and AnalyticsEngine metrics.', false);
+                }
+            }, 300);
+        }
+
+        // Analytics Actions
+        function generateFullReport() {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('generate full analytics report', true);
+                    setTimeout(() => {
+                        window.sentinelChat.addMessage('AnalyticsEngine: Comprehensive report generation coordinating with LogAgent, ComplianceMonitor, and all sub-agents. Including threat predictions, performance metrics, compliance status, and log analysis from comprehensive cyber defense infrastructure. Report will be encrypted and Dilithium-signed. ETA: 3-5 minutes.', false);
+                    }, 1200);
+                }
+            }, 300);
+        }
+
+        function exportAnalytics() {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('AnalyticsEngine: Data export prepared with coordination from LogAgent and ComplianceMonitor. 2.4M processed events, ML predictions, and compliance metrics ready for download. All data encrypted with hybrid algorithms from EncryptionManager.', false);
+                }
+            }, 300);
+        }
+
+        function exportLogs() {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('LogAgent: Secure log export initiated with AnalyticsEngine correlation. All entries Dilithium-3 signed for forensic integrity. Export includes metadata and signature verification tools from comprehensive cyber defense logging.', false);
+                }
+            }, 300);
+        }
+
+        function searchLogs() {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage('LogAgent: Log search interface ready with AnalyticsEngine correlation capabilities. Query tampering-proof audit trail from comprehensive cyber defense. Use "search logs [keyword]" or "search logs --date YYYY-MM-DD" for specific searches.', false);
+                }
+            }, 300);
+        }
+
+        function showEncryptionStatus(type) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`AnalyticsEngine: Hybrid encryption coordinating with EncryptionManager across all sub-agents. Post-quantum algorithms (Kyber-1024, Dilithium-3, SPHINCS+, Falcon) integrated with classical encryption protecting comprehensive analytics infrastructure. All metrics secured with hybrid-resistant encryption.`, false);
+                }
+            }, 300);
+        }
+
+        // Utility functions
+        function formatDateFromISO(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        // Cleanup activity feed on page unload
+        window.addEventListener('beforeunload', () => {
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                activityFeedManager.stopAutoGeneration(analyticsFeedId);
+            }
+        });
+
+        // Global functions for compatibility - leveraging shared chat system
+        window.toggleChat = () => {
+            if (window.sentinelChat) {
+                window.sentinelChat.toggle();
+            }
+        };
+        
+        window.sendChatMessage = () => {
+            const input = document.getElementById('aiChatInput');
+            if (input && input.value.trim() && window.sentinelChat) {
+                window.sentinelChat.sendMessage(input.value.trim());
+                input.value = '';
+            }
+        };
+        
+        window.handleChatKeyPress = (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        };
+        
+        window.showAgentShutdownModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'flex';
+        };
+        
+        window.closeModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'none';
+        };
+        
+        window.closeModalOnOverlay = (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        };
+        
+        window.confirmAgentShutdown = () => {
+            if (typeof SentinelState !== 'undefined') {
+                SentinelState.agentActive = !SentinelState.agentActive;
+                
+                // Update UI elements
+                const agentStatus = document.querySelector('.agent-status');
+                const agentTitle = document.querySelector('.agent-title');
+                const agentStatusText = document.querySelector('.agent-status-text');
+                
+                if (SentinelState.agentActive) {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
+                        agentStatus.style.borderColor = '#00ff88';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Active';
+                        agentTitle.style.color = 'var(--primary)';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Autonomous with Manual Override';
+                    }
+                    
+                    // Resume analytics systems and activity feed
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.startAutoGeneration(analyticsFeedId, 5000);
+                        activityFeedManager.addMessage(analyticsFeedId, '🤖 Main Agent resumed: Analytics coordination with LogAgent, ComplianceMonitor reactivated', '', 'Main Agent');
+                    }
+                } else {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
+                        agentStatus.style.borderColor = '#ffaa00';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Paused';
+                        agentTitle.style.color = '#ffaa00';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Manual Control Only';
+                    }
+                    
+                    // Pause analytics systems and activity feed
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.stopAutoGeneration(analyticsFeedId);
+                        activityFeedManager.addMessage(analyticsFeedId, '⚠️ Main Agent paused: Analytics sub-agents in manual control mode', 'warning', 'Main Agent');
+                    }
+                }
+                
+                closeModal();
+                
+                if (SentinelState.chatOpen && window.sentinelChat) {
+                    const status = SentinelState.agentActive ? 'resumed autonomous operation with analytics coordination across all sub-agents' : 'switched to manual control mode';
+                    window.sentinelChat.addMessage(`⚠️ Main Agent has ${status}. Analytics sub-agents ${SentinelState.agentActive ? 'coordinating' : 'paused'}.`, false, 'system');
+                }
+            }
+        };
+        
+        window.handleLogout = () => {
+            if (confirm('Are you sure you want to logout? The AI agent will continue comprehensive autonomous cyber defense with coordinated analytics across all sub-agents.')) {
+                localStorage.removeItem('sentinel_auth');
+                localStorage.removeItem('sentinel_scale');
+                window.location.href = 'index.html';
+            }
+        };
+    </script>
+</body>
+</html>
