@@ -284,39 +284,38 @@
             transform: translateY(-2px);
         }
 
-        /* Navigation Tabs with FORCED SCROLLBAR STYLING */
+        /* Navigation Tabs with DEFINITIVE SCROLLBAR SOLUTION */
         .nav-tabs {
             display: flex;
             gap: 15px;
             margin-bottom: 30px;
             background: var(--bg-card);
-            padding: 12px 12px 24px 12px; /* Extra bottom padding for scrollbar */
+            padding: 12px 12px 24px 12px; /* Extra padding for scrollbar space */
             border-radius: 15px;
             border: 1px solid var(--border);
-            overflow-x: scroll !important; /* Force scroll with !important */
+            overflow-x: scroll !important; /* Force horizontal scroll */
             overflow-y: hidden;
             backdrop-filter: blur(15px);
             scrollbar-width: thin;
             scrollbar-color: var(--primary) rgba(255, 255, 255, 0.1);
             -webkit-overflow-scrolling: touch;
-            white-space: nowrap; /* Prevent wrapping */
-            /* Force minimum content width to trigger scrollbar */
-            min-width: 100%;
+            white-space: nowrap;
+            /* Force content to be wider than container */
+            min-width: calc(100% + 1px);
         }
 
-        /* Force scrollbar to ALWAYS be visible with stronger styling */
+        /* WEBKIT SCROLLBAR - ALWAYS VISIBLE */
         .nav-tabs::-webkit-scrollbar {
             height: 12px !important;
             -webkit-appearance: none;
-            display: block !important;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-radius: 6px;
         }
 
         .nav-tabs::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.1) !important;
             border-radius: 6px;
             border: 1px solid rgba(0, 255, 136, 0.2);
-            display: block !important;
         }
 
         .nav-tabs::-webkit-scrollbar-thumb {
@@ -324,7 +323,6 @@
             border-radius: 6px;
             min-width: 40px;
             border: 1px solid rgba(0, 255, 136, 0.5);
-            display: block !important;
         }
 
         .nav-tabs::-webkit-scrollbar-thumb:hover {
@@ -332,12 +330,13 @@
             box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
-        /* Force the nav container to have scrollable content */
+        /* Force scrollable content with invisible spacer */
         .nav-tabs::after {
             content: '';
-            min-width: 1px;
+            min-width: 10px;
             height: 1px;
             flex-shrink: 0;
+            opacity: 0;
         }
 
         .nav-tab {
@@ -357,7 +356,7 @@
             gap: 10px;
             text-decoration: none;
             flex-shrink: 0; /* Prevent tabs from shrinking */
-            min-width: 140px; /* Increased minimum width to force scrollbar */
+            min-width: 150px; /* Increased to ensure scrollbar triggers */
         }
 
         .nav-tab:hover {
