@@ -284,56 +284,81 @@
             transform: translateY(-2px);
         }
 
-        /* Navigation Tabs with DEFINITIVE SCROLLBAR SOLUTION */
+        /* Navigation Tabs - ULTIMATE SCROLLBAR SOLUTION */
         .nav-tabs {
             display: flex;
             gap: 15px;
             margin-bottom: 30px;
             background: var(--bg-card);
-            padding: 12px 12px 24px 12px; /* Extra padding for scrollbar space */
+            padding: 12px 12px 24px 12px;
             border-radius: 15px;
             border: 1px solid var(--border);
-            overflow-x: scroll !important; /* Force horizontal scroll */
-            overflow-y: hidden;
             backdrop-filter: blur(15px);
+            
+            /* FORCE HORIZONTAL SCROLL - MULTIPLE METHODS */
+            overflow-x: scroll !important;
+            overflow-y: hidden;
+            white-space: nowrap;
+            
+            /* FORCE CLASSIC SCROLLBARS (NOT OVERLAY) */
+            scrollbar-gutter: stable;
+            
+            /* FIREFOX SCROLLBAR */
             scrollbar-width: thin;
             scrollbar-color: var(--primary) rgba(255, 255, 255, 0.1);
-            -webkit-overflow-scrolling: touch;
-            white-space: nowrap;
-            /* Force content to be wider than container */
-            min-width: calc(100% + 1px);
+            
+            /* ENSURE CONTENT OVERFLOWS */
+            min-width: 100%;
+            width: 100%;
+            max-width: 100%;
         }
 
-        /* WEBKIT SCROLLBAR - ALWAYS VISIBLE */
+        /* WEBKIT/CHROME SCROLLBAR - COMPREHENSIVE STYLING */
         .nav-tabs::-webkit-scrollbar {
             height: 12px !important;
-            -webkit-appearance: none;
+            width: 12px !important; /* Add width for potential vertical */
+            -webkit-appearance: none !important;
             background: rgba(255, 255, 255, 0.05) !important;
-            border-radius: 6px;
+            border-radius: 6px !important;
+            display: block !important;
         }
 
         .nav-tabs::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.1) !important;
-            border-radius: 6px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 6px !important;
+            border: 1px solid rgba(0, 255, 136, 0.2) !important;
+            box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1) !important;
         }
 
         .nav-tabs::-webkit-scrollbar-thumb {
             background: var(--primary) !important;
-            border-radius: 6px;
-            min-width: 40px;
-            border: 1px solid rgba(0, 255, 136, 0.5);
+            border-radius: 6px !important;
+            border: 1px solid rgba(0, 255, 136, 0.5) !important;
+            min-width: 40px !important;
+            box-shadow: 0 0 3px rgba(0, 255, 136, 0.3) !important;
         }
 
         .nav-tabs::-webkit-scrollbar-thumb:hover {
             background: var(--secondary) !important;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
         }
 
-        /* Force scrollable content with invisible spacer */
+        .nav-tabs::-webkit-scrollbar-corner {
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* FORCE CONTENT TO EXCEED CONTAINER WIDTH */
+        .nav-tabs::before {
+            content: '';
+            min-width: 1px;
+            height: 1px;
+            flex-shrink: 0;
+            order: -1;
+        }
+
         .nav-tabs::after {
             content: '';
-            min-width: 10px;
+            min-width: 20px; /* Increased from 10px */
             height: 1px;
             flex-shrink: 0;
             opacity: 0;
@@ -355,8 +380,9 @@
             align-items: center;
             gap: 10px;
             text-decoration: none;
-            flex-shrink: 0; /* Prevent tabs from shrinking */
-            min-width: 150px; /* Increased to ensure scrollbar triggers */
+            flex-shrink: 0; /* Never allow shrinking */
+            min-width: 160px; /* Increased even more */
+            width: 160px; /* Fixed width to guarantee overflow */
         }
 
         .nav-tab:hover {
@@ -2084,6 +2110,9 @@
                 initializePageContext();
             }
 
+            // FORCE NAVIGATION SCROLLBAR TO APPEAR
+            forceNavigationScrollbar();
+
             // Initialize defense activity feed using shared.js ActivityFeedManager
             if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
                 // Initialize defense feed
@@ -2122,6 +2151,53 @@
             setInterval(() => {
                 updateDefenseMetrics();
             }, 4000);
+        }
+
+        // FORCE NAVIGATION SCROLLBAR FUNCTION
+        function forceNavigationScrollbar() {
+            const navTabs = document.querySelector('.nav-tabs');
+            if (!navTabs) return;
+            
+            // Force scrollbar appearance with multiple methods
+            setTimeout(() => {
+                // Method 1: Calculate and force overflow
+                const tabs = navTabs.querySelectorAll('.nav-tab');
+                let totalWidth = 0;
+                tabs.forEach(tab => {
+                    totalWidth += 160 + 15; // tab width + gap
+                });
+                
+                // Add extra width to ensure overflow
+                totalWidth += 100; // Extra buffer
+                
+                // Method 2: Force content wider than container
+                navTabs.style.minWidth = `${totalWidth}px`;
+                
+                // Method 3: Add invisible spacer element
+                if (!navTabs.querySelector('.force-scrollbar-spacer')) {
+                    const spacer = document.createElement('div');
+                    spacer.className = 'force-scrollbar-spacer';
+                    spacer.style.minWidth = '50px';
+                    spacer.style.height = '1px';
+                    spacer.style.flexShrink = '0';
+                    spacer.style.opacity = '0';
+                    navTabs.appendChild(spacer);
+                }
+                
+                // Method 4: Force scroll property again
+                navTabs.style.overflowX = 'scroll';
+                
+                console.log('Navigation scrollbar forced - total width:', totalWidth, 'container width:', navTabs.clientWidth);
+            }, 100);
+            
+            // Additional check after 500ms
+            setTimeout(() => {
+                if (navTabs.scrollWidth <= navTabs.clientWidth) {
+                    console.log('Still no overflow detected, adding more content...');
+                    // Force even more width
+                    navTabs.style.minWidth = '2000px';
+                }
+            }, 500);
         }
 
         function populateHoneypots() {
