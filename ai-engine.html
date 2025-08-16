@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Engine | AI Sentinel-X</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --accent: #7c3aed;
+            --danger: #ff0044;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060912;
+            --bg-card: rgba(10, 20, 40, 0.8);
+            --border: rgba(0, 255, 136, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #00ccff 100%);
+            --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
+            --gradient-neural: linear-gradient(135deg, #7c3aed 0%, #ff00ff 50%, #00ccff 100%);
+            --gradient-quantum: linear-gradient(135deg, #ff00ff 0%, #7c3aed 50%, #00ccff 100%);
+            --gradient-hybrid: linear-gradient(135deg, #00ff88 0%, #7c3aed 50%, #00ccff 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Consolas', 'Monaco', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Neural Network Background Canvas */
+        #neuralCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header with rounded bottom corners */
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px 15px 20px 20px;
+            padding: 25px 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* Logo */
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-shield {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            animation: shieldPulse 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .logo-eye {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-iris {
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+
+        .rotating-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate 12s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 4px var(--primary);
+        }
+
+        .dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+        .dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
+        .dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Encryption Status Badge - Matching defense.html style */
+        .encryption-badges {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .encryption-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .encryption-badge:hover {
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .status-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: statusPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .agent-status:hover {
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .agent-icon {
+            font-size: 20px;
+        }
+
+        .agent-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .agent-status-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 0, 68, 0.3);
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: var(--danger);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 68, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--border);
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            font-weight: bold;
+        }
+
+        /* Sub-Agent Status - Standardized from shared.js */
+        .sub-agent-status {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 15px 20px !important;
+            margin-bottom: 25px !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(15px);
+            min-height: 90px !important;
+            max-height: 90px !important;
+        }
+
+        .sub-agent-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .sub-agent-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-neural);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+            flex-shrink: 0;
+        }
+
+        .sub-agent-details h3 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .sub-agent-details p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .sub-agent-metrics {
+            display: flex;
+            gap: 30px;
+            flex-shrink: 0;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px !important;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 3px;
+        }
+
+        .metric-label {
+            font-size: 12px !important;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Main Agent Status Banner */
+        .main-agent-status {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-agent-status::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.1), transparent);
+            animation: bannerScan 8s linear infinite;
+        }
+
+        @keyframes bannerScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .main-agent-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .main-agent-info {
+            text-align: center;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .main-agent-title {
+            font-size: 28px;
+            font-weight: bold;
+            background: var(--gradient-neural);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .main-agent-subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .agent-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .agent-metric {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .agent-metric:hover {
+            background: rgba(124, 58, 237, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.2);
+        }
+
+        .agent-metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--accent);
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .agent-metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        /* Main Grid - Perfect 2x2 layout */
+        .ai-engine-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* Common Panel Styles */
+        .performance-panel,
+        .neural-panel,
+        .coordination-panel,
+        .subagents-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            min-height: 400px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* System Performance Monitor */
+        .performance-metrics {
+            display: grid;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .performance-metric {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 255, 136, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .performance-metric:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .metric-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .metric-status {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-optimal {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .status-warning {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .status-training {
+            background: rgba(124, 58, 237, 0.2);
+            color: var(--accent);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .metric-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .metric-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .metric-bar-fill {
+            height: 100%;
+            background: var(--gradient-1);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .metric-bar-fill.neural {
+            background: var(--gradient-neural);
+        }
+
+        /* Neural Network Status Panel */
+        .neural-metrics {
+            display: grid;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .neural-metric {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(124, 58, 237, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .neural-metric:hover {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(0, 255, 136, 0.02) 100%);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Agent Coordination Hub */
+        .coordination-activities {
+            display: grid;
+            gap: 12px;
+            flex: 1;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .coordination-activity {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(124, 58, 237, 0.02) 100%);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 15px;
+            transition: all 0.3s ease;
+            animation: activitySlideIn 0.5s ease;
+            cursor: pointer;
+        }
+
+        @keyframes activitySlideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .coordination-activity:hover {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(0, 255, 136, 0.02) 100%);
+            transform: translateX(5px);
+        }
+
+        .coordination-activity.encryption {
+            border-left-color: var(--primary);
+        }
+
+        .coordination-activity.security {
+            border-left-color: var(--danger);
+        }
+
+        .coordination-activity.compliance {
+            border-left-color: var(--secondary);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .activity-agents {
+            font-size: 10px;
+            color: var(--accent);
+            background: rgba(124, 58, 237, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            display: inline-block;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .activity-message {
+            font-size: 13px;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .activity-result {
+            font-size: 11px;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .result-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        /* Sub-Agents Control Panel */
+        .subagents-list {
+            display: grid;
+            gap: 12px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            max-height: 350px;
+        }
+
+        .subagent-item {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 255, 136, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .subagent-item:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .subagent-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .subagent-icon {
+            font-size: 24px;
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+
+        .subagent-details {
+            flex: 1;
+        }
+
+        .subagent-name {
+            font-weight: bold;
+            font-size: 15px;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .subagent-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .subagent-activity {
+            font-size: 11px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .subagent-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        .status-text {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--success);
+            text-transform: uppercase;
+        }
+
+        /* Training & Optimization Section */
+        .training-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .training-progress {
+            margin-top: 20px;
+        }
+
+        .progress-item {
+            margin-bottom: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .progress-value {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            transition: width 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Activity Feed using shared.js infrastructure */
+        .activity-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feed-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .feed-item {
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s ease;
+            animation: feedSlide 0.3s ease;
+        }
+
+        @keyframes feedSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feed-item.warning {
+            background: rgba(255, 170, 0, 0.05);
+            border-left-color: var(--warning);
+        }
+
+        .feed-item.danger {
+            background: rgba(255, 0, 68, 0.05);
+            border-left-color: var(--danger);
+        }
+
+        .feed-item.encryption {
+            background: rgba(124, 58, 237, 0.05);
+            border-left-color: var(--accent);
+        }
+
+        .feed-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feed-message {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .feed-agent {
+            font-size: 11px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* FOOTER WITH EXACT SAME DESIGN AS NETWORK/DEFENSE PAGES BUT AI ENGINE COLORS */
+        .footer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            margin: 40px 20px 20px 20px;
+            padding: 25px 0 15px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background scanning effect with AI Engine colors */
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(124, 58, 237, 0.03) 30%, 
+                rgba(255, 0, 255, 0.05) 50%, 
+                rgba(124, 58, 237, 0.03) 70%, 
+                transparent 100%);
+            animation: footerScan 20s linear infinite;
+        }
+
+        @keyframes footerScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Central orbital logo system */
+        .footer-orbital-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            height: 70px;
+        }
+
+        .orbital-logo-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main logo shield */
+        .orbital-logo-shield {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: orbitalPulse 4s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        @keyframes orbitalPulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+            }
+        }
+
+        .orbital-logo-eye {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .orbital-logo-iris {
+            width: 14px;
+            height: 14px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+            animation: irisGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes irisGlow {
+            0%, 100% { box-shadow: 0 0 12px rgba(0, 255, 136, 0.8); }
+            50% { box-shadow: 0 0 18px rgba(0, 255, 136, 1); }
+        }
+
+        /* Three orbiting dots system */
+        .orbital-dots-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .orbital-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            animation: orbitRotate 12s linear infinite;
+        }
+
+        .orbital-ring:nth-child(2) {
+            animation-duration: 18s;
+            animation-direction: reverse;
+        }
+
+        .orbital-ring:nth-child(3) {
+            animation-duration: 24s;
+        }
+
+        @keyframes orbitRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .orbital-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .orbital-dot:nth-child(1) {
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--primary);
+        }
+
+        .orbital-dot:nth-child(2) {
+            top: 50%;
+            right: -3px;
+            transform: translateY(-50%);
+            background: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .orbital-dot:nth-child(3) {
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Brand title under logo */
+        .footer-brand-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-brand-name {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .footer-brand-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Horizontal navigation links */
+        .footer-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .footer-nav-link:hover::before {
+            left: 100%;
+        }
+
+        .footer-nav-link:hover {
+            background: rgba(0, 255, 136, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+        }
+
+        .footer-nav-icon {
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-nav-link:hover .footer-nav-icon {
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        /* Bottom section with copyright */
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+            text-align: center;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 11px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+
+        .footer-copyright-divider {
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--primary);
+        }
+
+        /* AI Chat Widget */
+        .ai-chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .ai-chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+            font-size: 28px;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .ai-chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .ai-chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 400px;
+            height: 500px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .ai-chat-window.active {
+            display: flex;
+            animation: chatSlideIn 0.3s ease;
+        }
+
+        @keyframes chatSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-chat-header {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ai-chat-close {
+            cursor: pointer;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--bg-darker);
+        }
+
+        .cli-mode-indicator {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--warning);
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .cli-mode-indicator.active {
+            display: block;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-message {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-message-bubble {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .ai-message-bubble.user {
+            background: rgba(0, 204, 255, 0.1);
+            border-color: var(--secondary);
+            align-self: flex-end;
+        }
+
+        .ai-message-bubble.system {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--accent);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .ai-message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .ai-chat-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .ai-chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .ai-chat-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .ai-chat-send {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Agent Shutdown Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn-primary {
+            background: var(--gradient-1);
+            color: var(--bg-darker);
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .ai-engine-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .encryption-badges {
+                order: -1;
+                justify-content: center;
+            }
+            
+            .nav-tabs {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .sub-agent-status {
+                flex-direction: column;
+                text-align: center;
+                min-height: auto !important;
+                max-height: none !important;
+            }
+            
+            .sub-agent-metrics {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .main-agent-status {
+                padding: 20px;
+            }
+            
+            .agent-metrics {
+                gap: 20px;
+            }
+            
+            .ai-chat-window {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 140px);
+                right: -20px;
+                bottom: 80px;
+            }
+
+            /* Mobile footer adjustments */
+            .footer-navigation {
+                gap: 15px;
+            }
+
+            .footer-nav-link {
+                padding: 8px 15px;
+                font-size: 11px;
+            }
+
+            .orbital-logo-container {
+                width: 60px;
+                height: 60px;
+            }
+
+            .orbital-logo-shield {
+                width: 35px;
+                height: 35px;
+            }
+
+            .orbital-logo-eye {
+                width: 20px;
+                height: 20px;
+            }
+
+            .orbital-logo-iris {
+                width: 12px;
+                height: 12px;
+            }
+
+            .footer-brand-name {
+                font-size: 18px;
+            }
+
+            .footer {
+                margin: 30px 15px 15px 15px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Check authentication
+        const auth = localStorage.getItem('sentinel_auth');
+        if (!auth) {
+            window.location.href = 'index.html';
+        } else {
+            const authData = JSON.parse(auth);
+            if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
+                localStorage.removeItem('sentinel_auth');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+    <!-- Neural Network Background -->
+    <canvas id="neuralCanvas"></canvas>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="rotating-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="logo-shield">
+                            <div class="logo-eye">
+                                <div class="logo-iris"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="brand-name">AI SENTINEL-X</h1>
+                        <p class="brand-tagline">Autonomous Cyber Defense</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="encryption-badges">
+                        <div class="encryption-badge" onclick="showEncryptionStatus('hybrid')">
+                            <div class="status-light"></div>
+                            <span>HYBRID MODE ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="agent-status" onclick="showAgentShutdownModal()">
+                        <span class="agent-icon">🤖</span>
+                        <div class="agent-info">
+                            <span class="agent-title">AI Agent Active</span>
+                            <span class="agent-status-text" id="agentModeText">Autonomous with Manual Override</span>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <a href="dashboard.html" class="nav-tab">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="threats.html" class="nav-tab">
+                <span>🛡️</span>
+                <span>Threats</span>
+            </a>
+            <a href="network.html" class="nav-tab">
+                <span>🌐</span>
+                <span>Network</span>
+            </a>
+            <a href="defense.html" class="nav-tab">
+                <span>⚔️</span>
+                <span>Defense</span>
+            </a>
+            <a href="#" class="nav-tab active">
+                <span>🧠</span>
+                <span>AI Engine</span>
+            </a>
+            <a href="encryption.html" class="nav-tab">
+                <span>🔐</span>
+                <span>Encryption</span>
+            </a>
+            <a href="analytics.html" class="nav-tab">
+                <span>📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="vpn.html" class="nav-tab">
+                <span>🔒</span>
+                <span>VPNMonitor</span>
+            </a>
+            <a href="settings.html" class="nav-tab">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- Sub-Agent Status -->
+        <div class="sub-agent-status">
+            <div class="sub-agent-info">
+                <div class="sub-agent-icon">🧠</div>
+                <div class="sub-agent-details">
+                    <h3>Main Agent AI Engine</h3>
+                    <p>Central AI orchestrating all 10 sub-agents • Neural networks monitoring ThreatScanner, NetworkMapper, DefenseOrchestrator, EncryptionManager, VPNMonitor and more</p>
+                </div>
+            </div>
+            <div class="sub-agent-metrics">
+                <div class="metric">
+                    <div class="metric-value" id="subAgentsActive">10</div>
+                    <div class="metric-label">Sub-Agents</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="decisionsPerMin">2.4K</div>
+                    <div class="metric-label">Decisions/Min</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">99.8%</div>
+                    <div class="metric-label">ML Accuracy</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="systemUptime">99.98%</div>
+                    <div class="metric-label">Uptime</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid - Perfect 2x2 layout -->
+        <div class="ai-engine-grid">
+            <!-- System Performance Monitor -->
+            <div class="performance-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">System Performance</h2>
+                    <span style="color: var(--text-secondary); font-size: 12px;">🔄 REAL-TIME</span>
+                </div>
+                <div class="performance-metrics" id="performanceMetrics">
+                    <!-- Performance metrics will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Neural Network Status -->
+            <div class="neural-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Neural Network Status</h2>
+                    <span style="color: var(--accent); font-size: 12px;">🧠 LEARNING</span>
+                </div>
+                <div class="neural-metrics" id="neuralMetrics">
+                    <!-- Neural metrics will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Agent Coordination Hub -->
+            <div class="coordination-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Agent Coordination</h2>
+                    <span style="color: var(--text-secondary); font-size: 12px;">⚡ LIVE</span>
+                </div>
+                <div class="coordination-activities" id="coordinationActivities">
+                    <!-- Coordination activities will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Sub-Agents Control Panel -->
+            <div class="subagents-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Sub-Agent Orchestra</h2>
+                    <span style="color: var(--text-secondary); font-size: 12px;">🎵 HARMONY</span>
+                </div>
+                <div class="subagents-list" id="subAgentsList">
+                    <!-- Sub-agents will be populated from shared.js -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Training & Optimization Section -->
+        <div class="training-section">
+            <div class="panel-header">
+                <h2 class="panel-title">AI Training & Optimization</h2>
+                <span style="color: var(--text-secondary); font-size: 14px;">Continuous learning across all sub-agents</span>
+            </div>
+            <div class="training-progress">
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Threat Pattern Recognition</span>
+                        <span class="progress-value" id="threatLearning">94.7%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 94.7%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Network Behavior Analysis</span>
+                        <span class="progress-value" id="networkLearning">89.2%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 89.2%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Defense Response Optimization</span>
+                        <span class="progress-value" id="defenseOptimization">96.1%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 96.1%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Multi-Agent Coordination</span>
+                        <span class="progress-value" id="coordinationLearning">91.8%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 91.8%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Engine Activity Feed -->
+        <div class="activity-feed">
+            <div class="feed-header">
+                <h2 class="feed-title">
+                    <span>🧠</span>
+                    <span>AI Engine Activity Feed</span>
+                </h2>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>LIVE</span>
+                </div>
+            </div>
+            <div class="feed-content" id="aiEngineActivityFeed">
+                <!-- Feed items will be populated by ActivityFeedManager -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER WITH EXACT SAME DESIGN AS NETWORK/DEFENSE PAGES BUT AI ENGINE COLORS -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Central orbital logo system -->
+            <div class="footer-orbital-center">
+                <div class="orbital-logo-container">
+                    <!-- Main shield logo -->
+                    <div class="orbital-logo-shield">
+                        <div class="orbital-logo-eye">
+                            <div class="orbital-logo-iris"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Three orbiting dot systems -->
+                    <div class="orbital-dots-system">
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand title under logo -->
+            <div class="footer-brand-title">
+                <div class="footer-brand-name">AI SENTINEL-X</div>
+                <div class="footer-brand-subtitle">AI Engine Module</div>
+            </div>
+
+            <!-- Horizontal navigation links -->
+            <nav class="footer-navigation">
+                <a href="dashboard.html" class="footer-nav-link">
+                    <span class="footer-nav-icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="mailto:support@ai-sentinel-x.com" class="footer-nav-link">
+                    <span class="footer-nav-icon">📧</span>
+                    <span>Support</span>
+                </a>
+                <a href="https://docs.ai-sentinel-x.com" class="footer-nav-link">
+                    <span class="footer-nav-icon">📚</span>
+                    <span>Documentation</span>
+                </a>
+                <a href="settings.html" class="footer-nav-link">
+                    <span class="footer-nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <!-- Bottom copyright section -->
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <span>© 2025 AI Sentinel-X</span>
+                    <div class="footer-copyright-divider"></div>
+                    <span>All rights reserved</span>
+                    <div class="footer-copyright-divider"></div>
+                    <span>AI Engine Module</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Agent Shutdown Modal -->
+    <div class="modal-overlay" id="agentShutdownModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">⚠️ Agent Control Toggle</h2>
+            </div>
+            <div class="modal-content">
+                Toggle autonomous mode? When paused, manual control remains available through the AI chat bot CLI. System will fallback to local control mode if external APIs are offline.
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" onclick="confirmAgentShutdown()">Toggle Agent Mode</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Widget -->
+    <div class="ai-chat-widget">
+        <div class="ai-chat-window" id="aiChatWindow">
+            <div class="ai-chat-header">
+                <div class="ai-chat-status">
+                    <span class="chat-status-dot"></span>
+                    <span>MAIN AGENT ONLINE</span>
+                </div>
+                <button class="ai-chat-close" onclick="toggleChat()">×</button>
+            </div>
+            <div class="cli-mode-indicator" id="cliModeIndicator">
+                ⚠️ CLI MODE - Main Agent Offline
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-message">
+                    <div class="ai-message-bubble">
+                        I am the Main Agent orchestrating comprehensive autonomous cyber defense. I coordinate ThreatScanner, NetworkMapper, DefenseOrchestrator, EncryptionManager, EncryptionDeployer, CertificateManager, ComplianceMonitor, VPNMonitor, AnalyticsEngine, and LogAgent. All inter-agent communications use hybrid encryption. How can I assist you?
+                    </div>
+                    <div class="ai-message-time">Just now</div>
+                </div>
+            </div>
+            <div class="ai-chat-input-container">
+                <input 
+                    type="text" 
+                    class="ai-chat-input" 
+                    id="aiChatInput" 
+                    placeholder="Command the Main Agent or query sub-agents..."
+                    onkeypress="handleChatKeyPress(event)"
+                >
+                <button class="ai-chat-send" onclick="sendChatMessage()">SEND</button>
+            </div>
+        </div>
+        <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // AI Engine page-specific configurations using shared.js infrastructure
+        let aiEngineFeedId = 'ai-engine-feed';
+        let coordinationInterval;
+        let metricsUpdateInterval;
+
+        // AI Engine data structures
+        const AIEngineData = {
+            performanceMetrics: [
+                {
+                    name: 'CPU Usage',
+                    value: '28%',
+                    status: 'optimal',
+                    description: 'Main Agent + 10 sub-agents processing',
+                    percentage: 28
+                },
+                {
+                    name: 'Memory Usage', 
+                    value: '3.2GB',
+                    status: 'optimal',
+                    description: 'Neural networks + sub-agent models',
+                    percentage: 64
+                },
+                {
+                    name: 'Threat Response',
+                    value: '0.3s',
+                    status: 'optimal', 
+                    description: 'ThreatScanner → DefenseOrchestrator',
+                    percentage: 95
+                },
+                {
+                    name: 'Sub-Agent Sync',
+                    value: '99.8%',
+                    status: 'optimal',
+                    description: 'All 10 sub-agents coordinated',
+                    percentage: 99
+                }
+            ],
+            neuralMetrics: [
+                {
+                    name: 'Active Nodes',
+                    value: '2,847',
+                    status: 'training',
+                    description: 'Neural pathways across all agents',
+                    percentage: 92
+                },
+                {
+                    name: 'Learning Rate',
+                    value: '0.001',
+                    status: 'optimal',
+                    description: 'Adaptive optimization active',
+                    percentage: 88
+                },
+                {
+                    name: 'Model Accuracy',
+                    value: '99.8%',
+                    status: 'optimal',
+                    description: 'Cross-agent threat classification',
+                    percentage: 99
+                },
+                {
+                    name: 'Training Data',
+                    value: '14.2M',
+                    status: 'training',
+                    description: 'Multi-agent samples processed',
+                    percentage: 76
+                }
+            ]
+        };
+
+        // AI Engine page initialization using shared.js infrastructure
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                initializeAIEnginePage();
+            }, 100);
+        });
+
+        function initializeAIEnginePage() {
+            // Initialize neural background from shared.js
+            if (typeof initNeuralBackground === 'function') {
+                initNeuralBackground();
+            }
+
+            // Initialize page context from shared.js
+            if (typeof initializePageContext === 'function') {
+                initializePageContext();
+            }
+
+            // Initialize AI Engine activity feed using shared.js ActivityFeedManager
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                // Initialize AI Engine feed with specific message types
+                activityFeedManager.initializeFeed(aiEngineFeedId, 'dashboard'); // Use dashboard type for rich AI messages
+                activityFeedManager.setFeedContainer(aiEngineFeedId, 'aiEngineActivityFeed');
+                
+                // Add initial AI-specific messages
+                activityFeedManager.addMessage(aiEngineFeedId, '🧠 Main Agent: Autonomous cyber defense orchestration active across all 10 sub-agents', '', 'Main Agent');
+                activityFeedManager.addMessage(aiEngineFeedId, '🤖 Neural Network: Cross-agent coordination with 99.8% threat classification accuracy', '', 'AI Engine');
+                activityFeedManager.addMessage(aiEngineFeedId, '⚡ Performance Monitor: ThreatScanner, NetworkMapper, DefenseOrchestrator, and VPNMonitor operating optimally', '', 'AI Engine');
+                activityFeedManager.addMessage(aiEngineFeedId, '🔐 Agent Coordination: Hybrid encryption securing all inter-agent communications', 'encryption', 'AI Engine');
+                
+                // Start auto-generation every 7 seconds for AI Engine feed
+                activityFeedManager.startAutoGeneration(aiEngineFeedId, 7000);
+            } else {
+                console.log('ActivityFeedManager not available yet, retrying...');
+                setTimeout(initializeAIEnginePage, 200);
+                return;
+            }
+
+            // Initialize chat system from shared.js
+            if (typeof SentinelChat !== 'undefined') {
+                window.sentinelChat = new SentinelChat();
+            }
+
+            // Populate AI Engine sections
+            populatePerformanceMetrics();
+            populateNeuralMetrics();
+            populateSubAgents();
+            initializeCoordinationActivities();
+            
+            // Start automated systems
+            startMetricsUpdates();
+            startCoordinationGeneration();
+        }
+
+        function populatePerformanceMetrics() {
+            const container = document.getElementById('performanceMetrics');
+            if (!container) return;
+
+            container.innerHTML = '';
+            AIEngineData.performanceMetrics.forEach(metric => {
+                const div = document.createElement('div');
+                div.className = 'performance-metric';
+                div.onclick = () => showMetricDetails(metric.name.toLowerCase());
+                div.innerHTML = `
+                    <div class="metric-header">
+                        <div class="metric-name">${metric.name}</div>
+                        <div class="metric-status status-${metric.status}">${metric.status.toUpperCase()}</div>
+                    </div>
+                    <div class="metric-value">${metric.value}</div>
+                    <div class="metric-description">${metric.description}</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill" style="width: ${metric.percentage}%"></div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function populateNeuralMetrics() {
+            const container = document.getElementById('neuralMetrics');
+            if (!container) return;
+
+            container.innerHTML = '';
+            AIEngineData.neuralMetrics.forEach(metric => {
+                const div = document.createElement('div');
+                div.className = 'neural-metric';
+                div.onclick = () => showNeuralDetails(metric.name.toLowerCase());
+                div.innerHTML = `
+                    <div class="metric-header">
+                        <div class="metric-name">${metric.name}</div>
+                        <div class="metric-status status-${metric.status}">${metric.status.toUpperCase()}</div>
+                    </div>
+                    <div class="metric-value">${metric.value}</div>
+                    <div class="metric-description">${metric.description}</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill neural" style="width: ${metric.percentage}%"></div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function populateSubAgents() {
+            const container = document.getElementById('subAgentsList');
+            if (!container || typeof SubAgentConfigs === 'undefined') return;
+            
+            container.innerHTML = '';
+
+            // Use shared SubAgentConfigs from shared.js
+            Object.keys(SubAgentConfigs).forEach(agentKey => {
+                const agent = SubAgentConfigs[agentKey];
+                
+                const div = document.createElement('div');
+                div.className = 'subagent-item';
+                div.onclick = () => viewSubAgent(agentKey);
+                
+                div.innerHTML = `
+                    <div class="subagent-info">
+                        <div class="subagent-icon">${agent.icon}</div>
+                        <div class="subagent-details">
+                            <div class="subagent-name">${agent.name}</div>
+                            <div class="subagent-description">${agent.description}</div>
+                            <div class="subagent-activity">${agent.activity}</div>
+                        </div>
+                    </div>
+                    <div class="subagent-status">
+                        <div class="status-dot"></div>
+                        <div class="status-text">ACTIVE</div>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+
+            // Update sub-agent count in banner only
+            const countElement = document.getElementById('subAgentsActive');
+            const agentCount = Object.keys(SubAgentConfigs).length;
+            if (countElement) {
+                countElement.textContent = agentCount;
+            }
+        }
+
+        function initializeCoordinationActivities() {
+            const container = document.getElementById('coordinationActivities');
+            if (!container) return;
+
+            // Initial coordination activities showing comprehensive cyber defense
+            const initialActivities = [
+                {
+                    time: new Date(),
+                    agents: 'MAIN → THREAT → DEFENSE',
+                    message: 'Coordinated SQL injection response between ThreatScanner and DefenseOrchestrator',
+                    result: 'Attack blocked, honeypot triggered',
+                    type: 'security'
+                },
+                {
+                    time: new Date(Date.now() - 60000),
+                    agents: 'MAIN → NETWORK → ENCRYPT',
+                    message: 'NetworkMapper discovered new devices, EncryptionDeployer securing automatically',
+                    result: 'Hybrid encryption deployed',
+                    type: 'encryption'
+                },
+                {
+                    time: new Date(Date.now() - 120000),
+                    agents: 'MAIN → VPN → CERT',
+                    message: 'VPNMonitor alert triggered CertificateManager auto-renewal workflow',
+                    result: 'Certificate renewed with hybrid signatures',
+                    type: 'compliance'
+                },
+                {
+                    time: new Date(Date.now() - 180000),
+                    agents: 'MAIN → ANALYTICS → LOG',
+                    message: 'AnalyticsEngine detected anomaly, LogAgent coordinating audit trail',
+                    result: '99.8% confidence threat classification',
+                    type: 'security'
+                }
+            ];
+
+            initialActivities.forEach(activity => addCoordinationActivity(activity));
+        }
+
+        function addCoordinationActivity(activity) {
+            const container = document.getElementById('coordinationActivities');
+            if (!container) return;
+
+            const div = document.createElement('div');
+            div.className = `coordination-activity ${activity.type}`;
+            div.onclick = () => showCoordinationDetails(activity);
+            div.innerHTML = `
+                <div class="activity-time">${activity.time.toLocaleTimeString()}</div>
+                <div class="activity-agents">${activity.agents}</div>
+                <div class="activity-message">${activity.message}</div>
+                <div class="activity-result">
+                    <div class="result-icon"></div>
+                    <span>${activity.result}</span>
+                </div>
+            `;
+            
+            container.insertBefore(div, container.firstChild);
+            
+            // Keep only last 8 activities (smaller panel)
+            while (container.children.length > 8) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        function startCoordinationGeneration() {
+            if (coordinationInterval) clearInterval(coordinationInterval);
+            
+            coordinationInterval = setInterval(() => {
+                if (typeof SentinelState !== 'undefined' && SentinelState.agentActive) {
+                    generateCoordinationActivity();
+                }
+            }, 12000); // Generate every 12 seconds
+        }
+
+        function generateCoordinationActivity() {
+            const coordActions = [
+                {
+                    agents: 'MAIN → THREAT → DEFENSE',
+                    message: 'ThreatScanner detected malware, DefenseOrchestrator deployed containment',
+                    result: 'Threat neutralized automatically',
+                    type: 'security'
+                },
+                {
+                    agents: 'MAIN → NETWORK → VPN',
+                    message: 'NetworkMapper found new endpoint, VPNMonitor securing connection',
+                    result: 'VPN tunnel established with hybrid encryption',
+                    type: 'encryption'
+                },
+                {
+                    agents: 'MAIN → COMPLIANCE → CERT',
+                    message: 'ComplianceMonitor triggered certificate renewal for SOC2 compliance',
+                    result: 'Certificate updated with post-quantum signature',
+                    type: 'compliance'
+                },
+                {
+                    agents: 'MAIN → ANALYTICS → LOG',
+                    message: 'AnalyticsEngine correlated events with LogAgent for audit trail',
+                    result: 'Complete audit chain with Dilithium signatures',
+                    type: 'security'
+                },
+                {
+                    agents: 'MAIN → ENCRYPT → DEPLOY',
+                    message: 'EncryptionManager coordinated deployment across infrastructure',
+                    result: 'Hybrid encryption active on new assets',
+                    type: 'encryption'
+                }
+            ];
+            
+            const coordAction = coordActions[Math.floor(Math.random() * coordActions.length)];
+            coordAction.time = new Date();
+            addCoordinationActivity(coordAction);
+            
+            // Also add to activity feed using ActivityFeedManager
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                activityFeedManager.addMessage(aiEngineFeedId, `🤝 ${coordAction.agents}: ${coordAction.message}`, coordAction.type, 'AI Coordination');
+            }
+        }
+
+        function startMetricsUpdates() {
+            if (metricsUpdateInterval) clearInterval(metricsUpdateInterval);
+            
+            metricsUpdateInterval = setInterval(() => {
+                updateMetrics();
+            }, 3000);
+        }
+
+        function updateMetrics() {
+            // Update decisions per minute
+            const decisions = document.getElementById('decisionsPerMin');
+            if (decisions) {
+                const current = parseFloat(decisions.textContent.replace('K', ''));
+                const newValue = (current + 0.1).toFixed(1) + 'K';
+                decisions.textContent = newValue;
+            }
+            
+            // Update training progress occasionally
+            const progressElements = [
+                { id: 'threatLearning', max: 96 },
+                { id: 'networkLearning', max: 92 },
+                { id: 'defenseOptimization', max: 97 },
+                { id: 'coordinationLearning', max: 94 }
+            ];
+            
+            progressElements.forEach(prog => {
+                if (Math.random() > 0.8) {
+                    const element = document.getElementById(prog.id);
+                    if (element) {
+                        const current = parseFloat(element.textContent.replace('%', ''));
+                        if (current < prog.max) {
+                            const newValue = Math.min(prog.max, current + 0.1);
+                            element.textContent = newValue.toFixed(1) + '%';
+                            const progressBar = element.parentElement.nextElementSibling.firstElementChild;
+                            if (progressBar) {
+                                progressBar.style.width = newValue + '%';
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Detail view functions using shared chat system
+        function showMetricDetails(metricType) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    let message = '';
+                    switch(metricType) {
+                        case 'cpu usage':
+                            message = 'Performance Monitor: 28% CPU utilization handling Main Agent + 10 sub-agents coordination. Optimal performance across ThreatScanner, NetworkMapper, DefenseOrchestrator, and all specialized agents.';
+                            break;
+                        case 'memory usage':
+                            message = 'Memory Manager: 3.2GB allocated for neural networks and sub-agent models. Memory optimization across all coordinated agents for peak performance.';
+                            break;
+                        case 'threat response':
+                            message = 'Response Engine: 0.3s average detection to response time. Real-time coordination between ThreatScanner detection and DefenseOrchestrator response.';
+                            break;
+                        case 'sub-agent sync':
+                            message = 'Coordination Engine: 99.8% synchronization across all 10 sub-agents. Real-time coordination ensuring comprehensive autonomous cyber defense.';
+                            break;
+                    }
+                    window.sentinelChat.addMessage(message, false);
+                }
+            }, 300);
+        }
+
+        function showNeuralDetails(neuralType) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    let message = '';
+                    switch(neuralType) {
+                        case 'active nodes':
+                            message = 'Neural Network: 2,847 active nodes processing real-time data across all sub-agents. Deep learning pathways optimizing threat detection, network mapping, defense coordination, and encryption deployment.';
+                            break;
+                        case 'learning rate':
+                            message = 'Learning Engine: 0.001 adaptive learning rate optimized for cross-agent coordination. Auto-adjusting based on threat landscape and sub-agent performance.';
+                            break;
+                        case 'model accuracy':
+                            message = 'ML Engine: 99.8% accuracy in cross-agent threat classification. Model trained on millions of samples from ThreatScanner, NetworkMapper, DefenseOrchestrator, and all coordinated agents.';
+                            break;
+                        case 'training data':
+                            message = 'Training System: 14.2M multi-agent samples processed today. Continuous learning from live threat data across all sub-agents while maintaining privacy with hybrid encryption.';
+                            break;
+                    }
+                    window.sentinelChat.addMessage(message, false);
+                }
+            }, 300);
+        }
+
+        function viewSubAgent(agentKey) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`Main Agent: Connecting to ${SubAgentConfigs[agentKey]?.name || agentKey}...`, false, 'system');
+                    
+                    setTimeout(() => {
+                        const agent = SubAgentConfigs[agentKey];
+                        if (agent) {
+                            window.sentinelChat.addMessage(`${agent.name}: ${agent.description}. Status: ${agent.status}. Activity: ${agent.activity}. Coordinating with Main Agent for comprehensive cyber defense. All communications secured with hybrid encryption.`, false);
+                        }
+                    }, 800);
+                }
+            }, 300);
+        }
+
+        function showCoordinationDetails(activity) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`Multi-Agent Coordination Details:
+• Agents: ${activity.agents}
+• Action: ${activity.message}
+• Result: ${activity.result}
+• Time: ${activity.time.toLocaleTimeString()}
+• Type: ${activity.type.toUpperCase()}
+• Security: All coordination secured with hybrid encryption
+• Context: Part of comprehensive autonomous cyber defense strategy`, false);
+                }
+            }, 300);
+        }
+
+        function showEncryptionStatus(type) {
+            if (window.sentinelChat && typeof SentinelState !== 'undefined' && !SentinelState.chatOpen) {
+                window.sentinelChat.toggle();
+            }
+            setTimeout(() => {
+                if (window.sentinelChat) {
+                    window.sentinelChat.addMessage(`EncryptionManager: Hybrid encryption status - Post-quantum algorithms (Kyber-1024, Dilithium-3, SPHINCS+) combined with classical encryption protecting all AI Engine operations. Neural network communications and sub-agent coordination secured with quantum-resistant protection.`, false);
+                }
+            }, 300);
+        }
+
+        // Cleanup activity feed on page unload
+        window.addEventListener('beforeunload', () => {
+            if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                activityFeedManager.stopAutoGeneration(aiEngineFeedId);
+            }
+            if (coordinationInterval) {
+                clearInterval(coordinationInterval);
+            }
+            if (metricsUpdateInterval) {
+                clearInterval(metricsUpdateInterval);
+            }
+        });
+
+        // Global functions for compatibility - leveraging shared chat system
+        window.toggleChat = () => {
+            if (window.sentinelChat) {
+                window.sentinelChat.toggle();
+            }
+        };
+        
+        window.sendChatMessage = () => {
+            const input = document.getElementById('aiChatInput');
+            if (input && input.value.trim() && window.sentinelChat) {
+                window.sentinelChat.sendMessage(input.value.trim());
+                input.value = '';
+            }
+        };
+        
+        window.handleChatKeyPress = (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        };
+        
+        window.showAgentShutdownModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'flex';
+        };
+        
+        window.closeModal = () => {
+            const modal = document.getElementById('agentShutdownModal');
+            if (modal) modal.style.display = 'none';
+        };
+        
+        window.closeModalOnOverlay = (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        };
+        
+        window.confirmAgentShutdown = () => {
+            if (typeof SentinelState !== 'undefined') {
+                SentinelState.agentActive = !SentinelState.agentActive;
+                
+                // Update UI elements
+                const agentStatus = document.querySelector('.agent-status');
+                const agentTitle = document.querySelector('.agent-title');
+                const agentStatusText = document.querySelector('.agent-status-text');
+                
+                if (SentinelState.agentActive) {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
+                        agentStatus.style.borderColor = '#00ff88';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Active';
+                        agentTitle.style.color = 'var(--primary)';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Autonomous with Manual Override';
+                    }
+                    
+                    // Resume AI systems and activity feed
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.startAutoGeneration(aiEngineFeedId, 7000);
+                        activityFeedManager.addMessage(aiEngineFeedId, '🤖 Main Agent resumed: Comprehensive autonomous cyber defense reactivated across all sub-agents', '', 'Main Agent');
+                    }
+                    startCoordinationGeneration();
+                    startMetricsUpdates();
+                } else {
+                    if (agentStatus) {
+                        agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
+                        agentStatus.style.borderColor = '#ffaa00';
+                    }
+                    if (agentTitle) {
+                        agentTitle.textContent = 'AI Agent Paused';
+                        agentTitle.style.color = '#ffaa00';
+                    }
+                    if (agentStatusText) {
+                        agentStatusText.textContent = 'Manual Control Only';
+                    }
+                    
+                    // Pause AI systems and activity feed
+                    if (typeof activityFeedManager !== 'undefined' && activityFeedManager) {
+                        activityFeedManager.stopAutoGeneration(aiEngineFeedId);
+                        activityFeedManager.addMessage(aiEngineFeedId, '⚠️ Main Agent paused: Sub-agent coordination in standby mode, manual control only', 'warning', 'Main Agent');
+                    }
+                    if (coordinationInterval) clearInterval(coordinationInterval);
+                    if (metricsUpdateInterval) clearInterval(metricsUpdateInterval);
+                }
+                
+                closeModal();
+                
+                if (SentinelState.chatOpen && window.sentinelChat) {
+                    const status = SentinelState.agentActive ? 'resumed autonomous operation with comprehensive cyber defense coordination' : 'switched to manual control mode';
+                    window.sentinelChat.addMessage(`⚠️ Main Agent has ${status}. Sub-agent neural networks ${SentinelState.agentActive ? 'active' : 'paused'}.`, false, 'system');
+                }
+            }
+        };
+        
+        window.handleLogout = () => {
+            if (confirm('Are you sure you want to logout? The AI agent will continue comprehensive autonomous cyber defense across all sub-agents.')) {
+                localStorage.removeItem('sentinel_auth');
+                localStorage.removeItem('sentinel_scale');
+                window.location.href = 'index.html';
+            }
+        };
+    </script>
+</body>
+</html>
