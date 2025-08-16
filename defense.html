@@ -186,7 +186,7 @@
             align-items: center;
         }
 
-        /* Encryption Status Badge - Matching dashboard.html style */
+        /* Encryption Status Badge */
         .encryption-badges {
             display: flex;
             gap: 15px;
@@ -332,20 +332,22 @@
             background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 170, 102, 0.05) 100%);
             border: 1px solid rgba(0, 255, 136, 0.3);
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 15px 20px !important;
+            margin-bottom: 25px !important;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             gap: 20px;
             backdrop-filter: blur(15px);
+            min-height: 90px !important;
+            max-height: 90px !important;
         }
 
         .sub-agent-info {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex: 1;
         }
 
         .sub-agent-icon {
@@ -358,6 +360,7 @@
             justify-content: center;
             font-size: 24px;
             box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+            flex-shrink: 0;
         }
 
         .sub-agent-details h3 {
@@ -374,6 +377,7 @@
         .sub-agent-metrics {
             display: flex;
             gap: 30px;
+            flex-shrink: 0;
         }
 
         .metric {
@@ -381,13 +385,14 @@
         }
 
         .metric-value {
-            font-size: 24px;
+            font-size: 24px !important;
             font-weight: bold;
             color: var(--primary);
+            margin-bottom: 3px;
         }
 
         .metric-label {
-            font-size: 12px;
+            font-size: 12px !important;
             color: var(--text-secondary);
             text-transform: uppercase;
         }
@@ -844,6 +849,296 @@
             font-style: italic;
         }
 
+        /* COMPLETELY REBUILT FOOTER - AMAZING ORBITAL DESIGN */
+        .footer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            margin: 40px 20px 20px 20px;
+            padding: 25px 0 15px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background scanning effect */
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(0, 255, 136, 0.03) 30%, 
+                rgba(0, 204, 255, 0.05) 50%, 
+                rgba(124, 58, 237, 0.03) 70%, 
+                transparent 100%);
+            animation: footerScan 20s linear infinite;
+        }
+
+        @keyframes footerScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Central orbital logo system */
+        .footer-orbital-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            height: 70px;
+        }
+
+        .orbital-logo-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main logo shield */
+        .orbital-logo-shield {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: orbitalPulse 4s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        @keyframes orbitalPulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+            }
+        }
+
+        .orbital-logo-eye {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .orbital-logo-iris {
+            width: 14px;
+            height: 14px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+            animation: irisGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes irisGlow {
+            0%, 100% { box-shadow: 0 0 12px rgba(0, 255, 136, 0.8); }
+            50% { box-shadow: 0 0 18px rgba(0, 255, 136, 1); }
+        }
+
+        /* Three orbiting dots system */
+        .orbital-dots-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .orbital-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            animation: orbitRotate 12s linear infinite;
+        }
+
+        .orbital-ring:nth-child(2) {
+            animation-duration: 18s;
+            animation-direction: reverse;
+        }
+
+        .orbital-ring:nth-child(3) {
+            animation-duration: 24s;
+        }
+
+        @keyframes orbitRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .orbital-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .orbital-dot:nth-child(1) {
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--primary);
+        }
+
+        .orbital-dot:nth-child(2) {
+            top: 50%;
+            right: -3px;
+            transform: translateY(-50%);
+            background: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .orbital-dot:nth-child(3) {
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Brand title under logo */
+        .footer-brand-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-brand-name {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .footer-brand-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Horizontal navigation links */
+        .footer-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .footer-nav-link:hover::before {
+            left: 100%;
+        }
+
+        .footer-nav-link:hover {
+            background: rgba(0, 255, 136, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+        }
+
+        .footer-nav-icon {
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-nav-link:hover .footer-nav-icon {
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        /* Bottom section with copyright */
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+            text-align: center;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 11px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+
+        .footer-copyright-divider {
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--primary);
+        }
+
         /* AI Chat Widget */
         .ai-chat-widget {
             position: fixed;
@@ -1132,144 +1427,6 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* Footer */
-        .footer {
-            margin-top: 50px;
-            padding: 40px 0 20px 0;
-            border-top: 1px solid var(--border);
-            background: linear-gradient(135deg, rgba(10, 20, 40, 0.8) 0%, rgba(6, 9, 18, 0.9) 100%);
-            backdrop-filter: blur(15px);
-        }
-
-        .footer-content {
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .footer-main {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-
-        .footer-brand {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .footer-logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-shield);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .footer-logo-text {
-            font-size: 20px;
-            font-weight: bold;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .footer-description {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        .footer-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--primary);
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .footer-status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: statusPulse 3s ease-in-out infinite;
-        }
-
-        .footer-section h4 {
-            color: var(--primary);
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .footer-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            padding: 4px 0;
-        }
-
-        .footer-link:hover {
-            color: var(--primary);
-            transform: translateX(5px);
-        }
-
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .footer-copyright {
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-
-        .footer-tech-stack {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .tech-badge {
-            padding: 4px 8px;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 8px;
-            font-size: 10px;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
         /* Mobile Responsive */
         @media (max-width: 1200px) {
             .defense-grid {
@@ -1278,11 +1435,6 @@
             
             .coordination-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .footer-main {
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
             }
         }
 
@@ -1304,6 +1456,8 @@
             .sub-agent-status {
                 flex-direction: column;
                 text-align: center;
+                min-height: auto !important;
+                max-height: none !important;
             }
             
             .sub-agent-metrics {
@@ -1322,34 +1476,43 @@
                 bottom: 80px;
             }
 
-            .footer-main {
-                grid-template-columns: 1fr;
-                gap: 25px;
+            /* Mobile footer adjustments */
+            .footer-navigation {
+                gap: 15px;
             }
 
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
+            .footer-nav-link {
+                padding: 8px 15px;
+                font-size: 11px;
             }
-        }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+            .orbital-logo-container {
+                width: 60px;
+                height: 60px;
+            }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-        }
+            .orbital-logo-shield {
+                width: 35px;
+                height: 35px;
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
+            .orbital-logo-eye {
+                width: 20px;
+                height: 20px;
+            }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary);
+            .orbital-logo-iris {
+                width: 12px;
+                height: 12px;
+            }
+
+            .footer-brand-name {
+                font-size: 18px;
+            }
+
+            .footer {
+                margin: 30px 15px 15px 15px;
+            }
         }
     </style>
 </head>
@@ -1557,74 +1720,68 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- COMPLETELY REBUILT FOOTER - AMAZING ORBITAL DESIGN -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-main">
-                <!-- Brand Column -->
-                <div class="footer-brand">
-                    <div class="footer-logo">
-                        <div class="footer-logo-icon">⚔️</div>
-                        <div class="footer-logo-text">AI Sentinel-X</div>
+        <div class="footer-container">
+            <!-- Central orbital logo system -->
+            <div class="footer-orbital-center">
+                <div class="orbital-logo-container">
+                    <!-- Main shield logo -->
+                    <div class="orbital-logo-shield">
+                        <div class="orbital-logo-eye">
+                            <div class="orbital-logo-iris"></div>
+                        </div>
                     </div>
-                    <div class="footer-description">
-                        Advanced AI-powered cyber defense platform with autonomous threat detection, real-time response automation, and multi-agent coordination. DefenseOrchestrator manages comprehensive security operations with hybrid-resistant encryption and predictive analytics.
-                    </div>
-                    <div class="footer-status">
-                        <div class="footer-status-dot"></div>
-                        <span>DefenseOrchestrator Active</span>
-                    </div>
-                </div>
-
-                <!-- Security Operations -->
-                <div class="footer-section">
-                    <h4>Security Operations</h4>
-                    <div class="footer-links">
-                        <a href="dashboard.html" class="footer-link">🏠 Command Dashboard</a>
-                        <a href="threats.html" class="footer-link">🛡️ Threat Detection</a>
-                        <a href="network.html" class="footer-link">🌐 Network Security</a>
-                        <a href="ai-engine.html" class="footer-link">🧠 AI Coordination</a>
-                        <a href="encryption.html" class="footer-link">🔐 Encryption Systems</a>
-                        <a href="analytics.html" class="footer-link">📊 Security Analytics</a>
-                    </div>
-                </div>
-
-                <!-- Defense Systems -->
-                <div class="footer-section">
-                    <h4>Defense Systems</h4>
-                    <div class="footer-links">
-                        <a href="#" class="footer-link">🍯 Honeypot Management</a>
-                        <a href="#" class="footer-link">⚡ Response Automation</a>
-                        <a href="#" class="footer-link">🤝 Agent Coordination</a>
-                        <a href="#" class="footer-link">📋 Security Playbooks</a>
-                        <a href="#" class="footer-link">🔒 Access Control</a>
-                        <a href="#" class="footer-link">📈 Performance Metrics</a>
-                    </div>
-                </div>
-
-                <!-- Global Network -->
-                <div class="footer-section">
-                    <h4>Global Network</h4>
-                    <div class="footer-links">
-                        <a href="#" class="footer-link">🌍 Worldwide Coverage</a>
-                        <a href="#" class="footer-link">📡 Threat Intelligence</a>
-                        <a href="#" class="footer-link">🔄 Auto-Updates</a>
-                        <a href="#" class="footer-link">⚙️ System Settings</a>
-                        <a href="#" class="footer-link">📋 Compliance Reports</a>
-                        <a href="#" class="footer-link">🚀 Performance Optimization</a>
+                    
+                    <!-- Three orbiting dot systems -->
+                    <div class="orbital-dots-system">
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
+                        <div class="orbital-ring">
+                            <div class="orbital-dot"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Brand title under logo -->
+            <div class="footer-brand-title">
+                <div class="footer-brand-name">AI SENTINEL-X</div>
+                <div class="footer-brand-subtitle">DefenseOrchestrator Module</div>
+            </div>
+
+            <!-- Horizontal navigation links -->
+            <nav class="footer-navigation">
+                <a href="dashboard.html" class="footer-nav-link">
+                    <span class="footer-nav-icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="mailto:support@ai-sentinel-x.com" class="footer-nav-link">
+                    <span class="footer-nav-icon">📧</span>
+                    <span>Support</span>
+                </a>
+                <a href="https://docs.ai-sentinel-x.com" class="footer-nav-link">
+                    <span class="footer-nav-icon">📚</span>
+                    <span>Documentation</span>
+                </a>
+                <a href="settings.html" class="footer-nav-link">
+                    <span class="footer-nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <!-- Bottom copyright section -->
             <div class="footer-bottom">
                 <div class="footer-copyright">
-                    © 2025 AI Sentinel-X. Autonomous cyber defense platform with DefenseOrchestrator sub-agent coordination.
-                </div>
-                <div class="footer-tech-stack">
-                    <span class="tech-badge">Hybrid Encryption</span>
-                    <span class="tech-badge">Multi-Agent AI</span>
-                    <span class="tech-badge">Real-time Defense</span>
-                    <span class="tech-badge">Auto-Response</span>
+                    <span>© 2025 AI Sentinel-X</span>
+                    <div class="footer-copyright-divider"></div>
+                    <span>All rights reserved</span>
+                    <div class="footer-copyright-divider"></div>
+                    <span>DefenseOrchestrator Module</span>
                 </div>
             </div>
         </div>
@@ -1694,22 +1851,6 @@
                 {
                     id: 'ssh',
                     name: 'SSH Honeypot',
-                    icon: '🔐',
-                    details: 'Port 22 • 12 intrusions trapped',
-                    status: 'ACTIVE',
-                    aiStatus: 'DefenseOrchestrator + ThreatScanner: Monitoring brute force attempts'
-                },
-                {
-                    id: 'web',
-                    name: 'Web Application Decoy',
-                    icon: '🌐',
-                    details: 'Port 8080 • WordPress simulation',
-                    status: 'ACTIVE',
-                    aiStatus: 'DefenseOrchestrator + NetworkMapper: Collecting attack patterns'
-                },
-                {
-                    id: 'database',
-                    name: 'Database Honeypot',
                     icon: '🗄️',
                     details: 'Port 3306 • MySQL with fake data',
                     status: 'ACTIVE',
@@ -2296,9 +2437,6 @@
                 window.location.href = 'index.html';
             }
         };
-
-        // Make navigation function global (removed since we're using standard footer)
-        // window.navigateToDefenseSection = navigateToDefenseSection;
     </script>
 </body>
 </html>
