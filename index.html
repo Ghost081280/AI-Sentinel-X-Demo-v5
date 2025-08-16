@@ -740,17 +740,45 @@
         /* Hide any unwanted browser tooltips or labels */
         .twofa-container::after,
         .twofa-btn::after,
-        .twofa-input::after {
+        .twofa-input::after,
+        .twofa-container *::after,
+        .twofa-container *::before {
             display: none !important;
         }
 
         /* Ensure no form validation tooltips appear */
         .twofa-input:invalid {
-            box-shadow: none;
+            box-shadow: none !important;
         }
 
         .twofa-btn:invalid {
-            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Completely disable browser validation UI */
+        .twofa-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        /* Hide any tooltip or validation message */
+        .twofa-input::-webkit-validation-bubble,
+        .twofa-input::-webkit-validation-bubble-message,
+        .twofa-input::-webkit-validation-bubble-arrow,
+        .twofa-input::-webkit-validation-bubble-arrow-clipper {
+            display: none !important;
+        }
+
+        /* Hide any number input spinners or controls */
+        .twofa-input::-webkit-outer-spin-button,
+        .twofa-input::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+
+        .twofa-input[type=number] {
+            -moz-appearance: textfield !important;
         }
 
         /* TABLET AND MOBILE - VERTICAL LAYOUT */
@@ -1316,12 +1344,12 @@
         </div>
 
         <div class="twofa-input-container">
-            <input type="text" class="twofa-input" maxlength="1" id="code1" oninput="moveToNext(this, 'code2')" autofocus>
-            <input type="text" class="twofa-input" maxlength="1" id="code2" oninput="moveToNext(this, 'code3')">
-            <input type="text" class="twofa-input" maxlength="1" id="code3" oninput="moveToNext(this, 'code4')">
-            <input type="text" class="twofa-input" maxlength="1" id="code4" oninput="moveToNext(this, 'code5')">
-            <input type="text" class="twofa-input" maxlength="1" id="code5" oninput="moveToNext(this, 'code6')">
-            <input type="text" class="twofa-input" maxlength="1" id="code6" oninput="checkCode()">
+            <input type="text" class="twofa-input" maxlength="1" id="code1" oninput="moveToNext(this, 'code2')" autofocus novalidate autocomplete="off">
+            <input type="text" class="twofa-input" maxlength="1" id="code2" oninput="moveToNext(this, 'code3')" novalidate autocomplete="off">
+            <input type="text" class="twofa-input" maxlength="1" id="code3" oninput="moveToNext(this, 'code4')" novalidate autocomplete="off">
+            <input type="text" class="twofa-input" maxlength="1" id="code4" oninput="moveToNext(this, 'code5')" novalidate autocomplete="off">
+            <input type="text" class="twofa-input" maxlength="1" id="code5" oninput="moveToNext(this, 'code6')" novalidate autocomplete="off">
+            <input type="text" class="twofa-input" maxlength="1" id="code6" oninput="checkCode()" novalidate autocomplete="off">
         </div>
 
         <button class="twofa-btn" id="verifyBtn" onclick="verify2FA()" disabled>
